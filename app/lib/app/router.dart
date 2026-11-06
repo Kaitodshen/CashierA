@@ -1,0 +1,182 @@
+import 'package:cashiera/app/app_mode.dart';
+import 'package:cashiera/core/session/session_controller.dart';
+import 'package:cashiera/features/back_office/presentation/admin_shell.dart';
+import 'package:cashiera/features/back_office/presentation/admin_shifts_screen.dart';
+import 'package:cashiera/features/back_office/presentation/audit_screen.dart';
+import 'package:cashiera/features/back_office/presentation/back_office_home_screen.dart';
+import 'package:cashiera/features/back_office/presentation/categories_screen.dart';
+import 'package:cashiera/features/back_office/presentation/import_screen.dart';
+import 'package:cashiera/features/back_office/presentation/product_editor_screen.dart';
+import 'package:cashiera/features/back_office/presentation/products_screen.dart';
+import 'package:cashiera/features/back_office/presentation/promotion_editor_screen.dart';
+import 'package:cashiera/features/back_office/presentation/promotions_screen.dart';
+import 'package:cashiera/features/back_office/presentation/sign_in_screen.dart';
+import 'package:cashiera/features/back_office/presentation/stock_screen.dart';
+import 'package:cashiera/features/back_office/presentation/store_settings_screen.dart';
+import 'package:cashiera/features/back_office/presentation/suppliers_screen.dart';
+import 'package:cashiera/features/back_office/presentation/vouchers_screen.dart';
+import 'package:cashiera/features/catalog/presentation/catalog_browser_screen.dart';
+import 'package:cashiera/features/catalog/presentation/opname_screen.dart';
+import 'package:cashiera/features/pairing/presentation/pairing_screen.dart';
+import 'package:cashiera/features/pin_login/presentation/pin_lock_screen.dart';
+import 'package:cashiera/features/pos_home/presentation/pos_home_screen.dart';
+import 'package:cashiera/features/printing/printer_screen.dart';
+import 'package:cashiera/features/sell/presentation/orders_screen.dart';
+import 'package:cashiera/features/sell/presentation/payment_screen.dart';
+import 'package:cashiera/features/sell/presentation/receipt_screen.dart';
+import 'package:cashiera/features/sell/presentation/refund_screen.dart';
+import 'package:cashiera/features/sell/presentation/sell_screen.dart';
+import 'package:cashiera/features/shift/presentation/close_shift_screen.dart';
+import 'package:cashiera/features/shift/presentation/shift_report_screen.dart';
+import 'package:cashiera/features/shift/presentation/shift_screen.dart';
+import 'package:cashiera/features/startup/presentation/setup_screen.dart';
+import 'package:cashiera/features/startup/presentation/splash_screen.dart';
+import 'package:cashiera/features/startup/presentation/welcome_screen.dart';
+import 'package:cashiera/features/sync_status/presentation/sync_screen.dart';
+import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'router.g.dart';
+
+@Riverpod(keepAlive: true)
+GoRouter router(Ref ref) {
+  final mode = ValueNotifier<AppMode>(AppMode.starting);
+  ref
+    ..listen(sessionControllerProvider, (_, next) {
+      mode.value = switch (next) {
+        AsyncData(:final value) => value.mode,
+        AsyncError() => AppMode.signedOut,
+        _ => mode.value,
+      };
+    }, fireImmediately: true)
+    ..onDispose(mode.dispose);
+
+  final router = GoRouter(
+    initialLocation: AppRoutes.splash,
+    refreshListenable: mode,
+    redirect: (context, state) =>
+        redirectFor(mode.value, state.matchedLocation, isWeb: kIsWeb),
+    routes: [
+      GoRoute(path: AppRoutes.splash, builder: (_, _) => const SplashScreen()),
+      GoRoute(path: AppRoutes.setup, builder: (_, _) => const SetupScreen()),
+      GoRoute(
+        path: AppRoutes.welcome,
+        builder: (_, _) => const WelcomeScreen(),
+      ),
+      GoRoute(path: AppRoutes.pair, builder: (_, _) => const PairingScreen()),
+      GoRoute(path: AppRoutes.lock, builder: (_, _) => const PinLockScreen()),
+      GoRoute(path: AppRoutes.pos, builder: (_, _) => const PosHomeScreen()),
+      GoRoute(
+        path: AppRoutes.catalog,
+        builder: (_, _) => const CatalogBrowserScreen(),
+      ),
+      GoRoute(path: AppRoutes.opname, builder: (_, _) => const OpnameScreen()),
+      GoRoute(path: AppRoutes.sell, builder: (_, _) => const SellScreen()),
+      GoRoute(path: AppRoutes.pay, builder: (_, _) => const PaymentScreen()),
+      GoRoute(path: AppRoutes.orders, builder: (_, _) => const OrdersScreen()),
+      GoRoute(
+        path: '/pos/receipt/:id',
+        builder: (_, state) => ReceiptScreen(
+          key: ValueKey(state.uri.toString()),
+          orderId: state.pathParameters['id']!,
+          justSold: state.uri.queryParameters['sale'] == '1',
+        ),
+      ),
+      GoRoute(
+        path: '/pos/refund/:id',
+        builder: (_, state) =>
+            RefundScreen(orderId: state.pathParameters['id']!),
+      ),
+      GoRoute(path: AppRoutes.shift, builder: (_, _) => const ShiftScreen()),
+      GoRoute(
+        path: AppRoutes.shiftClose,
+        builder: (_, _) => const CloseShiftScreen(),
+      ),
+      GoRoute(
+        path: '/pos/shift/report/:id',
+        builder: (_, state) =>
+            ShiftReportScreen(shiftId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: AppRoutes.printer,
+        builder: (_, _) => const PrinterScreen(),
+      ),
+      GoRoute(path: AppRoutes.sync, builder: (_, _) => const SyncScreen()),
+      GoRoute(
+        path: AppRoutes.adminSignIn,
+        builder: (_, _) => const SignInScreen(),
+      ),
+      ShellRoute(
+        builder: (_, _, child) => AdminShell(child: child),
+        routes: [
+          GoRoute(
+            path: AppRoutes.admin,
+            builder: (_, _) => const BackOfficeHomeScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminProducts,
+            builder: (_, _) => const ProductsScreen(),
+          ),
+          GoRoute(
+            path: '${AppRoutes.adminProducts}/:id',
+            builder: (_, state) => ProductEditorScreen(
+              key: ValueKey(state.pathParameters['id']),
+              productId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.adminCategories,
+            builder: (_, _) => const CategoriesScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminSuppliers,
+            builder: (_, _) => const SuppliersScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminStock,
+            builder: (_, _) => const StockScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminImport,
+            builder: (_, _) => const ImportScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminPromotions,
+            builder: (_, _) => const PromotionsScreen(),
+          ),
+          GoRoute(
+            path: '${AppRoutes.adminPromotions}/:id',
+            builder: (_, state) => PromotionEditorScreen(
+              key: ValueKey(state.pathParameters['id']),
+              promotionId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.adminVouchers,
+            builder: (_, _) => const VouchersScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminSettings,
+            builder: (_, _) => const StoreSettingsScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminShifts,
+            builder: (_, _) => const AdminShiftsScreen(),
+          ),
+          GoRoute(
+            path: '${AppRoutes.adminShifts}/:id',
+            builder: (_, state) =>
+                AdminShiftReportScreen(shiftId: state.pathParameters['id']!),
+          ),
+          GoRoute(
+            path: AppRoutes.adminAudit,
+            builder: (_, _) => const AuditScreen(),
+          ),
+        ],
+      ),
+    ],
+  );
+  ref.onDispose(router.dispose);
+  return router;
+}

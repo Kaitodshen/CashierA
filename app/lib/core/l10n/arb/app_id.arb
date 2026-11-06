@@ -1,0 +1,1564 @@
+{
+  "@@locale": "id",
+  "appTitle": "CashierA",
+  "commonRetry": "Coba lagi",
+  "commonCancel": "Batal",
+  "commonClose": "Tutup",
+  "commonError": "Terjadi kesalahan: {message}",
+  "@commonError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "setupTitle": "Konfigurasi belum lengkap",
+  "setupBody": "Jalankan aplikasi dengan --dart-define=SUPABASE_URL=... dan --dart-define=SUPABASE_ANON_KEY=... agar terhubung ke server.",
+  "welcomeTitle": "Selamat datang di CashierA",
+  "welcomeSubtitle": "Pilih cara menggunakan perangkat ini.",
+  "welcomePairTerminal": "Pasangkan terminal kasir",
+  "welcomePairTerminalHint": "Untuk tablet atau PC di toko. Minta kode dari manajer.",
+  "welcomeBackOffice": "Masuk back office",
+  "welcomeBackOfficeHint": "Untuk pemilik dan manajer: laporan, produk, staf.",
+  "pairTitle": "Pasangkan terminal",
+  "pairBody": "Masukkan kode 8 karakter yang dibuat manajer di back office. Kode berlaku 15 menit.",
+  "pairCodeLabel": "Kode pasangan",
+  "pairButton": "Pasangkan",
+  "pairInvalidCode": "Kode terdiri dari 8 huruf/angka (tanpa O, 0, I, 1).",
+  "pairSuccess": "Terminal {code} terpasang di {store}.",
+  "@pairSuccess": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "lockTitle": "Siapa yang bertugas?",
+  "lockEnterPin": "PIN untuk {name}",
+  "@lockEnterPin": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "lockNoStaff": "Belum ada daftar staf. Sambungkan ke internet lalu perbarui.",
+  "lockRefreshStaff": "Perbarui daftar staf",
+  "lockStaffRefreshed": "Daftar staf diperbarui.",
+  "pinWrong": "PIN salah. Sisa {count} percobaan.",
+  "@pinWrong": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pinLocked": "Terlalu banyak percobaan. Coba lagi pukul {time}.",
+  "@pinLocked": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pinNoPin": "Belum ada PIN. Minta manajer mengaturnya di back office.",
+  "pinTooShort": "PIN minimal 4 angka.",
+  "statusOnline": "Online",
+  "statusOffline": "Offline",
+  "statusPending": "{count} tertunda",
+  "@statusPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "posTitle": "Kasir",
+  "posOnDuty": "Bertugas: {name}",
+  "@posOnDuty": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "posTerminal": "Terminal {code}",
+  "@posTerminal": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "posLock": "Kunci / ganti kasir",
+  "posOpenSync": "Status sinkronisasi",
+  "posStoreSettings": "Pengaturan toko",
+  "posTaxLine": "{tax} {rate}% · {mode}",
+  "@posTaxLine": {
+    "placeholders": {
+      "tax": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "posTaxInclusive": "termasuk harga",
+  "posTaxExclusive": "ditambahkan",
+  "posPaper": "Struk {mm} mm",
+  "@posPaper": {
+    "placeholders": {
+      "mm": {
+        "type": "int"
+      }
+    }
+  },
+  "syncTitle": "Sinkronisasi",
+  "syncNow": "Sinkronkan sekarang",
+  "syncEmpty": "Semua data sudah terkirim ke server.",
+  "syncStatusPending": "Menunggu",
+  "syncStatusSyncing": "Mengirim",
+  "syncStatusFailed": "Gagal",
+  "syncStatusDone": "Terkirim",
+  "syncAttempts": "Percobaan: {count}",
+  "@syncAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncRetried": "Dijadwalkan ulang.",
+  "syncRunResult": "{sent} terkirim, {failed} gagal",
+  "@syncRunResult": {
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "syncOfflineNow": "Server tidak terjangkau. Akan dicoba lagi otomatis.",
+  "adminSignInTitle": "Masuk back office",
+  "adminEmail": "Email",
+  "adminPassword": "Kata sandi",
+  "adminSignIn": "Masuk",
+  "adminEmailInvalid": "Masukkan email yang valid.",
+  "adminPasswordShort": "Kata sandi minimal 8 karakter.",
+  "adminNotStaff": "Akun ini belum terdaftar sebagai karyawan.",
+  "adminTitle": "Back office",
+  "adminSignOut": "Keluar",
+  "adminRole": "{role} · {stores} toko",
+  "@adminRole": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "stores": {
+        "type": "int"
+      }
+    }
+  },
+  "adminStores": "Toko",
+  "adminNoStores": "Belum ada toko yang bisa Anda akses.",
+  "adminPairTerminal": "Buat kode pasangan",
+  "adminDeviceName": "Nama terminal",
+  "adminDeviceNameHint": "mis. Kasir 2",
+  "adminCreateCode": "Buat kode",
+  "adminCodeTitle": "Kode pasangan",
+  "adminCodeBody": "Ketik kode ini di terminal baru sebelum pukul {time}.",
+  "@adminCodeBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "posCatalog": "Produk & stok",
+  "posCatalogHint": "Cari produk, cek stok, catat stok masuk/keluar",
+  "catalogTitle": "Produk & stok",
+  "catalogSearchHint": "Cari nama, SKU, atau scan barcode",
+  "catalogAll": "Semua",
+  "catalogEmpty": "Katalog belum ada di terminal ini. Sinkronkan saat online.",
+  "catalogNoMatch": "Tidak ada produk yang cocok.",
+  "catalogRefresh": "Sinkronkan katalog",
+  "catalogLastSync": "Terakhir disinkronkan {time}",
+  "@catalogLastSync": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogStock": "Stok {qty} {unit}",
+  "@catalogStock": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogLow": "Stok menipis",
+  "catalogCodeNotFound": "Kode {code} tidak ditemukan.",
+  "@catalogCodeNotFound": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogSynced": "Katalog diperbarui ({rows} perubahan).",
+  "@catalogSynced": {
+    "placeholders": {
+      "rows": {
+        "type": "int"
+      }
+    }
+  },
+  "stockIn": "Stok masuk",
+  "stockOut": "Stok keluar",
+  "stockQuantity": "Jumlah",
+  "stockReason": "Alasan",
+  "stockNote": "Catatan (opsional)",
+  "reasonStockIn": "Barang masuk",
+  "reasonStockOut": "Barang keluar",
+  "reasonDamaged": "Rusak",
+  "reasonExpired": "Kedaluwarsa",
+  "reasonLost": "Hilang",
+  "stockSave": "Simpan",
+  "stockSaved": "Stok {name} diperbarui.",
+  "@stockSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "stockInvalidQty": "Masukkan jumlah lebih dari 0 (maks. 3 desimal).",
+  "stockWholeOnly": "Satuan ini harus bilangan bulat.",
+  "opnameTitle": "Stok opname",
+  "opnameHint": "Isi jumlah yang dihitung. Baris kosong tidak diubah.",
+  "opnameSubmit": "Kirim opname ({count} item)",
+  "@opnameSubmit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "opnameConfirm": "Stok {count} item akan diganti dengan hasil hitungan. Lanjutkan?",
+  "@opnameConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "opnameDone": "Opname disimpan dan masuk antrean sinkronisasi.",
+  "opnameSystem": "Sistem: {qty}",
+  "@opnameSystem": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "commonContinue": "Lanjutkan",
+  "navHome": "Ringkasan",
+  "navProducts": "Produk",
+  "navCategories": "Kategori",
+  "navSuppliers": "Pemasok",
+  "navStock": "Stok",
+  "navImport": "Impor & ekspor",
+  "commonSave": "Simpan",
+  "commonAdd": "Tambah",
+  "commonEdit": "Ubah",
+  "commonSaved": "Tersimpan.",
+  "commonActive": "Aktif",
+  "commonInactive": "Nonaktif",
+  "commonRequired": "Wajib diisi",
+  "productsNew": "Produk baru",
+  "productsEmpty": "Belum ada produk. Tambah satu atau impor dari file.",
+  "productsVariants": "{count} varian",
+  "@productsVariants": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "productsAllCategories": "Semua kategori",
+  "productsReadOnly": "Hanya pemilik yang bisa mengubah katalog.",
+  "productEditTitle": "Ubah produk",
+  "productNewTitle": "Produk baru",
+  "productName": "Nama produk",
+  "productCategory": "Kategori",
+  "productUnit": "Satuan",
+  "productTaxable": "Kena PPN",
+  "productTaxableHint": "Matikan untuk barang bebas PPN (beras, gula, telur ...)",
+  "productTrackStock": "Lacak stok",
+  "productVariants": "Varian",
+  "productAddVariant": "Tambah varian",
+  "variantName": "Nama varian",
+  "variantSku": "SKU",
+  "variantBarcode": "Barcode",
+  "variantPrice": "Harga jual",
+  "variantCost": "HPP",
+  "variantRemove": "Hapus varian",
+  "productStoreSettings": "Harga & stok minimum per toko",
+  "storePriceOverride": "Harga khusus",
+  "storeReorderPoint": "Stok minimum",
+  "validationMoney": "Angka rupiah tanpa titik, mis. 25000",
+  "validationSku": "Huruf/angka . _ - (maks. 40)",
+  "categoriesEmpty": "Belum ada kategori.",
+  "categoryName": "Nama kategori",
+  "categoryColor": "Warna (#RRGGBB)",
+  "categoryOrderHint": "Seret untuk mengatur urutan di layar kasir.",
+  "suppliersEmpty": "Belum ada pemasok.",
+  "supplierName": "Nama pemasok",
+  "supplierContact": "Kontak",
+  "supplierPhone": "Telepon",
+  "supplierEmail": "Email",
+  "supplierAddress": "Alamat",
+  "stockStore": "Toko",
+  "stockLowOnly": "Hanya stok menipis",
+  "stockEmpty": "Belum ada produk yang dilacak stoknya.",
+  "stockReorder": "Min. {qty}",
+  "@stockReorder": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "stockAlerts": "{count} peringatan terbuka",
+  "@stockAlerts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stockResolve": "Selesai",
+  "stockMovements": "Riwayat mutasi",
+  "stockNoMovements": "Belum ada mutasi.",
+  "movementType_initial": "Stok awal",
+  "movementType_sale": "Penjualan",
+  "movementType_sale_void": "Batal jual",
+  "movementType_refund": "Retur",
+  "movementType_purchase_receive": "Penerimaan barang",
+  "movementType_adjustment": "Penyesuaian",
+  "movementType_waste": "Rusak/hilang",
+  "movementType_opname": "Opname",
+  "movementType_transfer_out": "Transfer keluar",
+  "movementType_transfer_in": "Transfer masuk",
+  "importTitle": "Impor & ekspor katalog",
+  "importHelp": "Isi template, lalu unggah sebagai CSV atau XLSX. Kolom stock_<KODE> menetapkan stok hasil hitung di toko itu.",
+  "importDownloadTemplate": "Unduh template",
+  "importExportCsv": "Ekspor CSV",
+  "importExportXlsx": "Ekspor XLSX",
+  "importPick": "Pilih file",
+  "importRun": "Impor {count} baris",
+  "@importRun": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importPreview": "{rows} baris · {products} produk",
+  "@importPreview": {
+    "placeholders": {
+      "rows": {
+        "type": "int"
+      },
+      "products": {
+        "type": "int"
+      }
+    }
+  },
+  "importIssues": "{count} masalah harus diperbaiki dulu",
+  "@importIssues": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importDone": "Impor selesai: {created} varian baru, {updated} diperbarui, {stock} baris stok.",
+  "@importDone": {
+    "placeholders": {
+      "created": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      },
+      "stock": {
+        "type": "int"
+      }
+    }
+  },
+  "importFileError": "File tidak bisa dibaca: {message}",
+  "@importFileError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "importSaved": "File disimpan.",
+  "importRowLabel": "Baris {row}",
+  "@importRowLabel": {
+    "placeholders": {
+      "row": {
+        "type": "int"
+      }
+    }
+  },
+  "importFileLevel": "File",
+  "issue_emptyFile": "File kosong.",
+  "issue_missingColumn": "Kolom {column} tidak ada.",
+  "@issue_missingColumn": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_unknownStore": "Kolom {column}: kode toko tidak dikenal.",
+  "@issue_unknownStore": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_tooManyRows": "Maksimal 5.000 baris per impor.",
+  "issue_requiredValue": "{column} wajib diisi.",
+  "@issue_requiredValue": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_skuFormat": "SKU \"{value}\" hanya boleh huruf, angka, . _ -",
+  "@issue_skuFormat": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_barcodeFormat": "Barcode \"{value}\" tidak valid.",
+  "@issue_barcodeFormat": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_priceFormat": "{column} \"{value}\": tulis angka saja, mis. 25000 (tanpa Rp atau titik).",
+  "@issue_priceFormat": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_quantityFormat": "{column} \"{value}\" bukan jumlah yang valid (maks. 3 desimal, tidak negatif).",
+  "@issue_quantityFormat": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_booleanFormat": "{column} \"{value}\": isi yes/no atau ya/tidak.",
+  "@issue_booleanFormat": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_unknownUnit": "Satuan \"{value}\" tidak dikenal.",
+  "@issue_unknownUnit": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_duplicateSku": "SKU \"{value}\" muncul lebih dari sekali.",
+  "@issue_duplicateSku": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_duplicateBarcode": "Barcode \"{value}\" muncul lebih dari sekali.",
+  "@issue_duplicateBarcode": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "issue_productMismatch": "\"{value}\": kategori, satuan, PPN atau lacak stok berbeda dari baris sebelumnya.",
+  "@issue_productMismatch": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "productSaveFailed": "Gagal menyimpan: {message}",
+  "@productSaveFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "commonNone": "Tidak ada",
+  "posSell": "Kasir",
+  "posSellHint": "Scan atau pilih barang, terima pembayaran, cetak struk",
+  "sellTitle": "Kasir",
+  "sellFavorites": "Favorit",
+  "sellNotFound": "Kode \"{code}\" tidak ditemukan.",
+  "@sellNotFound": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "sellUnavailable": "Tidak dijual",
+  "sellCartSummary": "{count} item · {total}",
+  "@sellCartSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "sellPay": "Bayar",
+  "sellPayAmount": "Bayar {amount}",
+  "@sellPayAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "sellNewBill": "Tagihan baru",
+  "sellClear": "Kosongkan",
+  "sellClearTitle": "Kosongkan tagihan?",
+  "sellClearHint": "Semua barang di tagihan ini dihapus.",
+  "sellClearHeldHint": "Perubahan sejak disimpan dibuang. Tagihan tetap tersimpan di daftar Ditahan.",
+  "sellAddCustomer": "Tambah pelanggan",
+  "sellEmpty": "Belum ada barang. Scan barcode atau ketuk produk.",
+  "sellChangeQuantity": "Ubah jumlah",
+  "sellLineDiscount": "Diskon barang",
+  "sellBillDiscount": "Diskon tagihan",
+  "sellNote": "Catatan",
+  "sellRemove": "Hapus",
+  "sellItemDiscounts": "Diskon barang",
+  "sellTaxIncluded": "Termasuk {tax}",
+  "@sellTaxIncluded": {
+    "placeholders": {
+      "tax": {
+        "type": "String"
+      }
+    }
+  },
+  "sellNeedsApproval": "Diskon melebihi batas: perlu persetujuan",
+  "sellDiscount": "Diskon",
+  "sellHold": "Tahan",
+  "sellHeld": "Tagihan {number} ditahan.",
+  "@sellHeld": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "discountManualLine": "Diskon",
+  "discountManualBill": "Diskon tagihan",
+  "discountVoucher": "Voucher",
+  "discountPoints": "Tukar poin",
+  "discountPercent": "Persen",
+  "discountAmount": "Rupiah",
+  "discountValue": "Besar diskon",
+  "discountInvalid": "Isi persen 0,01–100 atau rupiah di atas 0.",
+  "discountRemove": "Hapus diskon",
+  "voucherTitle": "Voucher",
+  "voucherCode": "Kode voucher",
+  "voucherCodeShort": "Kode minimal 3 karakter.",
+  "voucherUnknown": "Voucher {code} tidak dikenal.",
+  "@voucherUnknown": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "voucherInactive": "Voucher ini sudah tidak aktif.",
+  "voucherNotStarted": "Voucher ini belum berlaku.",
+  "voucherExpired": "Voucher ini sudah kedaluwarsa.",
+  "voucherUsedUp": "Kuota voucher ini sudah habis.",
+  "voucherBelowMinimum": "Belanja belum mencapai minimum voucher.",
+  "modifierRequired": "pilih {count}",
+  "@modifierRequired": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "modifierOptional": "opsional, maks. {count}",
+  "@modifierOptional": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "modifierAdd": "Tambahkan · {price}",
+  "@modifierAdd": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "approvalTitle": "Persetujuan",
+  "approvalDiscountReason": "Diskon {percent}% melebihi batas {limit}%.",
+  "@approvalDiscountReason": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "approvalCancelReason": "Membatalkan tagihan {number}.",
+  "@approvalCancelReason": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "approvalNobody": "Tidak ada staf di toko ini yang boleh menyetujui.",
+  "approvalEnterPin": "{name}, masukkan PIN Anda.",
+  "@approvalEnterPin": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "approvalLocked": "PIN terkunci 5 menit karena terlalu banyak percobaan.",
+  "approvalNoPin": "Staf ini belum punya PIN.",
+  "approvalOther": "Staf lain",
+  "customerAdd": "Pelanggan baru",
+  "customerName": "Nama",
+  "customerPhone": "No. HP (opsional)",
+  "customerPhoneInvalid": "Nomor HP 8–15 angka.",
+  "customerSearchHint": "Cari nama atau nomor HP",
+  "customerNoPermission": "Anda tidak boleh menambah pelanggan.",
+  "shiftOpenTitle": "Buka shift",
+  "shiftOpenHint": "Hitung uang di laci, lalu isi kas awal.",
+  "shiftOpeningCash": "Kas awal",
+  "shiftOpen": "Buka shift",
+  "shiftNoPermission": "Minta manajer atau kasir yang berwenang membuka shift.",
+  "payTitle": "Pembayaran {number}",
+  "@payTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "payDue": "Total tagihan",
+  "payCustomer": "Pelanggan: {name}",
+  "@payCustomer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "payRemaining": "Sisa {amount}",
+  "@payRemaining": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payChange": "Kembalian {amount}",
+  "@payChange": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payKasbonNote": "Kasbon {amount}, jatuh tempo {days} hari.",
+  "@payKasbonNote": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "payFinish": "Selesaikan transaksi",
+  "payMethod": "Metode pembayaran",
+  "payQuickCash": "Uang diterima",
+  "payExact": "Uang pas",
+  "payTendered": "Uang diterima",
+  "payAmount": "Jumlah",
+  "payReference": "No. referensi / approval",
+  "payReferenceOptional": "No. referensi (opsional)",
+  "payReferenceRequired": "{method} butuh nomor referensi.",
+  "@payReferenceRequired": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "payAdd": "Tambah {method}",
+  "@payAdd": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "payInvalidAmount": "Isi jumlah di atas 0.",
+  "payNonCashTooMuch": "Pembayaran non-tunai melebihi tagihan. Kembalian hanya dari tunai.",
+  "payOneKasbon": "Kasbon hanya boleh satu kali per tagihan.",
+  "payUnneeded": "Tunai ini tidak diperlukan, tagihan sudah lunas.",
+  "payShiftRequired": "Buka shift dulu sebelum menyelesaikan transaksi.",
+  "payNotPaid": "Pembayaran belum sama dengan tagihan.",
+  "payKasbonCustomer": "Kasbon butuh pelanggan.",
+  "receiptTitle": "Struk",
+  "receiptCashier": "Kasir",
+  "receiptCustomer": "Pelanggan",
+  "receiptSubtotal": "Subtotal",
+  "receiptService": "Biaya layanan",
+  "receiptTaxIncluded": "Termasuk {tax} {rate}",
+  "@receiptTaxIncluded": {
+    "placeholders": {
+      "tax": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptTaxAdded": "{tax} {rate}",
+  "@receiptTaxAdded": {
+    "placeholders": {
+      "tax": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptTaxBase": "DPP",
+  "receiptRounding": "Pembulatan",
+  "receiptTotal": "Total",
+  "receiptChange": "Kembali",
+  "receiptTendered": "Diterima",
+  "receiptKasbonDue": "Kasbon jatuh tempo {date}",
+  "@receiptKasbonDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptCancelled": "DIBATALKAN",
+  "receiptHeld": "BELUM DIBAYAR",
+  "receiptItems": "{count} item",
+  "@receiptItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptShare": "Bagikan PDF",
+  "receiptPrint": "Cetak",
+  "receiptReprint": "Cetak ulang",
+  "receiptNewSale": "Transaksi baru",
+  "receiptMissing": "Struk tidak ditemukan di terminal ini.",
+  "ordersTitle": "Transaksi",
+  "ordersToday": "Hari ini",
+  "ordersHeld": "Ditahan ({count})",
+  "@ordersHeld": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ordersTodayTotal": "Penjualan hari ini",
+  "ordersTodayCount": "{count} transaksi lunas di terminal ini",
+  "@ordersTodayCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ordersNone": "Belum ada transaksi hari ini.",
+  "ordersNoHeld": "Tidak ada tagihan yang ditahan.",
+  "ordersStatusHeld": "Ditahan",
+  "ordersStatusCancelled": "Batal",
+  "ordersStatusPaid": "Lunas",
+  "ordersResumeTitle": "Lanjutkan tagihan?",
+  "ordersResumeReplace": "Tagihan yang sedang dibuka akan dikosongkan. Tahan dulu jika masih dipakai.",
+  "ordersCancel": "Batalkan",
+  "ordersCancelTitle": "Batalkan {number}?",
+  "@ordersCancelTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "ordersCancelReason": "Alasan",
+  "ordersCancelReasonShort": "Tulis alasan minimal 3 huruf.",
+  "ordersCancelled": "Tagihan {number} dibatalkan.",
+  "@ordersCancelled": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "commonDone": "Selesai",
+  "commonSearch": "Cari",
+  "navPromotions": "Promo",
+  "navVouchers": "Voucher",
+  "navSettings": "Pengaturan toko",
+  "promosEmpty": "Belum ada promo.",
+  "promoMissing": "Promo ini tidak ditemukan.",
+  "promoNew": "Promo baru",
+  "promoGeneral": "Umum",
+  "promoName": "Nama promo",
+  "promoDescription": "Keterangan",
+  "promoType": "Jenis promo",
+  "promoTypeHappyHour": "Diskon jam tertentu",
+  "promoTypeBuyXGetY": "Beli X gratis/diskon Y",
+  "promoTypeBundle": "Paket harga",
+  "promoTypeTiered": "Diskon grosir (jumlah)",
+  "promoTypeMinPurchase": "Minimal belanja",
+  "promoPriority": "Prioritas",
+  "promoPriorityHint": "Angka kecil dijalankan lebih dulu.",
+  "promoStackable": "Bisa digabung",
+  "promoStackableHint": "Jika mati, barang yang sudah kena promo lain tidak ikut, dan promo sesudahnya tidak berlaku untuk barang ini.",
+  "promoRules": "Aturan",
+  "promoScope": "Berlaku untuk",
+  "promoScopeAll": "Semua produk",
+  "promoScopeCategories": "Kategori",
+  "promoScopeProducts": "Produk",
+  "promoScopeVariants": "Varian (SKU)",
+  "promoDiscountPerUnit": "Diskon (Rp per unit)",
+  "promoBuyScope": "Beli barang",
+  "promoBuyQuantity": "Jumlah beli",
+  "promoGetScope": "Dapat barang",
+  "promoGetQuantity": "Jumlah dapat",
+  "promoGetDiscount": "Diskon barang yang didapat (100% = gratis)",
+  "promoMaxApplications": "Maks. berlaku per transaksi",
+  "promoUnlimitedHint": "Kosongkan untuk tanpa batas",
+  "promoComponent": "Isi paket {index}",
+  "@promoComponent": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "promoQty": "Jumlah",
+  "promoAddComponent": "Tambah isi paket",
+  "promoBundlePrice": "Harga paket",
+  "promoMinQuantity": "Mulai jumlah",
+  "promoAddTier": "Tambah tingkat",
+  "promoMinSubtotal": "Minimal belanja",
+  "promoBillDiscount": "Potongan tagihan",
+  "promoWhen": "Waktu berlaku",
+  "promoStartsAnytime": "Mulai: kapan saja",
+  "promoStarts": "Mulai {date}",
+  "@promoStarts": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "promoEndsNever": "Selesai: tidak ada",
+  "promoEnds": "Sampai {date}",
+  "@promoEnds": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "promoClearPeriod": "Hapus tanggal",
+  "promoDays": "Hari (kosong = setiap hari)",
+  "promoEveryDay": "Berlaku setiap hari.",
+  "promoHours": "Jam",
+  "promoAllDay": "Sepanjang hari",
+  "promoStores": "Toko",
+  "promoAllStores": "Tidak ada yang dipilih: berlaku di semua toko.",
+  "promoStoreCount": "{count} toko",
+  "@promoStoreCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "promoPeriodInvalid": "Tanggal selesai harus setelah tanggal mulai.",
+  "promoProblemName": "Isi nama promo.",
+  "promoProblemWindow": "Isi jam mulai dan jam selesai, atau kosongkan keduanya.",
+  "promoProblemHappyHour": "Diskon jam tertentu butuh jam mulai dan selesai.",
+  "promoProblemScope": "Pilih barang yang berlaku.",
+  "promoProblemQuantity": "Jumlah harus angka bulat di atas 0.",
+  "promoProblemComponents": "Paket butuh minimal 2 isi.",
+  "promoProblemTiers": "Tingkat jumlah harus naik, mulai dari 1.",
+  "promoSummaryDiscount": "diskon {discount}",
+  "@promoSummaryDiscount": {
+    "placeholders": {
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoSummaryBuyGet": "beli {buy} dapat {get} diskon {discount}",
+  "@promoSummaryBuyGet": {
+    "placeholders": {
+      "buy": {
+        "type": "int"
+      },
+      "get": {
+        "type": "int"
+      },
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "promoSummaryBundle": "{count} barang jadi {price}",
+  "@promoSummaryBundle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "promoSummaryMinPurchase": "belanja {min} hemat {discount}",
+  "@promoSummaryMinPurchase": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "vouchersEmpty": "Belum ada voucher.",
+  "voucherNew": "Voucher baru",
+  "voucherCodeHint": "3–32 huruf besar, angka, - atau _",
+  "voucherMinSubtotal": "min. {amount}",
+  "@voucherMinSubtotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "voucherMaxDiscount": "maks. {amount}",
+  "@voucherMaxDiscount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "voucherUsed": "dipakai {used}/{max}",
+  "@voucherUsed": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "voucherUntil": "s.d. {date}",
+  "@voucherUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "voucherMaxDiscountLabel": "Diskon maksimal (opsional)",
+  "voucherMinSubtotalLabel": "Minimal belanja (opsional)",
+  "voucherMaxUses": "Kuota total (opsional)",
+  "voucherPerCustomer": "Maks. per pelanggan (opsional)",
+  "voucherCountInvalid": "Angka bulat di atas 0.",
+  "settingsTax": "Pajak",
+  "settingsTaxEnabled": "Kenakan pajak",
+  "settingsTaxName": "Nama pajak",
+  "settingsRate": "Tarif",
+  "settingsTaxInclusive": "Harga sudah termasuk pajak",
+  "settingsTaxInclusiveHint": "Rp 25.000 dengan PPN 11% berisi PPN Rp 2.477.",
+  "settingsTaxExclusiveHint": "Pajak ditambahkan di atas harga.",
+  "settingsServiceCharge": "Biaya layanan",
+  "settingsServiceChargeEnabled": "Kenakan biaya layanan",
+  "settingsServiceChargeTaxable": "Biaya layanan kena pajak",
+  "settingsCashier": "Kasir",
+  "settingsRounding": "Pembulatan total",
+  "settingsRoundingNone": "Tidak dibulatkan",
+  "settingsRoundingNearest": "Terdekat",
+  "settingsRoundingUp": "Ke atas",
+  "settingsRoundingDown": "Ke bawah",
+  "settingsRoundingUnit": "Kelipatan",
+  "settingsDiscountLimit": "Batas diskon tanpa persetujuan",
+  "settingsDiscountLimitHint": "Diskon manual di atas batas ini perlu PIN manajer.",
+  "settingsKasbon": "Izinkan kasbon",
+  "settingsReceipt": "Struk",
+  "settingsReceiptHeader": "Judul struk",
+  "settingsReceiptFooter": "Catatan kaki struk",
+  "settingsPaymentMethods": "Metode pembayaran",
+  "settingsPaymentMethodsHint": "Yang aktif muncul di layar pembayaran toko ini.",
+  "settingsNeedsReference": "perlu no. referensi",
+  "settingsPercentInvalid": "Isi persen 0–100.",
+  "posShift": "Shift",
+  "posShiftOpenSince": "Buka sejak {time} · {name}",
+  "@posShiftOpenSince": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "posShiftNone": "Belum ada shift terbuka",
+  "posPrinter": "Printer",
+  "posPrinterNone": "Belum diatur",
+  "shiftTitle": "Shift",
+  "shiftNoneOpen": "Belum ada shift terbuka. Buka shift di layar Kasir.",
+  "shiftGoSell": "Ke Kasir",
+  "shiftDrawerExpected": "Uang di laci seharusnya",
+  "shiftOpenedBy": "Dibuka {time} oleh {name}",
+  "@shiftOpenedBy": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftCashIn": "Kas masuk",
+  "shiftCashOut": "Kas keluar",
+  "shiftOpenDrawer": "Buka laci",
+  "shiftPrintX": "Cetak X",
+  "shiftClose": "Tutup shift",
+  "shiftMovements": "Kas masuk & keluar",
+  "shiftNoMovements": "Belum ada kas masuk atau keluar.",
+  "shiftHistory": "Shift sebelumnya",
+  "shiftHistoryLine": "{date} · {name}",
+  "@shiftHistoryLine": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftMovementAmount": "Jumlah",
+  "shiftMovementReason": "Keterangan",
+  "shiftMovementSaved": "{kind} {amount} dicatat.",
+  "@shiftMovementSaved": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftDrawerShort": "Uang di laci hanya {amount}.",
+  "@shiftDrawerShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftReport": "Laporan shift",
+  "drawerReasonTitle": "Buka laci tanpa transaksi",
+  "drawerApprovalReason": "Membuka laci tanpa transaksi: {reason}",
+  "@drawerApprovalReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "drawerOpened": "Laci dibuka.",
+  "drawerNotSet": "Printer ini tidak diatur untuk membuka laci. Ubah di Pengaturan printer.",
+  "closeTitle": "Tutup shift",
+  "closeCountByNotes": "Hitung per pecahan",
+  "closeEnterTotal": "Masukkan total",
+  "closeCounted": "Uang dihitung",
+  "closeExpected": "Seharusnya",
+  "closeDifference": "Selisih",
+  "closeEven": "Pas",
+  "closeOver": "Lebih {amount}",
+  "@closeOver": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "closeShort": "Kurang {amount}",
+  "@closeShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "closeNote": "Catatan",
+  "closeNoteRequired": "Jelaskan selisihnya.",
+  "closeHeldWarning": "{count} tagihan masih ditahan. Tagihan itu tetap ditahan setelah shift ditutup.",
+  "@closeHeldWarning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closePending": "{count} transaksi belum terkirim. Semuanya dikirim sebelum penutupan shift.",
+  "@closePending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closeConfirmTitle": "Tutup shift sekarang?",
+  "closeConfirmBody": "Uang dihitung {counted}, seharusnya {expected}. Setelah ditutup, penjualan perlu shift baru.",
+  "@closeConfirmBody": {
+    "placeholders": {
+      "counted": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "String"
+      }
+    }
+  },
+  "closeDone": "Shift ditutup.",
+  "reportTitleX": "Laporan X",
+  "reportTitleZ": "Laporan Z",
+  "reportTerminal": "Terminal",
+  "reportOpened": "Dibuka",
+  "reportClosed": "Ditutup",
+  "reportSales": "Penjualan",
+  "reportTransactions": "Transaksi",
+  "reportGross": "Penjualan kotor",
+  "reportDiscounts": "Diskon",
+  "reportNet": "Penjualan bersih",
+  "reportService": "Biaya layanan",
+  "reportTax": "Pajak",
+  "reportRounding": "Pembulatan",
+  "reportTotal": "Total",
+  "reportAverage": "Rata-rata per transaksi",
+  "reportPayments": "Pembayaran",
+  "reportCorrections": "Koreksi",
+  "reportVoids": "Void",
+  "reportCancelled": "Tagihan dibatalkan",
+  "reportRefunds": "Refund",
+  "reportKasbonIssued": "Kasbon baru",
+  "reportKasbonRepaid": "Kasbon dibayar",
+  "reportCash": "Kas",
+  "reportOpeningCash": "Kas awal",
+  "reportCashSales": "Penjualan tunai",
+  "reportVoidedCash": "Void tunai",
+  "reportCashRefunds": "Refund tunai",
+  "reportKasbonCash": "Kasbon dibayar tunai",
+  "reportCashIn": "Kas masuk",
+  "reportCashOut": "Kas keluar",
+  "reportExpected": "Kas seharusnya",
+  "reportCounted": "Kas dihitung",
+  "reportDifference": "Selisih",
+  "reportTopItems": "Produk terlaris",
+  "reportPrintedAt": "Dicetak {time}",
+  "@reportPrintedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reportPrint": "Cetak",
+  "reportShare": "Bagikan PDF",
+  "reportMissing": "Shift tidak ditemukan.",
+  "receiptVoided": "VOID - DIBATALKAN",
+  "receiptCopy": "SALINAN",
+  "receiptVoid": "Void",
+  "receiptRefund": "Refund",
+  "receiptRefundLine": "{number} · {method}",
+  "@receiptRefundLine": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptVoidedLine": "Di-void {time} oleh {name}: {reason}",
+  "@receiptVoidedLine": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptPrinted": "Struk dikirim ke printer.",
+  "voidTitle": "Void {number}?",
+  "@voidTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "voidReason": "Alasan void",
+  "voidApproval": "Void {number}.",
+  "@voidApproval": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "voidApprovalPrinted": "Void {number} setelah struk dicetak.",
+  "@voidApprovalPrinted": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "voidDone": "{number} di-void. Stok dikembalikan.",
+  "@voidDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "reasonShort": "Tulis alasan, minimal 3 huruf.",
+  "printFailed": "Gagal mencetak: {reason}",
+  "@printFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "printNotConfigured": "Belum ada printer. Atur di Pengaturan printer, atau bagikan PDF.",
+  "printUnsupported": "Printer ini tidak didukung di perangkat ini.",
+  "printConnectFailed": "Tidak bisa terhubung ke printer. Pastikan printer menyala dan dekat.",
+  "printSendFailed": "Data gagal dikirim ke printer.",
+  "printInvalidAddress": "Alamat printer tidak valid.",
+  "printSystemDialog": "Cetak lewat dialog sistem",
+  "refundTitle": "Refund {number}",
+  "@refundTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "refundPickItems": "Pilih barang yang dikembalikan",
+  "refundAll": "Semua",
+  "refundLeft": "Sisa {left} dari {sold}",
+  "@refundLeft": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "sold": {
+        "type": "String"
+      }
+    }
+  },
+  "refundRestock": "Kembalikan ke stok",
+  "refundRestockHint": "Matikan untuk barang rusak yang dibuang.",
+  "refundMethod": "Dikembalikan lewat",
+  "refundViaCash": "Tunai",
+  "refundViaQris": "QRIS",
+  "refundViaCard": "Kartu",
+  "refundViaTransfer": "Transfer",
+  "refundViaEwallet": "E-wallet",
+  "refundReason": "Alasan refund",
+  "refundTotal": "Total refund",
+  "refundRefundable": "Bisa dikembalikan: {amount}",
+  "@refundRefundable": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "refundSubmit": "Refund {amount}",
+  "@refundSubmit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "refundApproval": "Refund {amount} untuk {number}.",
+  "@refundApproval": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "refundDone": "Refund {number} tercatat.",
+  "@refundDone": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "refundNothing": "Pilih minimal satu barang.",
+  "refundExceedsPaid": "Melebihi uang yang diterima. Bagian kasbon belum bisa di-refund.",
+  "refundZero": "Barang ini gratis; tidak ada uang untuk dikembalikan.",
+  "refundQuantity": "Jumlah melebihi sisa yang bisa dikembalikan.",
+  "refundFull": "Semua sudah di-refund.",
+  "refundSlipTitle": "REFUND",
+  "refundSlipOrder": "Dari transaksi {number}",
+  "@refundSlipOrder": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "refundSlipStaff": "Kasir: {name}",
+  "@refundSlipStaff": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "refundSlipApprover": "Disetujui: {name}",
+  "@refundSlipApprover": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "refundSlipMethod": "Dikembalikan: {method}",
+  "@refundSlipMethod": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "refundSlipReason": "Alasan: {reason}",
+  "@refundSlipReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "posErrShiftClosed": "Shift sudah ditutup.",
+  "posErrNotCompleted": "Hanya transaksi selesai yang bisa di-void atau di-refund.",
+  "posErrVoidAfterRefund": "Transaksi yang sudah di-refund tidak bisa di-void.",
+  "posErrRefundMethod": "Metode refund tidak valid.",
+  "posErrPermission": "Perlu izin {permission}.",
+  "@posErrPermission": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      }
+    }
+  },
+  "printerTitle": "Pengaturan printer",
+  "printerNone": "Belum ada printer struk.",
+  "printerConnection": "Sambungan",
+  "printerBluetooth": "Bluetooth",
+  "printerUsb": "USB",
+  "printerNetwork": "Jaringan",
+  "printerSearch": "Cari printer",
+  "printerSearching": "Mencari printer…",
+  "printerFoundNone": "Tidak ada printer ditemukan. Nyalakan printer dan Bluetooth, lalu coba lagi.",
+  "printerName": "Nama printer",
+  "printerAddress": "Alamat",
+  "printerAddressHint": "Contoh 192.168.1.50 atau 192.168.1.50:9100",
+  "printerPaper": "Lebar kertas",
+  "printerPaperMm": "{mm} mm",
+  "@printerPaperMm": {
+    "placeholders": {
+      "mm": {
+        "type": "int"
+      }
+    }
+  },
+  "printerOpensDrawer": "Buka laci kas lewat printer",
+  "printerAutoPrint": "Cetak struk otomatis setelah bayar",
+  "printerTest": "Tes cetak",
+  "printerTestTitle": "TES PRINTER",
+  "printerTestLine": "Kertas {mm} mm · {columns} kolom",
+  "@printerTestLine": {
+    "placeholders": {
+      "mm": {
+        "type": "int"
+      },
+      "columns": {
+        "type": "int"
+      }
+    }
+  },
+  "printerTestSent": "Halaman tes dikirim.",
+  "printerSaved": "Printer disimpan.",
+  "printerRemove": "Hapus printer",
+  "printerRemoved": "Printer dihapus.",
+  "printerAddressRequired": "Pilih atau isi alamat printer.",
+  "printerDiscoverUnsupported": "Pencarian printer tidak tersedia di perangkat ini. Pakai printer jaringan.",
+  "navShifts": "Shift",
+  "navAudit": "Log audit",
+  "adminAllStores": "Semua toko",
+  "adminPeriod": "{from} – {to}",
+  "@adminPeriod": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "shiftsEmpty": "Tidak ada shift di periode ini.",
+  "shiftsOpen": "Masih buka",
+  "shiftsSales": "Penjualan {amount}",
+  "@shiftsSales": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "auditOnlyApprovals": "Hanya persetujuan",
+  "auditKind": "Jenis",
+  "auditAll": "Semua",
+  "auditKindOrders": "Penjualan",
+  "auditKindShifts": "Shift",
+  "auditKindCash": "Kas",
+  "auditKindPos": "Laci kas",
+  "auditKindReceipts": "Struk",
+  "auditKindDevices": "Terminal",
+  "auditKindData": "Perubahan data",
+  "auditEmpty": "Tidak ada catatan.",
+  "auditLoadMore": "Muat lagi",
+  "auditApprovedBy": "disetujui {name}",
+  "@auditApprovedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "auditSystem": "Sistem",
+  "auditActionName": "{action, select, shift_opened{Shift dibuka} shift_closed{Shift ditutup} cash_movement_in{Kas masuk} cash_movement_out{Kas keluar} order_voided{Transaksi di-void} order_refunded{Refund} order_cancelled{Tagihan dibatalkan} order_discount_approved{Diskon disetujui} pos_drawer_open_no_sale{Laci dibuka tanpa transaksi} receipt_reprinted{Struk dicetak ulang} device_paired{Terminal dipasangkan} device_revoked{Terminal dicabut} device_pairing_code_created{Kode pasang dibuat} employee_pin_set{PIN diatur} catalog_imported{Katalog diimpor} kasbon_repayment{Pembayaran kasbon} other{{action}}}",
+  "@auditActionName": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  }
+}

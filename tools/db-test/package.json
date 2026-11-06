@@ -1,0 +1,16 @@
+{
+  "name": "cashiera-db-test",
+  "private": true,
+  "type": "module",
+  "description": "Runs CashierA's Supabase migrations, seed and pgTAP tests on an embedded Postgres (PGlite). No Docker needed.",
+  "scripts": {
+    "test": "node run.mjs",
+    "migrate": "node run.mjs --migrate-only"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.5.15"
+  }
+}

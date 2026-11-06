@@ -1,0 +1,28 @@
+# Node (tools/db-test)
+node_modules/
+
+# Supabase CLI
+supabase/.temp/
+supabase/.branches/
+supabase/.env
+.env
+.env.*
+!.env.example
+
+# Flutter / Dart (from Phase 2)
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+**/ios/Pods/
+**/android/.gradle/
+*.iml
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

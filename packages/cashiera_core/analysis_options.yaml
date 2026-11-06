@@ -1,0 +1,6 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+linter:
+  rules:
+    # Classes and functions are documented; every enum value and field is not.
+    public_member_api_docs: false

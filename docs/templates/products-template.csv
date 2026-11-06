@@ -1,0 +1,5 @@
+product_name,variant_name,sku,barcode,category,unit,price,cost,taxable,track_stock,reorder_point,stock_PST,stock_BKS,stock_TGR
+Air Mineral,600 ml,MNM-AIR-600,2000000000015,Minuman,pcs,4000,2600,yes,yes,10,48,40,35
+Air Mineral,1500 ml,MNM-AIR-1500,2000000000022,Minuman,pcs,7000,4700,yes,yes,10,30,24,20
+Beras Premium 5 kg,Default,SMB-BRS-5KG,2000000000213,Sembako,pcs,78000,70000,no,yes,5,20,15,12
+Bawang Merah Curah,Per kg,SYR-BWM-KG,,Sayur & Buah,kg,42000,34000,no,yes,5,12.5,10,8.75
