@@ -2187,4 +2187,321 @@ class AppLocalizationsEn extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get pointsTitle => 'Redeem points';
+
+  @override
+  String pointsBalance(int points) {
+    return 'Balance $points points';
+  }
+
+  @override
+  String pointsMax(int points, String amount) {
+    return 'At most $points points ($amount)';
+  }
+
+  @override
+  String pointsMin(int points) {
+    return 'At least $points points';
+  }
+
+  @override
+  String get pointsField => 'Points';
+
+  @override
+  String get pointsAll => 'Max';
+
+  @override
+  String get pointsRemove => 'Remove';
+
+  @override
+  String get pointsUse => 'Use';
+
+  @override
+  String pointsTooMany(int points) {
+    return 'At most $points points.';
+  }
+
+  @override
+  String pointsBelowMin(int points) {
+    return 'At least $points points.';
+  }
+
+  @override
+  String pointsUsed(int points) {
+    return '−$points points';
+  }
+
+  @override
+  String pointsButton(int points) {
+    return '$points points';
+  }
+
+  @override
+  String get posErrPoints => 'Not enough points, or below the minimum.';
+
+  @override
+  String get posErrVoidKasbonPaid =>
+      'This kasbon has installments; refund instead of voiding.';
+
+  @override
+  String receiptPointsEarned(int points) {
+    return 'Points earned: $points';
+  }
+
+  @override
+  String get posCustomers => 'Customers';
+
+  @override
+  String get posCustomersHint => 'Points, kasbon and installments';
+
+  @override
+  String get customersTitle => 'Customers';
+
+  @override
+  String get customersSearch => 'Search name, phone or code';
+
+  @override
+  String get customersEmpty => 'No customers.';
+
+  @override
+  String customersPoints(int points) {
+    return '$points points';
+  }
+
+  @override
+  String customersOwes(String amount) {
+    return 'Owes $amount';
+  }
+
+  @override
+  String get customerEdit => 'Edit customer';
+
+  @override
+  String get customerSaved => 'Customer saved.';
+
+  @override
+  String customerTotalOwed(String amount) {
+    return 'Kasbon $amount';
+  }
+
+  @override
+  String get customerPay => 'Pay kasbon';
+
+  @override
+  String get customerKasbon => 'Kasbon';
+
+  @override
+  String get customerNoKasbon => 'No kasbon.';
+
+  @override
+  String customerKasbonLine(String left, String amount) {
+    return '$left left of $amount';
+  }
+
+  @override
+  String customerDue(String date) {
+    return 'Due $date';
+  }
+
+  @override
+  String customerOverdue(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days late',
+      one: '1 day late',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get customerInstallments => 'Installments on this terminal';
+
+  @override
+  String repayTitle(String name) {
+    return 'Kasbon payment from $name';
+  }
+
+  @override
+  String repayOwed(String amount) {
+    return 'Owes $amount';
+  }
+
+  @override
+  String get repayAmount => 'Amount';
+
+  @override
+  String get repayAll => 'Pay all';
+
+  @override
+  String get repayMethod => 'Method';
+
+  @override
+  String get repayReference => 'Reference';
+
+  @override
+  String get repayInvalid => 'Enter an amount.';
+
+  @override
+  String get repayNothing => 'Nothing is owed.';
+
+  @override
+  String get repayExceeds => 'More than is owed.';
+
+  @override
+  String repayDone(String amount, String left) {
+    return 'Received $amount. $left is still owed.';
+  }
+
+  @override
+  String get kasbonSlipTitle => 'KASBON PAYMENT';
+
+  @override
+  String kasbonSlipCustomer(String name) {
+    return 'Customer: $name';
+  }
+
+  @override
+  String kasbonSlipCashier(String name) {
+    return 'Cashier: $name';
+  }
+
+  @override
+  String get kasbonSlipBefore => 'Owed before';
+
+  @override
+  String get kasbonSlipPaid => 'Paid';
+
+  @override
+  String get kasbonSlipAfter => 'Still owed';
+
+  @override
+  String kasbonSlipMethod(String method) {
+    return 'Method: $method';
+  }
+
+  @override
+  String get kasbonSlipSettled => 'PAID IN FULL';
+
+  @override
+  String get navCustomers => 'Customers';
+
+  @override
+  String get navKasbon => 'Kasbon';
+
+  @override
+  String get navLoyalty => 'Loyalty & kasbon';
+
+  @override
+  String ledgerEntryType(String type) {
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'earn': 'Earned',
+      'redeem': 'Redeemed',
+      'reverse_earn': 'Earning reversed',
+      'reverse_redeem': 'Redemption reversed',
+      'adjust': 'Adjustment',
+      'other': '$type',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String kasbonStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'open': 'Unpaid',
+      'partial': 'Part paid',
+      'paid': 'Paid',
+      'void': 'Void',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get adminCustomerEmail => 'E-mail';
+
+  @override
+  String get adminCustomerLimit => 'Kasbon limit';
+
+  @override
+  String get adminCustomerLimitHint => 'Leave empty for no limit';
+
+  @override
+  String adminCustomerLimitShort(String amount) {
+    return 'Limit $amount';
+  }
+
+  @override
+  String get adminAdjustPoints => 'Adjust points';
+
+  @override
+  String get adminAdjustPointsField => 'Points (+ or −)';
+
+  @override
+  String get adminAdjustNote => 'Reason';
+
+  @override
+  String adminAdjustDone(int points) {
+    return 'The balance is now $points points.';
+  }
+
+  @override
+  String get adminPointsHistory => 'Points history';
+
+  @override
+  String adminKasbonPaidLine(String paid, String amount) {
+    return 'Paid $paid of $amount';
+  }
+
+  @override
+  String adminKasbonTotal(String total, String overdue) {
+    return 'Total $total · overdue $overdue';
+  }
+
+  @override
+  String get adminKasbonEmpty => 'No open kasbon.';
+
+  @override
+  String adminKasbonOldest(String date) {
+    return 'Oldest $date';
+  }
+
+  @override
+  String adminKasbonOverdue(String amount) {
+    return 'Overdue $amount';
+  }
+
+  @override
+  String get loyaltyEnabled => 'Points programme on';
+
+  @override
+  String get loyaltyEarn => 'Spend for 1 point';
+
+  @override
+  String get loyaltyValue => 'Value of 1 point when redeemed';
+
+  @override
+  String get loyaltyMin => 'Minimum points per redemption';
+
+  @override
+  String get loyaltyDueDays => 'Kasbon due after (days)';
+
+  @override
+  String loyaltyRange(int min, int max) {
+    return 'Enter a number from $min to $max.';
+  }
+
+  @override
+  String get loyaltyOwnerOnly => 'Only the owner can change these settings.';
+
+  @override
+  String get loyaltyHint =>
+      'Applies to every store. Terminals use new settings after their next refresh.';
+
+  @override
+  String cashMovementApproval(String kind, String amount, String reason) {
+    return '$kind of $amount opens the drawer: $reason';
+  }
 }

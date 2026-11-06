@@ -3811,6 +3811,474 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'{action, select, shift_opened{Shift dibuka} shift_closed{Shift ditutup} cash_movement_in{Kas masuk} cash_movement_out{Kas keluar} order_voided{Transaksi di-void} order_refunded{Refund} order_cancelled{Tagihan dibatalkan} order_discount_approved{Diskon disetujui} pos_drawer_open_no_sale{Laci dibuka tanpa transaksi} receipt_reprinted{Struk dicetak ulang} device_paired{Terminal dipasangkan} device_revoked{Terminal dicabut} device_pairing_code_created{Kode pasang dibuat} employee_pin_set{PIN diatur} catalog_imported{Katalog diimpor} kasbon_repayment{Pembayaran kasbon} other{{action}}}'**
   String auditActionName(String action);
+
+  /// No description provided for @pointsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Tukar poin'**
+  String get pointsTitle;
+
+  /// No description provided for @pointsBalance.
+  ///
+  /// In id, this message translates to:
+  /// **'Saldo {points} poin'**
+  String pointsBalance(int points);
+
+  /// No description provided for @pointsMax.
+  ///
+  /// In id, this message translates to:
+  /// **'Maksimal {points} poin ({amount})'**
+  String pointsMax(int points, String amount);
+
+  /// No description provided for @pointsMin.
+  ///
+  /// In id, this message translates to:
+  /// **'Minimal {points} poin'**
+  String pointsMin(int points);
+
+  /// No description provided for @pointsField.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah poin'**
+  String get pointsField;
+
+  /// No description provided for @pointsAll.
+  ///
+  /// In id, this message translates to:
+  /// **'Maks'**
+  String get pointsAll;
+
+  /// No description provided for @pointsRemove.
+  ///
+  /// In id, this message translates to:
+  /// **'Hapus'**
+  String get pointsRemove;
+
+  /// No description provided for @pointsUse.
+  ///
+  /// In id, this message translates to:
+  /// **'Pakai'**
+  String get pointsUse;
+
+  /// No description provided for @pointsTooMany.
+  ///
+  /// In id, this message translates to:
+  /// **'Paling banyak {points} poin.'**
+  String pointsTooMany(int points);
+
+  /// No description provided for @pointsBelowMin.
+  ///
+  /// In id, this message translates to:
+  /// **'Paling sedikit {points} poin.'**
+  String pointsBelowMin(int points);
+
+  /// No description provided for @pointsUsed.
+  ///
+  /// In id, this message translates to:
+  /// **'−{points} poin'**
+  String pointsUsed(int points);
+
+  /// No description provided for @pointsButton.
+  ///
+  /// In id, this message translates to:
+  /// **'{points} poin'**
+  String pointsButton(int points);
+
+  /// No description provided for @posErrPoints.
+  ///
+  /// In id, this message translates to:
+  /// **'Poin tidak cukup atau di bawah minimum.'**
+  String get posErrPoints;
+
+  /// No description provided for @posErrVoidKasbonPaid.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon ini sudah dicicil; lakukan refund, bukan void.'**
+  String get posErrVoidKasbonPaid;
+
+  /// No description provided for @receiptPointsEarned.
+  ///
+  /// In id, this message translates to:
+  /// **'Poin didapat: {points}'**
+  String receiptPointsEarned(int points);
+
+  /// No description provided for @posCustomers.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelanggan'**
+  String get posCustomers;
+
+  /// No description provided for @posCustomersHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Poin, kasbon dan cicilan'**
+  String get posCustomersHint;
+
+  /// No description provided for @customersTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelanggan'**
+  String get customersTitle;
+
+  /// No description provided for @customersSearch.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari nama, nomor HP atau kode'**
+  String get customersSearch;
+
+  /// No description provided for @customersEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada pelanggan.'**
+  String get customersEmpty;
+
+  /// No description provided for @customersPoints.
+  ///
+  /// In id, this message translates to:
+  /// **'{points} poin'**
+  String customersPoints(int points);
+
+  /// No description provided for @customersOwes.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon {amount}'**
+  String customersOwes(String amount);
+
+  /// No description provided for @customerEdit.
+  ///
+  /// In id, this message translates to:
+  /// **'Ubah pelanggan'**
+  String get customerEdit;
+
+  /// No description provided for @customerSaved.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelanggan disimpan.'**
+  String get customerSaved;
+
+  /// No description provided for @customerTotalOwed.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon {amount}'**
+  String customerTotalOwed(String amount);
+
+  /// No description provided for @customerPay.
+  ///
+  /// In id, this message translates to:
+  /// **'Bayar kasbon'**
+  String get customerPay;
+
+  /// No description provided for @customerKasbon.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon'**
+  String get customerKasbon;
+
+  /// No description provided for @customerNoKasbon.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada kasbon.'**
+  String get customerNoKasbon;
+
+  /// No description provided for @customerKasbonLine.
+  ///
+  /// In id, this message translates to:
+  /// **'Sisa {left} dari {amount}'**
+  String customerKasbonLine(String left, String amount);
+
+  /// No description provided for @customerDue.
+  ///
+  /// In id, this message translates to:
+  /// **'Jatuh tempo {date}'**
+  String customerDue(String date);
+
+  /// No description provided for @customerOverdue.
+  ///
+  /// In id, this message translates to:
+  /// **'Terlambat {days} hari'**
+  String customerOverdue(int days);
+
+  /// No description provided for @customerInstallments.
+  ///
+  /// In id, this message translates to:
+  /// **'Cicilan di terminal ini'**
+  String get customerInstallments;
+
+  /// No description provided for @repayTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Bayar kasbon {name}'**
+  String repayTitle(String name);
+
+  /// No description provided for @repayOwed.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon {amount}'**
+  String repayOwed(String amount);
+
+  /// No description provided for @repayAmount.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah'**
+  String get repayAmount;
+
+  /// No description provided for @repayAll.
+  ///
+  /// In id, this message translates to:
+  /// **'Lunasi'**
+  String get repayAll;
+
+  /// No description provided for @repayMethod.
+  ///
+  /// In id, this message translates to:
+  /// **'Metode'**
+  String get repayMethod;
+
+  /// No description provided for @repayReference.
+  ///
+  /// In id, this message translates to:
+  /// **'Referensi'**
+  String get repayReference;
+
+  /// No description provided for @repayInvalid.
+  ///
+  /// In id, this message translates to:
+  /// **'Isi jumlah.'**
+  String get repayInvalid;
+
+  /// No description provided for @repayNothing.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada kasbon.'**
+  String get repayNothing;
+
+  /// No description provided for @repayExceeds.
+  ///
+  /// In id, this message translates to:
+  /// **'Melebihi sisa kasbon.'**
+  String get repayExceeds;
+
+  /// No description provided for @repayDone.
+  ///
+  /// In id, this message translates to:
+  /// **'Cicilan {amount} diterima. Sisa kasbon {left}.'**
+  String repayDone(String amount, String left);
+
+  /// No description provided for @kasbonSlipTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'PEMBAYARAN KASBON'**
+  String get kasbonSlipTitle;
+
+  /// No description provided for @kasbonSlipCustomer.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelanggan: {name}'**
+  String kasbonSlipCustomer(String name);
+
+  /// No description provided for @kasbonSlipCashier.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasir: {name}'**
+  String kasbonSlipCashier(String name);
+
+  /// No description provided for @kasbonSlipBefore.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon sebelumnya'**
+  String get kasbonSlipBefore;
+
+  /// No description provided for @kasbonSlipPaid.
+  ///
+  /// In id, this message translates to:
+  /// **'Dibayar'**
+  String get kasbonSlipPaid;
+
+  /// No description provided for @kasbonSlipAfter.
+  ///
+  /// In id, this message translates to:
+  /// **'Sisa kasbon'**
+  String get kasbonSlipAfter;
+
+  /// No description provided for @kasbonSlipMethod.
+  ///
+  /// In id, this message translates to:
+  /// **'Metode: {method}'**
+  String kasbonSlipMethod(String method);
+
+  /// No description provided for @kasbonSlipSettled.
+  ///
+  /// In id, this message translates to:
+  /// **'LUNAS'**
+  String get kasbonSlipSettled;
+
+  /// No description provided for @navCustomers.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelanggan'**
+  String get navCustomers;
+
+  /// No description provided for @navKasbon.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon'**
+  String get navKasbon;
+
+  /// No description provided for @navLoyalty.
+  ///
+  /// In id, this message translates to:
+  /// **'Loyalti & kasbon'**
+  String get navLoyalty;
+
+  /// No description provided for @ledgerEntryType.
+  ///
+  /// In id, this message translates to:
+  /// **'{type, select, earn{Poin didapat} redeem{Poin ditukar} reverse_earn{Poin dibatalkan} reverse_redeem{Poin dikembalikan} adjust{Penyesuaian} other{{type}}}'**
+  String ledgerEntryType(String type);
+
+  /// No description provided for @kasbonStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'{status, select, open{Belum dibayar} partial{Dicicil} paid{Lunas} void{Batal} other{{status}}}'**
+  String kasbonStatus(String status);
+
+  /// No description provided for @adminCustomerEmail.
+  ///
+  /// In id, this message translates to:
+  /// **'E-mail'**
+  String get adminCustomerEmail;
+
+  /// No description provided for @adminCustomerLimit.
+  ///
+  /// In id, this message translates to:
+  /// **'Batas kasbon'**
+  String get adminCustomerLimit;
+
+  /// No description provided for @adminCustomerLimitHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Kosongkan untuk tanpa batas'**
+  String get adminCustomerLimitHint;
+
+  /// No description provided for @adminCustomerLimitShort.
+  ///
+  /// In id, this message translates to:
+  /// **'Batas {amount}'**
+  String adminCustomerLimitShort(String amount);
+
+  /// No description provided for @adminAdjustPoints.
+  ///
+  /// In id, this message translates to:
+  /// **'Sesuaikan poin'**
+  String get adminAdjustPoints;
+
+  /// No description provided for @adminAdjustPointsField.
+  ///
+  /// In id, this message translates to:
+  /// **'Poin (+ atau −)'**
+  String get adminAdjustPointsField;
+
+  /// No description provided for @adminAdjustNote.
+  ///
+  /// In id, this message translates to:
+  /// **'Alasan'**
+  String get adminAdjustNote;
+
+  /// No description provided for @adminAdjustDone.
+  ///
+  /// In id, this message translates to:
+  /// **'Saldo poin sekarang {points}.'**
+  String adminAdjustDone(int points);
+
+  /// No description provided for @adminPointsHistory.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat poin'**
+  String get adminPointsHistory;
+
+  /// No description provided for @adminKasbonPaidLine.
+  ///
+  /// In id, this message translates to:
+  /// **'Dibayar {paid} dari {amount}'**
+  String adminKasbonPaidLine(String paid, String amount);
+
+  /// No description provided for @adminKasbonTotal.
+  ///
+  /// In id, this message translates to:
+  /// **'Total {total} · terlambat {overdue}'**
+  String adminKasbonTotal(String total, String overdue);
+
+  /// No description provided for @adminKasbonEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada kasbon terbuka.'**
+  String get adminKasbonEmpty;
+
+  /// No description provided for @adminKasbonOldest.
+  ///
+  /// In id, this message translates to:
+  /// **'Tertua {date}'**
+  String adminKasbonOldest(String date);
+
+  /// No description provided for @adminKasbonOverdue.
+  ///
+  /// In id, this message translates to:
+  /// **'Terlambat {amount}'**
+  String adminKasbonOverdue(String amount);
+
+  /// No description provided for @loyaltyEnabled.
+  ///
+  /// In id, this message translates to:
+  /// **'Program poin aktif'**
+  String get loyaltyEnabled;
+
+  /// No description provided for @loyaltyEarn.
+  ///
+  /// In id, this message translates to:
+  /// **'Belanja untuk 1 poin'**
+  String get loyaltyEarn;
+
+  /// No description provided for @loyaltyValue.
+  ///
+  /// In id, this message translates to:
+  /// **'Nilai 1 poin saat ditukar'**
+  String get loyaltyValue;
+
+  /// No description provided for @loyaltyMin.
+  ///
+  /// In id, this message translates to:
+  /// **'Minimal poin sekali tukar'**
+  String get loyaltyMin;
+
+  /// No description provided for @loyaltyDueDays.
+  ///
+  /// In id, this message translates to:
+  /// **'Jatuh tempo kasbon (hari)'**
+  String get loyaltyDueDays;
+
+  /// No description provided for @loyaltyRange.
+  ///
+  /// In id, this message translates to:
+  /// **'Isi angka {min}–{max}.'**
+  String loyaltyRange(int min, int max);
+
+  /// No description provided for @loyaltyOwnerOnly.
+  ///
+  /// In id, this message translates to:
+  /// **'Hanya pemilik yang bisa mengubah pengaturan ini.'**
+  String get loyaltyOwnerOnly;
+
+  /// No description provided for @loyaltyHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Berlaku untuk semua toko. Terminal memakai pengaturan baru setelah sinkron berikutnya.'**
+  String get loyaltyHint;
+
+  /// No description provided for @cashMovementApproval.
+  ///
+  /// In id, this message translates to:
+  /// **'{kind} {amount} membuka laci: {reason}'**
+  String cashMovementApproval(String kind, String amount, String reason);
 }
 
 class _AppLocalizationsDelegate

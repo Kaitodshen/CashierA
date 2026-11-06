@@ -92,6 +92,10 @@ RefundService refundService(Ref ref) =>
     RefundService(ref.watch(appDatabaseProvider));
 
 @Riverpod(keepAlive: true)
+KasbonService kasbonService(Ref ref) =>
+    KasbonService(ref.watch(appDatabaseProvider));
+
+@Riverpod(keepAlive: true)
 AuditService auditService(Ref ref) =>
     AuditService(ref.watch(appDatabaseProvider));
 

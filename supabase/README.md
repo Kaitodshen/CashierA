@@ -23,8 +23,10 @@ This folder is the complete server side so far: the Phase 1 schema, row level se
 | `migrations/…1400_catalog_rpc.sql` | Phase 3: `save_product`, `import_catalog`, `stock_overview`, `catalog_export` |
 | `migrations/…1500_pos.sql` | Phase 4: `save_promotion`, and the line-tax rule for bills whose only taxable part is the service charge |
 | `migrations/…1600_shift_audit.sql` | Phase 5: `shift_overview`, `audit_entries`, names in `shift_summary`, and an audit entry for every approved manual discount |
+| `migrations/…1800_review_fixes.sql` | Review fixes: an approval naming another employee only from a paired terminal; payments only on completed orders; expected cash from completed and voided sales only |
+| `migrations/…1700_loyalty_kasbon.sql` | Phase 6: points checked against `business_profile`, the `loyalty.adjust` permission, `adjust_points`, `kasbon_overview`, `customer_statement` |
 | `seed.sql` | Demo data. The demo sign-ins and PINs are listed in its header |
-| `tests/database/*.test.sql` | 16 pgTAP files, 290 assertions |
+| `tests/database/*.test.sql` | 19 pgTAP files, 356 assertions |
 
 ## 1. Test it on this PC (no Docker)
 
@@ -36,7 +38,7 @@ npm install
 npm test
 ```
 
-Expected output ends with `All 16 test files passed (290 assertions)`. To run a single file, use `node run.mjs --only 030`.
+Expected output ends with `All 19 test files passed (356 assertions)`. To run a single file, use `node run.mjs --only 030`.
 
 ## 2. Use a hosted Supabase project
 
@@ -98,7 +100,7 @@ npx supabase@3.0.0 test db
   Every store table's SELECT policy uses it.
 - **Writes.** Orders, shifts, payments, refunds, kasbon and stock have no client write policies. They change only through `SECURITY DEFINER` RPCs that check the store, the acting employee and their permission (`app.assert_write_scope`, `app.assert_actor`, `app.assert_approver`). Master data (catalog, promos, settings, staff, purchasing) is written directly under permission policies.
 - **Hidden data.** PIN hashes live in `employee_pins`, which has no client access at all. Loyalty balances and voucher counters have column-level grants and are maintained only by triggers. `anon` has no table privileges.
-- **Approvals.** These need a second employee who holds the permission:
+- **Approvals.** These need an employee who holds the permission (a colleague by PIN on the terminal, or the person on duty if they hold it themselves):
 
   | Action | Permission |
   |---|---|
@@ -107,7 +109,7 @@ npx supabase@3.0.0 test db
   | Any refund | `pos.refund` |
   | Opening the drawer without a sale | `pos.open_drawer` |
 
-  Each approval is written to `audit_log` with the approver (approved manual discounts as `order.discount_approved` when the sale completes, migration 1600). The approver may be the person on duty when they hold the permission.
+  Each approval is written to `audit_log` with the approver (approved manual discounts as `order.discount_approved` when the sale completes, migration 1600). The approver may be the person on duty when they hold the permission. Naming *another* employee as approver is accepted only from a paired terminal, which checked that employee's PIN; staff signed in anywhere else approve as themselves only (`approval_requires_terminal`, migration 1800).
 - **Immutability.** The audit log rejects UPDATE, DELETE and TRUNCATE, even from the database owner. Stock movements, refunds, petty cash, kasbon payments and the loyalty ledger are append-only. A completed order's money and lines are frozen: fix it with a void or a refund.
 
 ## 5. Sync API: `sync_push(client_uuid, entity, action, payload)`
@@ -141,6 +143,10 @@ Rejection codes the app should translate for cashiers include `tax_mismatch`, `p
 
 **Line tax.** The tax is spread over the taxable lines. When no taxable line has anything left to carry it (an exempt basket with a taxable service charge), the header keeps the tax and the lines carry none (migration 1500).
 
+**Points (migration 1700).** A completed sale with a customer must earn exactly ⌊net_total / loyalty_earn_amount⌋ points (`points_earned_mismatch`), value redeemed points at `loyalty_point_value` (`points_value_mismatch`), and reach `loyalty_min_redeem_points` (`points_below_minimum`). With loyalty off, no points at all (`loyalty_disabled`).
+
+**Payments (migration 1800).** Only a completed order carries payments; a held, open or cancelled snapshot with payments is refused (`payments_require_completion`). Expected cash and the X/Z cash sales count the cash of completed and voided sales only.
+
 **Money contract.** The server re-checks the arithmetic in [docs §4.5](../docs/phase-0-architecture.md#45-money-quantities-and-tax). The line sums must equal the header, the payments must equal the grand total, and the tax must be `round(base × r / (10000 + r))` when tax is included in the price, or `round(base × r / 10000)` when it is added on top. Quantities travel as decimal strings (`"1.250"`). Amounts are integer rupiah.
 
 ## 6. Other RPCs
@@ -161,6 +167,9 @@ Rejection codes the app should translate for cashiers include `tax_mismatch`, `p
 | `shift_summary(shift_id)` | Terminal, `shift.manage` or `reports.view` | X-report (open shift) or Z-report (closed) data, with the terminal code and the opener and closer names |
 | `shift_overview(store_id, from, to)` | `shift.manage` or `reports.view` | Shifts by business date (newest first, at most 500) with expected and counted cash, selisih, order count and sales |
 | `audit_entries(store_id, from, to, only_approvals, action_prefix, limit, before, before_id)` | `audit.view` | Audit log with actor, approver, store and terminal names, newest first (at most 200 per page). Page with the `occurred_at` and `id` of the last row shown. Company-wide entries are for owners |
+| `adjust_points(customer_id, points, note)` | `loyalty.adjust` (owner, manager) | Adds or removes points with a note of at least 3 characters; refuses a balance below 0 (`points_insufficient`); audited as `loyalty.adjusted` |
+| `kasbon_overview(store_id, as_of)` | `kasbon.manage` or `reports.view` | Outstanding kasbon per customer and store: open count, outstanding, overdue, oldest due date, most overdue first |
+| `customer_statement(customer_id)` | Staff | The customer, their kasbon (with installments) in the stores the caller may see, and the last 100 points entries |
 | `save_product(p)` | `catalog.manage` | Saves a product, its variants and per-store prices and reorder points in one transaction. Variants left out are deactivated, not deleted. Raises `duplicate_sku` or `duplicate_barcode` |
 | `import_catalog(rows)` | `catalog.manage`, plus `inventory.opname` at each store whose stock column is filled | All-or-nothing import of up to 5,000 rows. Creates missing categories (matched case-insensitively), matches products by SKU and then by name, and applies stock as one opname per store. A bad row fails the whole import with `import_invalid: row N: …`. Writes a `catalog.imported` audit entry and returns the counts |
 | `stock_overview(store_id)` | `inventory.view`, `reports.view` or `pos.sell` at that store | Every active variant with on-hand stock, reorder point and a low flag |
@@ -203,6 +212,6 @@ Terminals pass `employee_id` (the PIN-verified user). Back-office callers always
 
 ## 9. What has and hasn't been verified
 
-- ✅ All migrations, the seed and the 290 assertions pass on PGlite 0.5.15 (PostgreSQL 18.6), checked on 2026-11-06. `140_shift_audit.test.sql` closes a shift built the same way as `cashiera_core/test/shift/server_fixture_test.dart`, so the terminal's X/Z report and the server's agree on one shared example. `130_pos.test.sql` books a sale priced by the Dart engine (`cashiera_core/test/pricing/server_fixture_test.dart` builds the same numbers), so the server and the terminal are checked against one shared example.
+- ✅ All migrations, the seed and the 356 assertions pass on PGlite 0.5.15 (PostgreSQL 18.6), checked on 2026-11-07. `140_shift_audit.test.sql` closes a shift built the same way as `cashiera_core/test/shift/server_fixture_test.dart`, so the terminal's X/Z report and the server's agree on one shared example. `130_pos.test.sql` books a sale priced by the Dart engine (`cashiera_core/test/pricing/server_fixture_test.dart` builds the same numbers), so the server and the terminal are checked against one shared example.
 - ⚠️ Hosted Supabase runs PostgreSQL 17. The SQL avoids PostgreSQL 18-only features, but it has **not yet been run on a real Supabase stack** (this PC has no Docker). Run `supabase db push --remote` plus `supabase test db --remote` on a staging project, or the local Docker stack, before going live.
 - ⚠️ The Supabase stand-ins in `tools/db-test/supabase-shim.sql` cover only what these migrations touch (auth users, JWT claims, storage tables, the realtime publication). They are not a full Supabase emulation.

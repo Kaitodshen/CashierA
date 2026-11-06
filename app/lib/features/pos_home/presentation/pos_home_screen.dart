@@ -79,6 +79,13 @@ class PosHomeScreen extends ConsumerWidget {
         onTap: () => context.go(AppRoutes.shift),
       ),
       _InfoCard(
+        key: const Key('pos-customers'),
+        icon: Icons.people_outline,
+        title: l10n.posCustomers,
+        lines: [l10n.posCustomersHint],
+        onTap: () => context.go(AppRoutes.customers),
+      ),
+      _InfoCard(
         key: const Key('pos-printer'),
         icon: Icons.print_outlined,
         title: l10n.posPrinter,

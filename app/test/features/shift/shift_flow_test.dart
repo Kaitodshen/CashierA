@@ -195,6 +195,9 @@ void main() {
     await _enter(tester, 'cash-amount', '300000');
     await _enter(tester, 'cash-reason', 'Setor ke bank');
     await tapKey(tester, 'cash-save');
+    // The drawer opens for the cash: a manager approves with their PIN.
+    expect(find.textContaining('membuka laci'), findsOneWidget);
+    await approveAs(tester, manager);
     await tester.pump(const Duration(milliseconds: 600));
     expect(
       find.text('Uang di laci hanya Rp 210.500.', findRichText: true),
@@ -206,6 +209,9 @@ void main() {
     await _enter(tester, 'cash-amount', '10500');
     await _enter(tester, 'cash-reason', 'Setor ke bank');
     await tapKey(tester, 'cash-save');
+    // The drawer opens for the cash: a manager approves with their PIN.
+    expect(find.textContaining('membuka laci'), findsOneWidget);
+    await approveAs(tester, manager);
     expect(
       tester.widget<Text>(find.byKey(const Key('shift-expected'))).data,
       'Rp 200.000',

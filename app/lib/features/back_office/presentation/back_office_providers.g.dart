@@ -1121,3 +1121,323 @@ final class AdminShiftReportFamily extends $Family
   @override
   String toString() => r'adminShiftReportProvider';
 }
+
+@ProviderFor(customersAdmin)
+final customersAdminProvider = CustomersAdminProvider._();
+
+final class CustomersAdminProvider
+    extends
+        $FunctionalProvider<
+          CustomersAdminRepository,
+          CustomersAdminRepository,
+          CustomersAdminRepository
+        >
+    with $Provider<CustomersAdminRepository> {
+  CustomersAdminProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'customersAdminProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$customersAdminHash();
+
+  @$internal
+  @override
+  $ProviderElement<CustomersAdminRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  CustomersAdminRepository create(Ref ref) {
+    return customersAdmin(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CustomersAdminRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CustomersAdminRepository>(value),
+    );
+  }
+}
+
+String _$customersAdminHash() => r'7b15487e5fd94ce215eb5f44fce4f436e8ec2262';
+
+@ProviderFor(adminCustomers)
+final adminCustomersProvider = AdminCustomersFamily._();
+
+final class AdminCustomersProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<AdminCustomer>>,
+          List<AdminCustomer>,
+          FutureOr<List<AdminCustomer>>
+        >
+    with
+        $FutureModifier<List<AdminCustomer>>,
+        $FutureProvider<List<AdminCustomer>> {
+  AdminCustomersProvider._({
+    required AdminCustomersFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'adminCustomersProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$adminCustomersHash();
+
+  @override
+  String toString() {
+    return r'adminCustomersProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<AdminCustomer>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<AdminCustomer>> create(Ref ref) {
+    final argument = this.argument as String;
+    return adminCustomers(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AdminCustomersProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$adminCustomersHash() => r'db2a8326695de757d091bf5ab7d30b73081e96ea';
+
+final class AdminCustomersFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<AdminCustomer>>, String> {
+  AdminCustomersFamily._()
+    : super(
+        retry: null,
+        name: r'adminCustomersProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  AdminCustomersProvider call(String query) =>
+      AdminCustomersProvider._(argument: query, from: this);
+
+  @override
+  String toString() => r'adminCustomersProvider';
+}
+
+@ProviderFor(adminCustomerStatement)
+final adminCustomerStatementProvider = AdminCustomerStatementFamily._();
+
+final class AdminCustomerStatementProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<CustomerStatement>,
+          CustomerStatement,
+          FutureOr<CustomerStatement>
+        >
+    with
+        $FutureModifier<CustomerStatement>,
+        $FutureProvider<CustomerStatement> {
+  AdminCustomerStatementProvider._({
+    required AdminCustomerStatementFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'adminCustomerStatementProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$adminCustomerStatementHash();
+
+  @override
+  String toString() {
+    return r'adminCustomerStatementProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<CustomerStatement> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<CustomerStatement> create(Ref ref) {
+    final argument = this.argument as String;
+    return adminCustomerStatement(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AdminCustomerStatementProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$adminCustomerStatementHash() =>
+    r'62175ca113979347521860c4102fd11b6780cff3';
+
+final class AdminCustomerStatementFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<CustomerStatement>, String> {
+  AdminCustomerStatementFamily._()
+    : super(
+        retry: null,
+        name: r'adminCustomerStatementProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  AdminCustomerStatementProvider call(String customerId) =>
+      AdminCustomerStatementProvider._(argument: customerId, from: this);
+
+  @override
+  String toString() => r'adminCustomerStatementProvider';
+}
+
+@ProviderFor(adminKasbon)
+final adminKasbonProvider = AdminKasbonFamily._();
+
+final class AdminKasbonProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<KasbonOverviewRow>>,
+          List<KasbonOverviewRow>,
+          FutureOr<List<KasbonOverviewRow>>
+        >
+    with
+        $FutureModifier<List<KasbonOverviewRow>>,
+        $FutureProvider<List<KasbonOverviewRow>> {
+  AdminKasbonProvider._({
+    required AdminKasbonFamily super.from,
+    required String? super.argument,
+  }) : super(
+         retry: null,
+         name: r'adminKasbonProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$adminKasbonHash();
+
+  @override
+  String toString() {
+    return r'adminKasbonProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<KasbonOverviewRow>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<KasbonOverviewRow>> create(Ref ref) {
+    final argument = this.argument as String?;
+    return adminKasbon(ref, storeId: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AdminKasbonProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$adminKasbonHash() => r'69a25dcb0ef5dd17be3a042a8e620451ae5195fa';
+
+final class AdminKasbonFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<KasbonOverviewRow>>, String?> {
+  AdminKasbonFamily._()
+    : super(
+        retry: null,
+        name: r'adminKasbonProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  AdminKasbonProvider call({String? storeId}) =>
+      AdminKasbonProvider._(argument: storeId, from: this);
+
+  @override
+  String toString() => r'adminKasbonProvider';
+}
+
+@ProviderFor(adminLoyaltySettings)
+final adminLoyaltySettingsProvider = AdminLoyaltySettingsProvider._();
+
+final class AdminLoyaltySettingsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LoyaltySettings>,
+          LoyaltySettings,
+          FutureOr<LoyaltySettings>
+        >
+    with $FutureModifier<LoyaltySettings>, $FutureProvider<LoyaltySettings> {
+  AdminLoyaltySettingsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'adminLoyaltySettingsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$adminLoyaltySettingsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<LoyaltySettings> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<LoyaltySettings> create(Ref ref) {
+    return adminLoyaltySettings(ref);
+  }
+}
+
+String _$adminLoyaltySettingsHash() =>
+    r'9ce0d6498301816495f7cd646ae554f6b94951fe';

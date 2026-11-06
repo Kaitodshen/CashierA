@@ -1560,5 +1560,317 @@
         "type": "String"
       }
     }
+  },
+  "pointsTitle": "Tukar poin",
+  "pointsBalance": "Saldo {points} poin",
+  "@pointsBalance": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsMax": "Maksimal {points} poin ({amount})",
+  "@pointsMax": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsMin": "Minimal {points} poin",
+  "@pointsMin": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsField": "Jumlah poin",
+  "pointsAll": "Maks",
+  "pointsRemove": "Hapus",
+  "pointsUse": "Pakai",
+  "pointsTooMany": "Paling banyak {points} poin.",
+  "@pointsTooMany": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsBelowMin": "Paling sedikit {points} poin.",
+  "@pointsBelowMin": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsUsed": "−{points} poin",
+  "@pointsUsed": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsButton": "{points} poin",
+  "@pointsButton": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "posErrPoints": "Poin tidak cukup atau di bawah minimum.",
+  "posErrVoidKasbonPaid": "Kasbon ini sudah dicicil; lakukan refund, bukan void.",
+  "receiptPointsEarned": "Poin didapat: {points}",
+  "@receiptPointsEarned": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "posCustomers": "Pelanggan",
+  "posCustomersHint": "Poin, kasbon dan cicilan",
+  "customersTitle": "Pelanggan",
+  "customersSearch": "Cari nama, nomor HP atau kode",
+  "customersEmpty": "Tidak ada pelanggan.",
+  "customersPoints": "{points} poin",
+  "@customersPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "customersOwes": "Kasbon {amount}",
+  "@customersOwes": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerEdit": "Ubah pelanggan",
+  "customerSaved": "Pelanggan disimpan.",
+  "customerTotalOwed": "Kasbon {amount}",
+  "@customerTotalOwed": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerPay": "Bayar kasbon",
+  "customerKasbon": "Kasbon",
+  "customerNoKasbon": "Tidak ada kasbon.",
+  "customerKasbonLine": "Sisa {left} dari {amount}",
+  "@customerKasbonLine": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerDue": "Jatuh tempo {date}",
+  "@customerDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "customerOverdue": "Terlambat {days} hari",
+  "@customerOverdue": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "customerInstallments": "Cicilan di terminal ini",
+  "repayTitle": "Bayar kasbon {name}",
+  "@repayTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "repayOwed": "Kasbon {amount}",
+  "@repayOwed": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repayAmount": "Jumlah",
+  "repayAll": "Lunasi",
+  "repayMethod": "Metode",
+  "repayReference": "Referensi",
+  "repayInvalid": "Isi jumlah.",
+  "repayNothing": "Tidak ada kasbon.",
+  "repayExceeds": "Melebihi sisa kasbon.",
+  "repayDone": "Cicilan {amount} diterima. Sisa kasbon {left}.",
+  "@repayDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonSlipTitle": "PEMBAYARAN KASBON",
+  "kasbonSlipCustomer": "Pelanggan: {name}",
+  "@kasbonSlipCustomer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonSlipCashier": "Kasir: {name}",
+  "@kasbonSlipCashier": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonSlipBefore": "Kasbon sebelumnya",
+  "kasbonSlipPaid": "Dibayar",
+  "kasbonSlipAfter": "Sisa kasbon",
+  "kasbonSlipMethod": "Metode: {method}",
+  "@kasbonSlipMethod": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonSlipSettled": "LUNAS",
+  "navCustomers": "Pelanggan",
+  "navKasbon": "Kasbon",
+  "navLoyalty": "Loyalti & kasbon",
+  "ledgerEntryType": "{type, select, earn{Poin didapat} redeem{Poin ditukar} reverse_earn{Poin dibatalkan} reverse_redeem{Poin dikembalikan} adjust{Penyesuaian} other{{type}}}",
+  "@ledgerEntryType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonStatus": "{status, select, open{Belum dibayar} partial{Dicicil} paid{Lunas} void{Batal} other{{status}}}",
+  "@kasbonStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "adminCustomerEmail": "E-mail",
+  "adminCustomerLimit": "Batas kasbon",
+  "adminCustomerLimitHint": "Kosongkan untuk tanpa batas",
+  "adminCustomerLimitShort": "Batas {amount}",
+  "@adminCustomerLimitShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAdjustPoints": "Sesuaikan poin",
+  "adminAdjustPointsField": "Poin (+ atau −)",
+  "adminAdjustNote": "Alasan",
+  "adminAdjustDone": "Saldo poin sekarang {points}.",
+  "@adminAdjustDone": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "adminPointsHistory": "Riwayat poin",
+  "adminKasbonPaidLine": "Dibayar {paid} dari {amount}",
+  "@adminKasbonPaidLine": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adminKasbonTotal": "Total {total} · terlambat {overdue}",
+  "@adminKasbonTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "overdue": {
+        "type": "String"
+      }
+    }
+  },
+  "adminKasbonEmpty": "Tidak ada kasbon terbuka.",
+  "adminKasbonOldest": "Tertua {date}",
+  "@adminKasbonOldest": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adminKasbonOverdue": "Terlambat {amount}",
+  "@adminKasbonOverdue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "loyaltyEnabled": "Program poin aktif",
+  "loyaltyEarn": "Belanja untuk 1 poin",
+  "loyaltyValue": "Nilai 1 poin saat ditukar",
+  "loyaltyMin": "Minimal poin sekali tukar",
+  "loyaltyDueDays": "Jatuh tempo kasbon (hari)",
+  "loyaltyRange": "Isi angka {min}–{max}.",
+  "@loyaltyRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "loyaltyOwnerOnly": "Hanya pemilik yang bisa mengubah pengaturan ini.",
+  "loyaltyHint": "Berlaku untuk semua toko. Terminal memakai pengaturan baru setelah sinkron berikutnya.",
+  "cashMovementApproval": "{kind} {amount} membuka laci: {reason}",
+  "@cashMovementApproval": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -2163,4 +2163,316 @@ class AppLocalizationsId extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get pointsTitle => 'Tukar poin';
+
+  @override
+  String pointsBalance(int points) {
+    return 'Saldo $points poin';
+  }
+
+  @override
+  String pointsMax(int points, String amount) {
+    return 'Maksimal $points poin ($amount)';
+  }
+
+  @override
+  String pointsMin(int points) {
+    return 'Minimal $points poin';
+  }
+
+  @override
+  String get pointsField => 'Jumlah poin';
+
+  @override
+  String get pointsAll => 'Maks';
+
+  @override
+  String get pointsRemove => 'Hapus';
+
+  @override
+  String get pointsUse => 'Pakai';
+
+  @override
+  String pointsTooMany(int points) {
+    return 'Paling banyak $points poin.';
+  }
+
+  @override
+  String pointsBelowMin(int points) {
+    return 'Paling sedikit $points poin.';
+  }
+
+  @override
+  String pointsUsed(int points) {
+    return '−$points poin';
+  }
+
+  @override
+  String pointsButton(int points) {
+    return '$points poin';
+  }
+
+  @override
+  String get posErrPoints => 'Poin tidak cukup atau di bawah minimum.';
+
+  @override
+  String get posErrVoidKasbonPaid =>
+      'Kasbon ini sudah dicicil; lakukan refund, bukan void.';
+
+  @override
+  String receiptPointsEarned(int points) {
+    return 'Poin didapat: $points';
+  }
+
+  @override
+  String get posCustomers => 'Pelanggan';
+
+  @override
+  String get posCustomersHint => 'Poin, kasbon dan cicilan';
+
+  @override
+  String get customersTitle => 'Pelanggan';
+
+  @override
+  String get customersSearch => 'Cari nama, nomor HP atau kode';
+
+  @override
+  String get customersEmpty => 'Tidak ada pelanggan.';
+
+  @override
+  String customersPoints(int points) {
+    return '$points poin';
+  }
+
+  @override
+  String customersOwes(String amount) {
+    return 'Kasbon $amount';
+  }
+
+  @override
+  String get customerEdit => 'Ubah pelanggan';
+
+  @override
+  String get customerSaved => 'Pelanggan disimpan.';
+
+  @override
+  String customerTotalOwed(String amount) {
+    return 'Kasbon $amount';
+  }
+
+  @override
+  String get customerPay => 'Bayar kasbon';
+
+  @override
+  String get customerKasbon => 'Kasbon';
+
+  @override
+  String get customerNoKasbon => 'Tidak ada kasbon.';
+
+  @override
+  String customerKasbonLine(String left, String amount) {
+    return 'Sisa $left dari $amount';
+  }
+
+  @override
+  String customerDue(String date) {
+    return 'Jatuh tempo $date';
+  }
+
+  @override
+  String customerOverdue(int days) {
+    return 'Terlambat $days hari';
+  }
+
+  @override
+  String get customerInstallments => 'Cicilan di terminal ini';
+
+  @override
+  String repayTitle(String name) {
+    return 'Bayar kasbon $name';
+  }
+
+  @override
+  String repayOwed(String amount) {
+    return 'Kasbon $amount';
+  }
+
+  @override
+  String get repayAmount => 'Jumlah';
+
+  @override
+  String get repayAll => 'Lunasi';
+
+  @override
+  String get repayMethod => 'Metode';
+
+  @override
+  String get repayReference => 'Referensi';
+
+  @override
+  String get repayInvalid => 'Isi jumlah.';
+
+  @override
+  String get repayNothing => 'Tidak ada kasbon.';
+
+  @override
+  String get repayExceeds => 'Melebihi sisa kasbon.';
+
+  @override
+  String repayDone(String amount, String left) {
+    return 'Cicilan $amount diterima. Sisa kasbon $left.';
+  }
+
+  @override
+  String get kasbonSlipTitle => 'PEMBAYARAN KASBON';
+
+  @override
+  String kasbonSlipCustomer(String name) {
+    return 'Pelanggan: $name';
+  }
+
+  @override
+  String kasbonSlipCashier(String name) {
+    return 'Kasir: $name';
+  }
+
+  @override
+  String get kasbonSlipBefore => 'Kasbon sebelumnya';
+
+  @override
+  String get kasbonSlipPaid => 'Dibayar';
+
+  @override
+  String get kasbonSlipAfter => 'Sisa kasbon';
+
+  @override
+  String kasbonSlipMethod(String method) {
+    return 'Metode: $method';
+  }
+
+  @override
+  String get kasbonSlipSettled => 'LUNAS';
+
+  @override
+  String get navCustomers => 'Pelanggan';
+
+  @override
+  String get navKasbon => 'Kasbon';
+
+  @override
+  String get navLoyalty => 'Loyalti & kasbon';
+
+  @override
+  String ledgerEntryType(String type) {
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'earn': 'Poin didapat',
+      'redeem': 'Poin ditukar',
+      'reverse_earn': 'Poin dibatalkan',
+      'reverse_redeem': 'Poin dikembalikan',
+      'adjust': 'Penyesuaian',
+      'other': '$type',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String kasbonStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'open': 'Belum dibayar',
+      'partial': 'Dicicil',
+      'paid': 'Lunas',
+      'void': 'Batal',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get adminCustomerEmail => 'E-mail';
+
+  @override
+  String get adminCustomerLimit => 'Batas kasbon';
+
+  @override
+  String get adminCustomerLimitHint => 'Kosongkan untuk tanpa batas';
+
+  @override
+  String adminCustomerLimitShort(String amount) {
+    return 'Batas $amount';
+  }
+
+  @override
+  String get adminAdjustPoints => 'Sesuaikan poin';
+
+  @override
+  String get adminAdjustPointsField => 'Poin (+ atau −)';
+
+  @override
+  String get adminAdjustNote => 'Alasan';
+
+  @override
+  String adminAdjustDone(int points) {
+    return 'Saldo poin sekarang $points.';
+  }
+
+  @override
+  String get adminPointsHistory => 'Riwayat poin';
+
+  @override
+  String adminKasbonPaidLine(String paid, String amount) {
+    return 'Dibayar $paid dari $amount';
+  }
+
+  @override
+  String adminKasbonTotal(String total, String overdue) {
+    return 'Total $total · terlambat $overdue';
+  }
+
+  @override
+  String get adminKasbonEmpty => 'Tidak ada kasbon terbuka.';
+
+  @override
+  String adminKasbonOldest(String date) {
+    return 'Tertua $date';
+  }
+
+  @override
+  String adminKasbonOverdue(String amount) {
+    return 'Terlambat $amount';
+  }
+
+  @override
+  String get loyaltyEnabled => 'Program poin aktif';
+
+  @override
+  String get loyaltyEarn => 'Belanja untuk 1 poin';
+
+  @override
+  String get loyaltyValue => 'Nilai 1 poin saat ditukar';
+
+  @override
+  String get loyaltyMin => 'Minimal poin sekali tukar';
+
+  @override
+  String get loyaltyDueDays => 'Jatuh tempo kasbon (hari)';
+
+  @override
+  String loyaltyRange(int min, int max) {
+    return 'Isi angka $min–$max.';
+  }
+
+  @override
+  String get loyaltyOwnerOnly =>
+      'Hanya pemilik yang bisa mengubah pengaturan ini.';
+
+  @override
+  String get loyaltyHint =>
+      'Berlaku untuk semua toko. Terminal memakai pengaturan baru setelah sinkron berikutnya.';
+
+  @override
+  String cashMovementApproval(String kind, String amount, String reason) {
+    return '$kind $amount membuka laci: $reason';
+  }
 }

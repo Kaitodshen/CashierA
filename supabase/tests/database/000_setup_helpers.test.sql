@@ -278,12 +278,14 @@ begin
 
   v_grand := v_net_total + v_service + case when v_settings.tax_inclusive then 0 else v_tax_total end;
 
-  -- Payments (default: exact cash).
+  -- Payments (default: exact cash for a completed order, none otherwise).
   v_remaining := v_grand;
   k := 0;
   for v_pay in
     select value from jsonb_array_elements(
-      coalesce(p_options -> 'payments', jsonb_build_array(jsonb_build_object('method', 'cash'))))
+      coalesce(p_options -> 'payments',
+               case when p_status = 'completed' then jsonb_build_array(jsonb_build_object('method', 'cash'))
+                    else '[]'::jsonb end))
   loop
     exit when v_remaining <= 0 and v_grand > 0;
     if v_grand = 0 then
@@ -317,7 +319,7 @@ begin
   end loop;
 
   if v_customer is not null and coalesce((p_options ->> 'earn_points')::boolean, true) then
-    v_points_earned := floor(v_grand::numeric / v_earn_amount)::integer;
+    v_points_earned := floor(v_net_total::numeric / v_earn_amount)::integer;
   end if;
 
   -- Discount rows.

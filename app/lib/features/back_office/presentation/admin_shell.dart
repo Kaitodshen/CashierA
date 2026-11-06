@@ -54,6 +54,21 @@ final _destinations = <_Destination>[
   ),
   _Destination(AppRoutes.adminAudit, Icons.policy_outlined, (l) => l.navAudit),
   _Destination(
+    AppRoutes.adminCustomers,
+    Icons.people_outline,
+    (l) => l.navCustomers,
+  ),
+  _Destination(
+    AppRoutes.adminKasbon,
+    Icons.request_quote_outlined,
+    (l) => l.navKasbon,
+  ),
+  _Destination(
+    AppRoutes.adminLoyalty,
+    Icons.stars_outlined,
+    (l) => l.navLoyalty,
+  ),
+  _Destination(
     AppRoutes.adminSettings,
     Icons.settings_outlined,
     (l) => l.navSettings,

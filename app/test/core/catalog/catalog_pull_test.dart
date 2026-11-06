@@ -370,4 +370,73 @@ void main() {
       );
     });
   });
+
+  group('points and kasbon balances', () {
+    Map<String, dynamic> customer(int points) => {
+      'id': 'c-rudi',
+      'code': 'C000002',
+      'name': 'Rudi Hartono',
+      'phone': '081200000002',
+      'points_balance': points,
+      'kasbon_limit': null,
+      'is_active': true,
+      'updated_at': ts(5),
+    };
+    Map<String, dynamic> receivable(int paid, String status) => {
+      'id': 'r-1',
+      'store_id': store,
+      'customer_id': 'c-rudi',
+      'order_id': 'o-1',
+      'amount': 35000,
+      'paid_amount': paid,
+      'due_date': '2026-12-06',
+      'status': status,
+      'updated_at': ts(5),
+    };
+
+    test('the server balances arrive when nothing is pending', () async {
+      source
+        ..put('customers', customer(45))
+        ..put('receivables', receivable(0, 'open'));
+      await service.pull();
+      final c = await db.select(db.localCustomers).getSingle();
+      expect(c.pointsBalance, 45);
+      final r = await db.select(db.localReceivables).getSingle();
+      expect((r.receivableId, r.paidAmount, r.status), ('r-1', 0, 'open'));
+      expect(r.dueDate, DateTime.utc(2026, 12, 6));
+    });
+
+    test('a queued sale or installment keeps the local balances', () async {
+      source
+        ..put('customers', customer(45))
+        ..put('receivables', receivable(0, 'open'));
+      await service.pull();
+      // The terminal sold and took an installment; neither has been sent.
+      await db.customStatement(
+        "UPDATE local_customers SET points_balance = 48, name = 'x'",
+      );
+      await db.customStatement(
+        "UPDATE local_receivables SET paid_amount = 15000, status = 'partial'",
+      );
+      await db.syncQueueDao.enqueue(
+        entity: 'receivable_payment',
+        action: 'create',
+        clientUuid: 'q-1',
+        payload: const {'order_id': 'o-1'},
+      );
+      source
+        ..put('customers', customer(45)..['name'] = 'Rudi H.')
+        ..put('receivables', receivable(0, 'open'));
+      await service.pull();
+      final c = await db.select(db.localCustomers).getSingle();
+      expect(
+        c.pointsBalance,
+        48,
+        reason: 'not overwritten by the older figure',
+      );
+      expect(c.name, 'Rudi H.', reason: 'other fields still update');
+      final r = await db.select(db.localReceivables).getSingle();
+      expect((r.paidAmount, r.status), (15000, 'partial'));
+    });
+  });
 }

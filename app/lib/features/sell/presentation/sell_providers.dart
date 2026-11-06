@@ -174,6 +174,10 @@ class CartController extends _$CartController {
       ? state.copyWith(clearVoucher: true)
       : state.copyWith(voucherCode: code.trim().toUpperCase());
 
+  /// Points to spend on this bill (0 removes them).
+  void setPointsToRedeem(int points) =>
+      state = state.copyWith(pointsToRedeem: points < 0 ? 0 : points);
+
   void resume(LocalOrderRow order) => state = Cart.fromJson(
     (jsonDecode(order.cartJson) as Map).cast<String, dynamic>(),
   );
@@ -220,6 +224,12 @@ Bill? currentBill(Ref ref, DiscountLabels labels) {
     promotions: promotions,
     billDiscount: cart.billDiscount,
     voucher: ref.watch(cartVoucherProvider).value,
+    points: cart.customer == null || cart.pointsToRedeem <= 0
+        ? null
+        : PointsRedemption(
+            points: cart.pointsToRedeem,
+            pointValue: config.business.loyalty.pointValue,
+          ),
     now: now.toUtc(),
     labels: labels,
   );

@@ -210,6 +210,7 @@ class Cart {
     this.approvedBy,
     this.voucherCode,
     this.note,
+    this.pointsToRedeem = 0,
   });
 
   factory fromJson(Map<String, dynamic> j) => Cart(
@@ -232,6 +233,7 @@ class Cart {
     approvedBy: j['approved_by'] as String?,
     voucherCode: j['voucher_code'] as String?,
     note: j['note'] as String?,
+    pointsToRedeem: (j['points_to_redeem'] as num? ?? 0).toInt(),
   );
 
   final String orderId;
@@ -250,6 +252,9 @@ class Cart {
   final String? approvedBy;
   final String? voucherCode;
   final String? note;
+
+  /// Points the customer chose to spend on this bill (capped by the bill).
+  final int pointsToRedeem;
 
   bool get isEmpty => lines.isEmpty;
 
@@ -272,6 +277,7 @@ class Cart {
     String? voucherCode,
     bool clearVoucher = false,
     String? note,
+    int? pointsToRedeem,
   }) => Cart(
     orderId: orderId,
     startedAt: startedAt,
@@ -283,6 +289,7 @@ class Cart {
     approvedBy: clearApproval ? null : approvedBy ?? this.approvedBy,
     voucherCode: clearVoucher ? null : voucherCode ?? this.voucherCode,
     note: note ?? this.note,
+    pointsToRedeem: clearCustomer ? 0 : pointsToRedeem ?? this.pointsToRedeem,
   );
 
   Map<String, dynamic> toJson() => {
@@ -296,5 +303,6 @@ class Cart {
     'approved_by': approvedBy,
     'voucher_code': voucherCode,
     'note': note,
+    'points_to_redeem': pointsToRedeem,
   };
 }

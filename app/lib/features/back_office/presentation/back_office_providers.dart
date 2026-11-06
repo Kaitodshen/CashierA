@@ -3,6 +3,7 @@ import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_models.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_repository.dart';
+import 'package:cashiera/features/back_office/data/customers_admin_repository.dart';
 import 'package:cashiera/features/back_office/data/pos_admin_repository.dart';
 import 'package:cashiera/features/back_office/data/shift_audit_repository.dart';
 import 'package:cashiera_core/cashiera_core.dart';
@@ -99,3 +100,23 @@ Future<List<ShiftOverviewRow>> adminShifts(
 @riverpod
 Future<ShiftReport> adminShiftReport(Ref ref, String shiftId) =>
     ref.watch(shiftAuditProvider).shiftSummary(shiftId);
+
+@Riverpod(keepAlive: true)
+CustomersAdminRepository customersAdmin(Ref ref) =>
+    CustomersAdminRepository(ref.watch(supabaseClientProvider));
+
+@riverpod
+Future<List<AdminCustomer>> adminCustomers(Ref ref, String query) =>
+    ref.watch(customersAdminProvider).customers(query);
+
+@riverpod
+Future<CustomerStatement> adminCustomerStatement(Ref ref, String customerId) =>
+    ref.watch(customersAdminProvider).statement(customerId);
+
+@riverpod
+Future<List<KasbonOverviewRow>> adminKasbon(Ref ref, {String? storeId}) =>
+    ref.watch(customersAdminProvider).kasbonOverview(storeId: storeId);
+
+@riverpod
+Future<LoyaltySettings> adminLoyaltySettings(Ref ref) =>
+    ref.watch(customersAdminProvider).loyaltySettings();

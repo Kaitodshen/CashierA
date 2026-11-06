@@ -50,6 +50,28 @@ class OrderRefundInfo {
       lines.every((l) => l.line.remainingQuantity.milli <= 0);
 }
 
+/// Earned points taken back by each refund of a sale, in order: each is
+/// ⌊earned × amount / grand total⌋, never more than is left
+/// (`app.sync_refund_create`).
+List<int> pointsReversedByRefunds({
+  required Map<String, dynamic> payload,
+  required List<int> refundAmounts,
+}) {
+  final earned = (payload['points_earned'] as num? ?? 0).toInt();
+  final grand = (payload['grand_total'] as num? ?? 0).toInt();
+  var taken = 0;
+  return [
+    for (final amount in refundAmounts)
+      () {
+        if (earned <= 0 || grand <= 0) return 0;
+        final share = earned * amount ~/ grand;
+        final points = share < earned - taken ? share : earned - taken;
+        taken += points;
+        return points < 0 ? 0 : points;
+      }(),
+  ];
+}
+
 /// Gives money back for part or all of a completed sale (`refund.create`).
 /// Every refund needs someone with `pos.refund` to enter their PIN.
 class RefundService {
@@ -112,7 +134,13 @@ class RefundService {
         ),
       );
     }
-    final paid = (payload['paid_total'] as num? ?? 0).toInt();
+    final kasbon = await (_db.select(
+      _db.localReceivables,
+    )..where((r) => r.orderId.equals(order.id))).getSingleOrNull();
+    // Money received: the non-kasbon payments plus kasbon already repaid.
+    final paid =
+        (payload['paid_total'] as num? ?? 0).toInt() +
+        (kasbon?.paidAmount ?? 0);
     final refunded = refunds.fold(0, (a, r) => a + r.amount);
     return OrderRefundInfo(
       lines: lines,
@@ -189,6 +217,26 @@ class RefundService {
         approvedByName: approver.fullName,
         refundedAt: now,
       );
+      final reversed = pointsReversedByRefunds(
+        payload: (jsonDecode(order.payloadJson) as Map).cast<String, dynamic>(),
+        refundAmounts: [
+          for (final r in current.refunds) r.amount,
+          plan.total.rupiah,
+        ],
+      );
+      final customerId =
+          (jsonDecode(order.payloadJson) as Map)['customer_id'] as String?;
+      if (customerId != null && reversed.last > 0) {
+        await _db.customUpdate(
+          'UPDATE local_customers SET points_balance = points_balance - ? '
+          'WHERE id = ?',
+          variables: [
+            Variable.withInt(reversed.last),
+            Variable.withString(customerId),
+          ],
+          updates: {_db.localCustomers},
+        );
+      }
       await _db.into(_db.localRefunds).insert(row);
 
       if (restock) {

@@ -25,6 +25,29 @@ class ReceiptPrinting {
     );
   }
 
+  /// The customer got [order]'s receipt as a PDF (shared, e-mailed,
+  /// WhatsApp): the first time it counts as printed, so a later void needs
+  /// approval; after that it is a copy and is audited.
+  Future<void> shared({
+    required LocalOrderRow order,
+    required StaffMember staff,
+    required String storeId,
+  }) async {
+    if (order.status != 'completed') return;
+    if (order.printedAt == null) {
+      await _orders.markPrinted(order.id);
+      return;
+    }
+    await _audit.log(
+      storeId: storeId,
+      action: AuditService.receiptReprinted,
+      actor: staff,
+      entityType: 'order',
+      entityId: order.id,
+      details: {'order_number': order.orderNumber, 'channel': 'pdf'},
+    );
+  }
+
   /// Throws a `PrinterException` when nothing was printed; the order is then
   /// left as it was.
   Future<void> printOrder({

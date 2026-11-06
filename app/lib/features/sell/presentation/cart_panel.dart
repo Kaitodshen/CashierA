@@ -7,6 +7,8 @@ import 'package:cashiera/core/pos/cart.dart';
 import 'package:cashiera/core/pos/pos_services.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
+import 'package:cashiera/features/customers/presentation/customer_providers.dart';
+import 'package:cashiera/features/customers/presentation/points_dialog.dart';
 import 'package:cashiera/features/sell/presentation/sell_dialogs.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
 import 'package:cashiera_core/cashiera_core.dart';
@@ -482,6 +484,8 @@ class CartPanel extends ConsumerWidget {
                       ),
                       label: Text(cart.voucherCode ?? l10n.voucherTitle),
                     ),
+                    if (cart.customer != null && bill != null)
+                      _PointsButton(cart: cart, bill: bill),
                     OutlinedButton.icon(
                       key: const Key('sell-hold'),
                       onPressed: cart.isEmpty
@@ -515,6 +519,53 @@ class CartPanel extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Spend the customer's points on this bill.
+class _PointsButton extends ConsumerWidget {
+  const new({required this.cart, required this.bill});
+
+  final Cart cart;
+  final Bill bill;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final rules = ref.watch(posConfigProvider).value?.business.loyalty;
+    final customer = ref.watch(customerRowProvider(cart.customer!.id)).value;
+    if (rules == null || !rules.enabled || customer == null) {
+      return const SizedBox.shrink();
+    }
+    final balance = customer.pointsBalance;
+    final maximum = rules.redeemable(
+      balance: balance,
+      payable: bill.grandTotal + bill.pointsDiscount,
+    );
+    return OutlinedButton.icon(
+      key: const Key('sell-points'),
+      onPressed: cart.isEmpty || (maximum == 0 && bill.pointsRedeemed == 0)
+          ? null
+          : () async {
+              final points = await showPointsDialog(
+                context,
+                balance: balance,
+                maximum: maximum,
+                current: bill.pointsRedeemed,
+                rules: rules,
+              );
+              if (points == null) return;
+              ref
+                  .read(cartControllerProvider.notifier)
+                  .setPointsToRedeem(points);
+            },
+      icon: const Icon(Icons.stars_outlined, size: 18),
+      label: Text(
+        bill.pointsRedeemed > 0
+            ? l10n.pointsUsed(bill.pointsRedeemed)
+            : l10n.pointsButton(balance),
       ),
     );
   }

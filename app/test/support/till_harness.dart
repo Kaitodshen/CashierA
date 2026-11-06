@@ -52,6 +52,7 @@ const manager = StaffMember(
     'pos.open_drawer',
     'pos.discount_override',
     'shift.manage',
+    'shift.cash_movement',
   },
   pinHash: '246802',
 );

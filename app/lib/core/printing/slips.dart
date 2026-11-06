@@ -36,6 +36,7 @@ ReceiptDocument receiptDocument(
   PrintText(l.items(r.itemCount)),
   for (final (label, value, :strong) in receiptTotals(r, l))
     PrintRow(label, value, bold: strong),
+  if (r.pointsEarned > 0) PrintText(l.pointsEarned(r.pointsEarned)),
   if (r.kasbonDueDate != null) PrintText(l.kasbonDue(r.kasbonDueDate!)),
   const PrintRule(),
   PrintText(r.footer, align: PrintAlign.center),
@@ -140,6 +141,62 @@ ReceiptDocument testPageDocument({
   const PrintRule(char: '='),
   const PrintRow('Rp', '1.234.567'),
   const PrintQr('CashierA'),
+  const PrintFeed(2),
+  const PrintCut(),
+]);
+
+/// What a kasbon installment slip shows.
+class KasbonSlipData {
+  const new({
+    required this.headerLines,
+    required this.title,
+    required this.dateText,
+    required this.customerLine,
+    required this.cashierLine,
+    required this.rows,
+    required this.methodLine,
+    this.settledText,
+  });
+
+  final List<String> headerLines;
+  final String title;
+  final String dateText;
+  final String customerLine;
+  final String cashierLine;
+
+  /// (label, value, strong): before, paid, after.
+  final List<(String, String, bool)> rows;
+  final String methodLine;
+
+  /// Printed large when nothing is owed any more.
+  final String? settledText;
+}
+
+ReceiptDocument kasbonSlipDocument(
+  KasbonSlipData r, {
+  bool openDrawer = false,
+}) => ReceiptDocument([
+  if (openDrawer) const PrintDrawer(),
+  for (final (i, line) in r.headerLines.indexed)
+    PrintText(line, align: PrintAlign.center, bold: i == 0),
+  PrintText(r.title, align: PrintAlign.center, bold: true),
+  const PrintRule(),
+  PrintText(r.dateText),
+  PrintText(r.customerLine),
+  PrintText(r.cashierLine),
+  const PrintRule(),
+  for (final (label, value, strong) in r.rows)
+    PrintRow(label, value, bold: strong),
+  PrintText(r.methodLine),
+  if (r.settledText != null) ...[
+    const PrintFeed(),
+    PrintText(
+      r.settledText!,
+      align: PrintAlign.center,
+      bold: true,
+      large: true,
+    ),
+  ],
   const PrintFeed(2),
   const PrintCut(),
 ]);

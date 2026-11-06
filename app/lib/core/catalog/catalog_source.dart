@@ -73,6 +73,8 @@ const mirrorSpecs = [
   ),
   MirrorSpec('vouchers', orderKey: 'id', jsonKey: ['id']),
   MirrorSpec('customers', orderKey: 'id'),
+  // Phase 6: this store's kasbon.
+  MirrorSpec('receivables', orderKey: 'id', storeScoped: true),
 ];
 
 MirrorSpec? mirrorSpecFor(String table) {

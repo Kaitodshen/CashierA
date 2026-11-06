@@ -84,7 +84,9 @@ Map<String, dynamic> buildOrderPayload({
     'grand_total': bill.grandTotal.rupiah,
     'paid_total': settlement?.paidTotal.rupiah ?? 0,
     'change_total': settlement?.changeTotal.rupiah ?? 0,
-    'points_earned': 0,
+    'points_earned': cart.customer == null
+        ? 0
+        : config.business.loyalty.pointsEarned(bill.net),
     'kasbon_due_date': dueDate?.toIso8601String().substring(0, 10),
     'items': [
       for (final (i, b) in bill.lines.indexed)

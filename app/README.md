@@ -37,7 +37,7 @@ Everything below works offline. Sales reach the server through the outbox, which
    - Promotions apply on their own: happy hour, buy X get Y, bundles, quantity tiers and minimum purchase, by priority and stacking rule.
    - A manual discount above the store's limit (default 20%) needs a colleague with `pos.discount_override` to enter their PIN. Someone who has the permission approves their own discount.
 4. **Bayar.** Pick a method. Cash offers exact and round amounts and shows the change. Card, transfer and e-wallet take a reference when the method needs one. You can split the payment, and only cash gives change. Kasbon asks for a customer and is due after the company's kasbon days.
-5. **Receipt.** It shows the change on top. **Bagikan PDF** shares the receipt, and **Cetak** prints it on the thermal printer (or through the system print dialog when none is set up) and marks it printed. Later prints say **SALINAN** and go to the audit log. **Void** and **Refund** are here too (see below).
+5. **Receipt.** It shows the change on top. **Bagikan PDF** shares the receipt (the first share of a finished sale counts as printing it; later shares are audited copies), and **Cetak** prints it on the thermal printer (or through the system print dialog when none is set up) and marks it printed. Later prints say **SALINAN** and go to the audit log. **Void** and **Refund** are here too (see below).
 6. **Transaksi.** This screen lists today's sales on this terminal and the held bills. Tap a sale to reprint it, or tap a held bill to resume it. **Batalkan** cancels a held bill with a reason; it needs `pos.void` or an approver.
 
 Order numbers look like `PST-T1-261106-0001`: store, terminal, store-local date, then a counter per terminal per day.
@@ -47,7 +47,7 @@ Order numbers look like `PST-T1-261106-0001`: store, terminal, store-local date,
 All of this works offline too. Approvals are a colleague with the permission entering their PIN on this terminal; someone who holds the permission can approve their own action.
 
 - **POS home → Shift.** Shows the cash that should be in the drawer and the live X report (sales, payments by method, voids, refunds, cash, top items).
-  - **Kas masuk / Kas keluar** records petty cash with a reason (`shift.cash_movement`). A cash out can't take more than the drawer should hold.
+  - **Kas masuk / Kas keluar** records petty cash with a reason (`shift.cash_movement`). A cash out can't take more than the drawer should hold. It opens the drawer, so staff without `pos.open_drawer` (cashiers) need a manager's PIN, the same as **Buka laci**.
   - **Buka laci** opens the drawer without a sale. It asks for a reason and a PIN with `pos.open_drawer`, and is audited.
   - **Cetak X** prints the X report.
   - **Tutup shift** counts the drawer by note or as a total, shows the selisih (even, over or short), and needs a note when it isn't even. Held bills stay held. The close is sent after the shift's sales, so the server computes the expected cash over the same transactions; if its figure differs it raises `CASH_DISCREPANCY`. The Z report prints and can be shared as a PDF. Earlier shifts are listed below with their selisih.
@@ -55,9 +55,26 @@ All of this works offline too. Approvals are a colleague with the permission ent
 - **Refund** (receipt screen): pick quantities per line, choose cash or a non-cash method the customer paid with, keep or turn off restocking, give a reason. Every refund needs a PIN with `pos.refund`. Partial refunds add up to the line's amount exactly. The kasbon part of a sale can't be refunded until it is repaid (Phase 6). Refund numbers look like `R-PST-T1-261106-0001`.
 - **POS home → Printer.** Find a Bluetooth (BLE) or USB printer, or type a network address (`192.168.1.50`, port 9100 by default). Pick 58 or 80 mm paper, whether the printer opens the cash drawer, and whether every sale prints by itself. **Tes cetak** prints a ruler so you can check the paper width. A printer that is off never blocks a sale: the cashier sees why, and can share the PDF instead.
 
+### Customers, points and kasbon (Phase 6)
+
+Works offline. The terminal keeps its own copy of each customer's points and of this store's kasbon. While a sale or an installment is still in the outbox, a refresh keeps the terminal's figure instead of the server's older one.
+
+- **Points at the till.** With a customer on the bill, the **poin** button shows the balance.
+  - Tap it to spend points. The most you can spend is what's left to pay or the balance, and there is a minimum per redemption when the company sets one.
+  - Points are earned on the rest: 1 point per Rp 10.000 of net spend, after discounts and points.
+  - The receipt shows the points earned. A void gives redeemed points back and takes earned ones away. A refund takes earned points back in proportion.
+- **POS home → Pelanggan.** Search by name, phone or code, and see each customer's points and what they owe this store.
+  - Open a customer to see each kasbon with what's left, its due date, and how late it is.
+  - **Bayar kasbon** takes any amount up to what is owed, in cash or a method the store accepts, with a reference for non-cash. The money goes to the oldest kasbon first. A balance slip prints (previous balance, paid, still owed, LUNAS when settled), and cash opens the drawer.
+  - Cash installments count in the shift's cash. A kasbon sale with installments can't be voided (refund it instead), and repaid kasbon becomes refundable.
+
 ### Catalog and stock
 
 - **Back office → Import / Export.** Download the template, fill it in Excel or Google Sheets, and upload the `.csv` or `.xlsx`. The preview lists every problem with its row number. Nothing is saved until the whole file is clean, and then it is saved in one transaction, so a failed import changes nothing. Importing the same file again updates the same products (matched by SKU). Stock columns set the counted stock per store and show up in the stock history as an opname. Export gives the same columns back, so export → edit → import works.
+- **Back office → Pelanggan / Kasbon / Loyalti & kasbon.**
+  - **Pelanggan:** search, add and edit customers (phone, e-mail, kasbon limit, active). A customer's page shows their kasbon with every installment and their points history. **Sesuaikan poin** adds or removes points with a reason; it needs the new `loyalty.adjust` permission (owner and manager), and the balance can't go below 0.
+  - **Kasbon:** what each customer owes per store, most overdue first, with the total and overdue amount, flagging customers over their limit.
+  - **Loyalti & kasbon:** the company rules (points on or off, spend per point, value per point, minimum redemption, kasbon due days). Only the owner can change them.
 - **Back office → Shift / Log audit.** Shift lists every shift by store and period with its selisih and sales; tap one for its X or Z report (print or share as PDF). Log audit shows who did what, who approved it and on which terminal, filtered by store, period, kind, or approvals only, newest first with **Muat lagi** for older entries.
 - **Back office → Promo / Voucher / Pengaturan toko.** Promotions use one form per type, with the products they apply to, the days and hours, the stores and the priority. Vouchers have a percent or a fixed amount, a minimum spend, a ceiling and a usage limit. Store settings cover tax (rate, included or added), service charge, rounding, the discount approval limit, kasbon, the receipt header and footer and the paper width, plus which payment methods the store accepts. Terminals pick up changes on their next refresh.
 - **Back office → Stock.** Pick a store to see on-hand stock, filter to low items, open an item's movement history, adjust it, and resolve low-stock alerts.
@@ -88,7 +105,7 @@ lib/
     auth/         pairing, staff roster, offline PIN check, server interfaces
     config/       --dart-define environment
     catalog/      catalog mirror pull, local catalog queries, offline stock changes, refresh scheduling
-    pos/          cart, till configuration, order payload, order/shift/refund/audit services, receipt,
+    pos/          cart, till configuration, order payload, order/shift/refund/kasbon/audit services, receipt,
                   X/Z report layout, PDFs
     printing/     printer setting, ESC/POS transport (plugin + TCP 9100, web stub), slips, printer service
     database/     Drift tables (local mirror + sync_queue)
@@ -100,7 +117,8 @@ lib/
     providers.dart  Riverpod wiring
   features/       startup, pairing, pin_login, pos_home, catalog (terminal), sell (cashier,
                   payment, receipt, refund, sales), shift (X/Z, close), printing (printer setup,
-                  print actions), sync_status, back_office (shell, products, categories, suppliers,
-                  stock, import/export, promotions, vouchers, store settings, shifts, audit log)
+                  print actions), customers (points, kasbon, installments), sync_status, back_office
+                  (shell, products, categories, suppliers, stock, import/export, promotions,
+                  vouchers, store settings, shifts, audit log, customers, kasbon, loyalty)
 test/             unit, sync and widget tests (in-memory SQLite, fake transport)
 ```

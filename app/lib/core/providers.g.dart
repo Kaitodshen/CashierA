@@ -614,6 +614,47 @@ final class RefundServiceProvider
 
 String _$refundServiceHash() => r'a4b1e7dba06db749cdfac99dac947e5919602a97';
 
+@ProviderFor(kasbonService)
+final kasbonServiceProvider = KasbonServiceProvider._();
+
+final class KasbonServiceProvider
+    extends $FunctionalProvider<KasbonService, KasbonService, KasbonService>
+    with $Provider<KasbonService> {
+  KasbonServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kasbonServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kasbonServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<KasbonService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  KasbonService create(Ref ref) {
+    return kasbonService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KasbonService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KasbonService>(value),
+    );
+  }
+}
+
+String _$kasbonServiceHash() => r'557ac0df4cb0771901d66d7452fec6186f4a345b';
+
 @ProviderFor(auditService)
 final auditServiceProvider = AuditServiceProvider._();
 
