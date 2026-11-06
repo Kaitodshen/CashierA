@@ -53,6 +53,7 @@ class CartLine {
     this.modifiers = const [],
     this.manualDiscount,
     this.note,
+    this.kitchenStation,
   });
 
   factory fromJson(Map<String, dynamic> j) => CartLine(
@@ -80,6 +81,7 @@ class CartLine {
             (j['manual_discount'] as Map).cast<String, dynamic>(),
           ),
     note: j['note'] as String?,
+    kitchenStation: j['kitchen_station'] as String?,
   );
 
   final String id;
@@ -99,6 +101,9 @@ class CartLine {
   final List<CartModifier> modifiers;
   final DiscountSpec? manualDiscount;
   final String? note;
+
+  /// `kitchen` / `bar`: where the line is prepared (F&B), or null.
+  final String? kitchenStation;
 
   String get displayName =>
       variantName == 'Default' ? productName : '$productName · $variantName';
@@ -155,6 +160,7 @@ class CartLine {
         ? null
         : manualDiscount ?? this.manualDiscount,
     note: clearNote ? null : note ?? this.note,
+    kitchenStation: kitchenStation,
   );
 
   Map<String, dynamic> toJson() => {
@@ -175,6 +181,7 @@ class CartLine {
     'modifiers': [for (final m in modifiers) m.toJson()],
     'manual_discount': manualDiscount?.toJson(),
     'note': note,
+    'kitchen_station': kitchenStation,
   };
 }
 
@@ -211,6 +218,11 @@ class Cart {
     this.voucherCode,
     this.note,
     this.pointsToRedeem = 0,
+    this.orderType = 'takeaway',
+    this.tableId,
+    this.tableName,
+    this.guestCount,
+    this.kitchenSent = const {},
   });
 
   factory fromJson(Map<String, dynamic> j) => Cart(
@@ -234,6 +246,15 @@ class Cart {
     voucherCode: j['voucher_code'] as String?,
     note: j['note'] as String?,
     pointsToRedeem: (j['points_to_redeem'] as num? ?? 0).toInt(),
+    orderType: j['order_type'] as String? ?? 'takeaway',
+    tableId: j['table_id'] as String?,
+    tableName: j['table_name'] as String?,
+    guestCount: (j['guest_count'] as num?)?.toInt(),
+    kitchenSent: {
+      for (final MapEntry(:key, :value)
+          in ((j['kitchen_sent'] as Map?) ?? const {}).entries)
+        key as String: (value as num).toInt(),
+    },
   );
 
   final String orderId;
@@ -256,7 +277,20 @@ class Cart {
   /// Points the customer chose to spend on this bill (capped by the bill).
   final int pointsToRedeem;
 
+  /// `takeaway` or `dine_in` (F&B, on [tableId]).
+  final String orderType;
+  final String? tableId;
+  final String? tableName;
+  final int? guestCount;
+
+  /// Line id → thousandths already sent to the kitchen or bar, so the next
+  /// ticket carries only what was added since.
+  final Map<String, int> kitchenSent;
+
   bool get isEmpty => lines.isEmpty;
+
+  /// Lines that go to a kitchen or bar station.
+  bool get hasKitchenItems => lines.any((l) => l.kitchenStation != null);
 
   /// Number of units, counting a weighed line as one.
   int get itemCount => lines.fold(
@@ -278,6 +312,12 @@ class Cart {
     bool clearVoucher = false,
     String? note,
     int? pointsToRedeem,
+    String? orderType,
+    String? tableId,
+    String? tableName,
+    int? guestCount,
+    bool clearTable = false,
+    Map<String, int>? kitchenSent,
   }) => Cart(
     orderId: orderId,
     startedAt: startedAt,
@@ -290,6 +330,11 @@ class Cart {
     voucherCode: clearVoucher ? null : voucherCode ?? this.voucherCode,
     note: note ?? this.note,
     pointsToRedeem: clearCustomer ? 0 : pointsToRedeem ?? this.pointsToRedeem,
+    orderType: clearTable ? 'takeaway' : orderType ?? this.orderType,
+    tableId: clearTable ? null : tableId ?? this.tableId,
+    tableName: clearTable ? null : tableName ?? this.tableName,
+    guestCount: clearTable ? null : guestCount ?? this.guestCount,
+    kitchenSent: kitchenSent ?? this.kitchenSent,
   );
 
   Map<String, dynamic> toJson() => {
@@ -304,5 +349,10 @@ class Cart {
     'voucher_code': voucherCode,
     'note': note,
     'points_to_redeem': pointsToRedeem,
+    'order_type': orderType,
+    'table_id': tableId,
+    'table_name': tableName,
+    'guest_count': guestCount,
+    'kitchen_sent': kitchenSent,
   };
 }

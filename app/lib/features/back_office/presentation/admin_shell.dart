@@ -37,6 +37,21 @@ final _destinations = <_Destination>[
     Icons.warehouse_outlined,
     (l) => l.navStock,
   ),
+  _Destination(
+    AppRoutes.adminPurchaseOrders,
+    Icons.shopping_cart_outlined,
+    (l) => l.navPurchasing,
+  ),
+  _Destination(
+    AppRoutes.adminTransfers,
+    Icons.swap_horiz,
+    (l) => l.navTransfers,
+  ),
+  _Destination(
+    AppRoutes.adminTables,
+    Icons.table_restaurant_outlined,
+    (l) => l.navTables,
+  ),
   _Destination(AppRoutes.adminImport, Icons.import_export, (l) => l.navImport),
   _Destination(
     AppRoutes.adminPromotions,

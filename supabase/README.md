@@ -26,8 +26,9 @@ This folder is the complete server side so far: the Phase 1 schema, row level se
 | `migrations/…1900_reports.sql` | Phase 7: `report_sales`, `report_payments`, `report_products`, `report_staff`, `report_tax`, `report_stock_value`, `dashboard_summary` |
 | `migrations/…1800_review_fixes.sql` | Review fixes: an approval naming another employee only from a paired terminal; payments only on completed orders; expected cash from completed and voided sales only |
 | `migrations/…1700_loyalty_kasbon.sql` | Phase 6: points checked against `business_profile`, the `loyalty.adjust` permission, `adjust_points`, `kasbon_overview`, `customer_statement` |
+| `migrations/…2000_purchasing_fnb.sql` | Phase 8: `save_purchase_order`, `set_purchase_order_status`, `receive_purchase_order` (goods receipts `GR-<store>-yyMMdd-NNN`), `purchase_order_list`, `purchase_order_detail`, `transfer_list`, `transfer_detail`, `kitchen_queue` |
 | `seed.sql` | Demo data. The demo sign-ins and PINs are listed in its header |
-| `tests/database/*.test.sql` | 20 pgTAP files, 386 assertions |
+| `tests/database/*.test.sql` | 21 pgTAP files, 412 assertions |
 
 ## 1. Test it on this PC (no Docker)
 
@@ -39,7 +40,7 @@ npm install
 npm test
 ```
 
-Expected output ends with `All 20 test files passed (386 assertions)`. To run a single file, use `node run.mjs --only 030`.
+Expected output ends with `All 21 test files passed (412 assertions)`. To run a single file, use `node run.mjs --only 030`.
 
 ## 2. Use a hosted Supabase project
 
@@ -164,6 +165,12 @@ Rejection codes the app should translate for cashiers include `tax_mismatch`, `p
 | `verify_employee_pin(employee_id, pin)` | Terminal of that store, or self | Online check with lockout (5 wrong tries locks for 5 minutes) |
 | `request_stock_transfer(from, to, items, note, employee_id)` | `transfer.request` at the receiving store | Creates a request |
 | `transition_stock_transfer(id, status, items, note, employee_id)` | Approve, reject or ship: `transfer.approve` at the sender. Receive: `inventory.receive` at the receiver | Moves stock and flags differences |
+| `transfer_list(store_id, direction, status)` and `transfer_detail(id)` | `inventory.view`, `transfer.request` or `transfer.approve` in one of the two stores | Transfers with store and employee names; `direction` `in` / `out` relative to `store_id`. The detail has every event (who and when), the quantities requested, shipped and received, and the sender's stock |
+| `save_purchase_order(p)` | `purchase.manage` at the store | Creates or replaces a `draft` / `ordered` PO and its lines; refused (`po_locked`) once goods arrived |
+| `set_purchase_order_status(id, status)` | `purchase.manage` | draft → ordered; draft or ordered → cancelled while nothing was received; audited |
+| `receive_purchase_order(p)` | `inventory.receive` at the store | One goods receipt for an ordered or partly received PO. Refuses more than is still open (`receipt_exceeds_order`) and an empty receipt. Stock in and weighted-average cost per delivery; status becomes `partially_received` or `received`; audited |
+| `purchase_order_list(store_id, status)` and `purchase_order_detail(id)` | `purchase.manage`, `inventory.receive` or `reports.view` | POs with supplier, totals and the received share; the detail has the lines and every receipt |
+| `kitchen_queue(station, store_id)` | Terminal of the store, or `kitchen.view` | Active tickets (new, preparing, ready) oldest first, each with only its station's items, modifiers and notes, the table and the guests. `kitchen.status` and `dining_table.status` (through `sync_push`) move them on |
 | `complete_stock_opname(opname_id, employee_id)` | `inventory.opname` | Completes a draft opname |
 | `shift_summary(shift_id)` | Terminal, `shift.manage` or `reports.view` | X-report (open shift) or Z-report (closed) data, with the terminal code and the opener and closer names |
 | `shift_overview(store_id, from, to)` | `shift.manage` or `reports.view` | Shifts by business date (newest first, at most 500) with expected and counted cash, selisih, order count and sales |
@@ -216,6 +223,6 @@ Terminals pass `employee_id` (the PIN-verified user). Back-office callers always
 
 ## 9. What has and hasn't been verified
 
-- ✅ All migrations, the seed and the 386 assertions pass on PGlite 0.5.15 (PostgreSQL 18.6), checked on 2026-11-07. `140_shift_audit.test.sql` closes a shift built the same way as `cashiera_core/test/shift/server_fixture_test.dart`, so the terminal's X/Z report and the server's agree on one shared example. `130_pos.test.sql` books a sale priced by the Dart engine (`cashiera_core/test/pricing/server_fixture_test.dart` builds the same numbers), so the server and the terminal are checked against one shared example.
+- ✅ All migrations, the seed and the 412 assertions pass on PGlite 0.5.15 (PostgreSQL 18.6), checked on 2026-11-07 after Phase 8. `140_shift_audit.test.sql` closes a shift built the same way as `cashiera_core/test/shift/server_fixture_test.dart`, so the terminal's X/Z report and the server's agree on one shared example. `130_pos.test.sql` books a sale priced by the Dart engine (`cashiera_core/test/pricing/server_fixture_test.dart` builds the same numbers), so the server and the terminal are checked against one shared example.
 - ⚠️ Hosted Supabase runs PostgreSQL 17. The SQL avoids PostgreSQL 18-only features, but it has **not yet been run on a real Supabase stack** (this PC has no Docker). Run `supabase db push --remote` plus `supabase test db --remote` on a staging project, or the local Docker stack, before going live.
 - ⚠️ The Supabase stand-ins in `tools/db-test/supabase-shim.sql` cover only what these migrations touch (auth users, JWT claims, storage tables, the realtime publication). They are not a full Supabase emulation.

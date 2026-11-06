@@ -36,6 +36,7 @@ class CatalogItem {
     this.cost = Money.zero,
     this.favoriteOrder,
     this.hasModifiers = false,
+    this.kitchenStation,
   });
 
   final String variantId;
@@ -63,6 +64,10 @@ class CatalogItem {
 
   /// The product has modifier groups to choose from.
   final bool hasModifiers;
+
+  /// `kitchen` or `bar` (the product's, else its category's), or null when
+  /// it is not prepared to order.
+  final String? kitchenStation;
 
   /// The price this store charges.
   Money get price => priceOverride ?? basePrice;

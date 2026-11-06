@@ -4,8 +4,8 @@ One codebase, two shells:
 
 | Device | Starts in | What it does |
 |---|---|---|
-| Paired terminal (Android tablet, Windows PC) | PIN lock → POS | Offline-first: local SQLite (Drift) + outbox synced to `sync_push`. Cashier screen (scan, promos, discounts, vouchers, hold/resume, split payment, kasbon, receipts on thermal printers or PDF), shifts with X/Z reports, cash in/out, voids and refunds with manager PIN, product browser, stock in and out, stock count (opname) |
-| Browser, phone, desktop signed in by email | Back office | Online: stores and pairing codes, products and variants, categories, suppliers, stock per store with history and low-stock alerts, CSV/XLSX import and export, promotions, vouchers, store settings (tax, rounding, receipt) and payment methods, shifts with their X/Z reports, the audit log |
+| Paired terminal (Android tablet, Windows PC) | PIN lock → POS | Offline-first: local SQLite (Drift) + outbox synced to `sync_push`. Cashier screen (scan, promos, discounts, vouchers, hold/resume, split payment, kasbon, receipts on thermal printers or PDF), shifts with X/Z reports, cash in/out, voids and refunds with manager PIN, product browser, stock in and out, stock count (opname). F&B stores: tables, kitchen and bar tickets, kitchen display |
+| Browser, phone, desktop signed in by email | Back office | Online: stores and pairing codes, products and variants, categories, suppliers, stock per store with history and low-stock alerts, CSV/XLSX import and export, promotions, vouchers, store settings (tax, rounding, receipt) and payment methods, shifts with their X/Z reports, the audit log, purchase orders and receiving, stock transfers, dining tables |
 
 ## Run
 
@@ -68,6 +68,25 @@ Works offline. The terminal keeps its own copy of each customer's points and of 
   - **Bayar kasbon** takes any amount up to what is owed, in cash or a method the store accepts, with a reference for non-cash. The money goes to the oldest kasbon first. A balance slip prints (previous balance, paid, still owed, LUNAS when settled), and cash opens the drawer.
   - Cash installments count in the shift's cash. A kasbon sale with installments can't be voided (refund it instead), and repaid kasbon becomes refundable.
 
+### F&B, purchasing and transfers (Phase 8)
+
+- **F&B stores.** The owner turns on **Mode F&B** per store in the back office (**Meja**), where the tables are set up (name, area, seats, active). A product is prepared in the kitchen or at the bar by its own station, else by its category's. Terminals pick it all up on their next refresh.
+- **Terminal → Meja.** A grid of the store's tables: free, occupied, needs clearing.
+  - Tap a free table, enter the guests, and the bill is a dine-in bill on that table.
+  - Tap a table with a bill from this terminal to resume it. A second bill on the same table is refused.
+  - **Kosongkan meja** frees a table after the guests left; it is refused while a bill is still open on it.
+- **Kirim ke dapur** (cashier screen, F&B stores): holds the bill and prints one ticket per station on the kitchen and bar printers (**Printer** has three slots: receipt, kitchen, bar). A ticket shows the table, guests, order number, time, and the items with modifiers and notes, without prices. Sending again prints only what was added, marked **TAMBAHAN**. With no printer for a station, the ticket is still on the kitchen display.
+- **Terminal → Dapur** (staff with `kitchen.view`): the open tickets of the store, oldest first, filtered by station, refreshed every 10 seconds and on every change. The border turns amber after 10 minutes and red after 20. **Mulai**, **Siap** and **Disajikan** go through the outbox and show at once. This screen needs the network; offline it keeps the last list.
+- **Back office → Pembelian.** Purchase orders per store and status.
+  - The editor takes the supplier, the store, the expected date, and lines picked by name or SKU with quantity and cost. **Simpan** keeps a draft, **Pesan** sends it, **Batalkan** cancels it while nothing has arrived.
+  - **Terima barang** takes the quantity (at most what is still open) and the cost per line. Each delivery gets a receipt number, adds the stock and averages the cost. Lines are locked once goods arrived.
+  - **PDF** gives the order for the supplier.
+- **Back office → Transfer.** Incoming and outgoing transfers per store.
+  - **Minta transfer**: the receiving store asks another store for items.
+  - The sender approves or rejects it (with a reason), then ships the quantities it sends.
+  - The receiver enters what arrived. A difference is shown in red and raises a discrepancy alert.
+  - The history shows who did what and when.
+
 ### Catalog and stock
 
 - **Back office → Import / Export.** Download the template, fill it in Excel or Google Sheets, and upload the `.csv` or `.xlsx`. The preview lists every problem with its row number. Nothing is saved until the whole file is clean, and then it is saved in one transaction, so a failed import changes nothing. Importing the same file again updates the same products (matched by SKU). Stock columns set the counted stock per store and show up in the stock history as an opname. Export gives the same columns back, so export → edit → import works.
@@ -126,9 +145,11 @@ lib/
     providers.dart  Riverpod wiring
   features/       startup, pairing, pin_login, pos_home, catalog (terminal), sell (cashier,
                   payment, receipt, refund, sales), shift (X/Z, close), printing (printer setup,
-                  print actions), customers (points, kasbon, installments), reports (dashboard, report
+                  print actions), customers (points, kasbon, installments), fnb (tables, kitchen tickets,
+                  kitchen display), reports (dashboard, report
                   tabs, PDF/Excel export), sync_status, back_office
                   (shell, products, categories, suppliers, stock, import/export, promotions,
-                  vouchers, store settings, shifts, audit log, customers, kasbon, loyalty)
+                  vouchers, store settings, shifts, audit log, customers, kasbon, loyalty, purchase
+                  orders, transfers, dining tables)
 test/             unit, sync and widget tests (in-memory SQLite, fake transport)
 ```

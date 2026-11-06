@@ -2007,5 +2007,275 @@
     }
   },
   "dashNothing": "Belum ada penjualan hari ini.",
-  "dashAllReports": "Semua laporan"
+  "dashAllReports": "Semua laporan",
+  "navPurchasing": "Pembelian",
+  "navTransfers": "Transfer",
+  "navTables": "Meja",
+  "poStatus": "{status, select, draft{Draf} ordered{Dipesan} partially_received{Diterima sebagian} received{Diterima} cancelled{Dibatalkan} other{{status}}}",
+  "@poStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseNew": "PO baru",
+  "purchaseEmpty": "Belum ada purchase order.",
+  "purchaseLines": "{count} baris",
+  "@purchaseLines": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "purchaseExpected": "Tanggal diharapkan",
+  "purchaseExpectedShort": "Diharapkan {date}",
+  "@purchaseExpectedShort": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseSupplier": "Pemasok",
+  "purchaseAddItem": "Tambah barang",
+  "purchaseSearchItem": "Cari nama atau SKU",
+  "purchaseIncomplete": "Pilih toko, pemasok dan minimal satu barang.",
+  "purchaseQtyInvalid": "Periksa angka untuk {name}.",
+  "@purchaseQtyInvalid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseQtyTooMuch": "{name}: maksimal {max}.",
+  "@purchaseQtyTooMuch": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseQtyNone": "Isi minimal satu jumlah.",
+  "purchaseMax": "maks {max}",
+  "@purchaseMax": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseOrder": "Pesan",
+  "purchaseOrdered": "Pesanan dikirim",
+  "purchaseCancel": "Batalkan",
+  "purchaseCancelled": "PO dibatalkan",
+  "purchaseReceive": "Terima barang",
+  "purchaseReceiveTitle": "Terima barang · {number}",
+  "@purchaseReceiveTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseReceived": "Diterima dengan nomor {number}",
+  "@purchaseReceived": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseReceipts": "Penerimaan barang",
+  "purchaseOrderedCol": "Dipesan",
+  "purchaseReceivedCol": "Diterima",
+  "purchaseCost": "Harga beli",
+  "purchaseUnit": "Satuan",
+  "purchasePdfTitle": "Purchase order {number}",
+  "@purchasePdfTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "transferNew": "Minta transfer",
+  "transferEmpty": "Belum ada transfer.",
+  "transferIncoming": "Masuk",
+  "transferOutgoing": "Keluar",
+  "transferStatus": "{status, select, requested{Diminta} approved{Disetujui} in_transit{Dikirim} received{Diterima} rejected{Ditolak} cancelled{Dibatalkan} other{{status}}}",
+  "@transferStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "transferEvent": "{event, select, requested{Diminta} approved{Disetujui} shipped{Dikirim} received{Diterima} rejected{Ditolak} cancelled{Dibatalkan} other{{event}}}",
+  "@transferEvent": {
+    "placeholders": {
+      "event": {
+        "type": "String"
+      }
+    }
+  },
+  "transferFrom": "Dari toko (pengirim)",
+  "transferTo": "Ke toko (penerima)",
+  "transferIncomplete": "Pilih dua toko yang berbeda dan minimal satu barang.",
+  "transferSubmit": "Kirim permintaan",
+  "transferApprove": "Setujui",
+  "transferReject": "Tolak",
+  "transferRejectReason": "Alasan",
+  "transferRejectedBecause": "Ditolak: {reason}",
+  "@transferRejectedBecause": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "transferShip": "Kirim barang",
+  "transferShipTitle": "Kirim barang · {number}",
+  "@transferShipTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "transferReceiveTitle": "Terima · {number}",
+  "@transferReceiveTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "transferCancel": "Batalkan transfer",
+  "transferRequested": "Diminta",
+  "transferShipped": "Dikirim",
+  "transferSenderStock": "Stok pengirim",
+  "transferHistory": "Riwayat",
+  "fnbMode": "Mode F&B (resto/kafe)",
+  "fnbModeHint": "Mengaktifkan meja, tiket dapur dan layar dapur di terminal toko ini.",
+  "fnbModeOwnerOnly": "Hanya pemilik yang dapat mengubah ini.",
+  "tablesEmpty": "Belum ada meja.",
+  "tableNew": "Meja baru",
+  "tableEdit": "Ubah meja",
+  "tableName": "Nama",
+  "tableArea": "Area (opsional)",
+  "tableCapacity": "Jumlah kursi",
+  "tableSeats": "{count} kursi",
+  "@tableSeats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tableInvalid": "Isi nama dan minimal 1 kursi.",
+  "kitchenTitle": "Dapur",
+  "kitchenRefresh": "Muat ulang",
+  "kitchenEmpty": "Tidak ada pesanan.",
+  "kitchenOffline": "Tidak terhubung ke server. Menampilkan daftar terakhir.",
+  "kitchenAge": "{minutes}'",
+  "@kitchenAge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "kitchenStatus": "{status, select, new{Baru} preparing{Dimasak} ready{Siap} served{Disajikan} other{{status}}}",
+  "@kitchenStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenStart": "Mulai",
+  "kitchenReady": "Siap",
+  "kitchenServed": "Disajikan",
+  "kitchenSend": "Kirim ke dapur",
+  "kitchenSent": "Terkirim ke dapur: {number}",
+  "@kitchenSent": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenNoPrinter": "Tidak ada printer untuk {stations}: pesanan tampil di layar dapur.",
+  "@kitchenNoPrinter": {
+    "placeholders": {
+      "stations": {
+        "type": "String"
+      }
+    }
+  },
+  "stationKitchen": "Dapur",
+  "stationBar": "Bar",
+  "orderTakeaway": "Bawa pulang",
+  "ticketTable": "{table} · {guests} tamu",
+  "@ticketTable": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      },
+      "guests": {
+        "type": "int"
+      }
+    }
+  },
+  "ticketAddition": "-- TAMBAHAN --",
+  "posErrTableOccupied": "Meja ini sudah punya bill terbuka. Lanjutkan bill tersebut.",
+  "posErrTableHasBill": "Selesaikan atau batalkan bill di meja ini dulu.",
+  "posTablesHint": "Bill makan di tempat per meja",
+  "posKitchenHint": "Pesanan untuk dapur dan bar",
+  "printerSlotReceipt": "Struk",
+  "printerSlotKitchen": "Dapur",
+  "printerSlotBar": "Bar",
+  "tablesEmptyTerminal": "Belum ada meja. Tambahkan di back office (Meja).",
+  "tableStatus": "{status, select, available{Kosong} occupied{Terisi} reserved{Dipesan} cleaning{Perlu dibereskan} other{{status}}}",
+  "@tableStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "tableClear": "Kosongkan meja",
+  "tableCleared": "{table} kosong kembali",
+  "@tableCleared": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableFinishCurrent": "Tahan atau selesaikan bill yang sedang dibuka dulu.",
+  "tableOccupiedElsewhere": "{table} punya bill di terminal lain.",
+  "@tableOccupiedElsewhere": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableGuests": "Jumlah tamu",
+  "tableGuestsTitle": "Tamu di {table}",
+  "@tableGuestsTitle": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSeat": "Mulai bill"
 }

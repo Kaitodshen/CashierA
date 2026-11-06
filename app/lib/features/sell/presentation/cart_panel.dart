@@ -9,6 +9,8 @@ import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
 import 'package:cashiera/features/customers/presentation/customer_providers.dart';
 import 'package:cashiera/features/customers/presentation/points_dialog.dart';
+import 'package:cashiera/features/fnb/kitchen_send.dart';
+import 'package:cashiera/features/printing/print_actions.dart';
 import 'package:cashiera/features/sell/presentation/sell_dialogs.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
 import 'package:cashiera_core/cashiera_core.dart';
@@ -213,6 +215,14 @@ class CartPanel extends ConsumerWidget {
       }
     } on PosPermissionException catch (e) {
       if (context.mounted) AppToast.error(context, l10n.commonError('$e'));
+    } on PosStateException catch (e) {
+      if (context.mounted) AppToast.error(context, posErrorText(l10n, e));
+    }
+  }
+
+  Future<void> _sendToKitchen(BuildContext context, WidgetRef ref) async {
+    if (await sendToKitchen(context, ref) && inSheet && context.mounted) {
+      Navigator.of(context).pop();
     }
   }
 
@@ -251,6 +261,7 @@ class CartPanel extends ConsumerWidget {
     final ctx = ref.watch(saleContextProvider);
     final controller = ref.read(cartControllerProvider.notifier);
     final canDiscount = ctx?.staff.can('pos.discount') ?? false;
+    final fnb = ctx?.config.fnbMode ?? false;
     final needsApproval =
         bill != null &&
         ctx != null &&
@@ -337,6 +348,23 @@ class CartPanel extends ConsumerWidget {
                   : () => controller.setCustomer(null),
             ),
           ),
+          if (cart.tableId != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.xs,
+                AppSpacing.lg,
+                0,
+              ),
+              child: InputChip(
+                key: const Key('sell-table'),
+                avatar: const Icon(Icons.table_restaurant_outlined, size: 18),
+                label: Text(
+                  l10n.ticketTable(cart.tableName ?? '', cart.guestCount ?? 0),
+                ),
+                onDeleted: cart.version > 0 ? null : controller.clearTable,
+              ),
+            ),
           const Divider(),
           Expanded(
             child: cart.isEmpty
@@ -494,6 +522,15 @@ class CartPanel extends ConsumerWidget {
                       icon: const Icon(Icons.pause_circle_outline, size: 18),
                       label: Text(l10n.sellHold),
                     ),
+                    if (fnb && cart.hasKitchenItems)
+                      FilledButton.tonalIcon(
+                        key: const Key('sell-send-kitchen'),
+                        onPressed: pendingKitchenLines(cart).isEmpty
+                            ? null
+                            : () => _sendToKitchen(context, ref),
+                        icon: const Icon(Icons.soup_kitchen_outlined, size: 18),
+                        label: Text(l10n.kitchenSend),
+                      ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),

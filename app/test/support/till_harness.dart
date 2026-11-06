@@ -16,6 +16,7 @@ import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 
 /// Shared setup for terminal widget tests: an in-memory database with one
@@ -238,6 +239,7 @@ Future<(AppDatabase, ProviderContainer)> openTill(
   Size size, {
   StaffMember staff = cashier,
   FakePrinterTransport? printer,
+  List<Override> overrides = const [],
 }) async {
   tester.platformDispatcher.localesTestValue = const [Locale('id', 'ID')];
   addTearDown(tester.platformDispatcher.clearLocalesTestValue);
@@ -263,6 +265,7 @@ Future<(AppDatabase, ProviderContainer)> openTill(
       printerTransportProvider.overrideWithValue(
         printer ?? FakePrinterTransport(),
       ),
+      ...overrides,
     ],
   );
   addTearDown(container.dispose);

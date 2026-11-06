@@ -45,6 +45,8 @@ String posErrorText(AppLocalizations l10n, Object e) => switch (e) {
     'refund_method' => l10n.posErrRefundMethod,
     'void_with_kasbon_payments' => l10n.posErrVoidKasbonPaid,
     'points' => l10n.posErrPoints,
+    'table_occupied' => l10n.posErrTableOccupied,
+    'table_has_open_order' => l10n.posErrTableHasBill,
     _ => l10n.sellEmpty,
   },
   PosPermissionException(:final permission) => l10n.posErrPermission(

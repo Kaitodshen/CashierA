@@ -4759,6 +4759,582 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Semua laporan'**
   String get dashAllReports;
+
+  /// No description provided for @navPurchasing.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembelian'**
+  String get navPurchasing;
+
+  /// No description provided for @navTransfers.
+  ///
+  /// In id, this message translates to:
+  /// **'Transfer'**
+  String get navTransfers;
+
+  /// No description provided for @navTables.
+  ///
+  /// In id, this message translates to:
+  /// **'Meja'**
+  String get navTables;
+
+  /// No description provided for @poStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'{status, select, draft{Draf} ordered{Dipesan} partially_received{Diterima sebagian} received{Diterima} cancelled{Dibatalkan} other{{status}}}'**
+  String poStatus(String status);
+
+  /// No description provided for @purchaseNew.
+  ///
+  /// In id, this message translates to:
+  /// **'PO baru'**
+  String get purchaseNew;
+
+  /// No description provided for @purchaseEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada purchase order.'**
+  String get purchaseEmpty;
+
+  /// No description provided for @purchaseLines.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} baris'**
+  String purchaseLines(int count);
+
+  /// No description provided for @purchaseExpected.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanggal diharapkan'**
+  String get purchaseExpected;
+
+  /// No description provided for @purchaseExpectedShort.
+  ///
+  /// In id, this message translates to:
+  /// **'Diharapkan {date}'**
+  String purchaseExpectedShort(String date);
+
+  /// No description provided for @purchaseSupplier.
+  ///
+  /// In id, this message translates to:
+  /// **'Pemasok'**
+  String get purchaseSupplier;
+
+  /// No description provided for @purchaseAddItem.
+  ///
+  /// In id, this message translates to:
+  /// **'Tambah barang'**
+  String get purchaseAddItem;
+
+  /// No description provided for @purchaseSearchItem.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari nama atau SKU'**
+  String get purchaseSearchItem;
+
+  /// No description provided for @purchaseIncomplete.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih toko, pemasok dan minimal satu barang.'**
+  String get purchaseIncomplete;
+
+  /// No description provided for @purchaseQtyInvalid.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa angka untuk {name}.'**
+  String purchaseQtyInvalid(String name);
+
+  /// No description provided for @purchaseQtyTooMuch.
+  ///
+  /// In id, this message translates to:
+  /// **'{name}: maksimal {max}.'**
+  String purchaseQtyTooMuch(String name, String max);
+
+  /// No description provided for @purchaseQtyNone.
+  ///
+  /// In id, this message translates to:
+  /// **'Isi minimal satu jumlah.'**
+  String get purchaseQtyNone;
+
+  /// No description provided for @purchaseMax.
+  ///
+  /// In id, this message translates to:
+  /// **'maks {max}'**
+  String purchaseMax(String max);
+
+  /// No description provided for @purchaseOrder.
+  ///
+  /// In id, this message translates to:
+  /// **'Pesan'**
+  String get purchaseOrder;
+
+  /// No description provided for @purchaseOrdered.
+  ///
+  /// In id, this message translates to:
+  /// **'Pesanan dikirim'**
+  String get purchaseOrdered;
+
+  /// No description provided for @purchaseCancel.
+  ///
+  /// In id, this message translates to:
+  /// **'Batalkan'**
+  String get purchaseCancel;
+
+  /// No description provided for @purchaseCancelled.
+  ///
+  /// In id, this message translates to:
+  /// **'PO dibatalkan'**
+  String get purchaseCancelled;
+
+  /// No description provided for @purchaseReceive.
+  ///
+  /// In id, this message translates to:
+  /// **'Terima barang'**
+  String get purchaseReceive;
+
+  /// No description provided for @purchaseReceiveTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Terima barang · {number}'**
+  String purchaseReceiveTitle(String number);
+
+  /// No description provided for @purchaseReceived.
+  ///
+  /// In id, this message translates to:
+  /// **'Diterima dengan nomor {number}'**
+  String purchaseReceived(String number);
+
+  /// No description provided for @purchaseReceipts.
+  ///
+  /// In id, this message translates to:
+  /// **'Penerimaan barang'**
+  String get purchaseReceipts;
+
+  /// No description provided for @purchaseOrderedCol.
+  ///
+  /// In id, this message translates to:
+  /// **'Dipesan'**
+  String get purchaseOrderedCol;
+
+  /// No description provided for @purchaseReceivedCol.
+  ///
+  /// In id, this message translates to:
+  /// **'Diterima'**
+  String get purchaseReceivedCol;
+
+  /// No description provided for @purchaseCost.
+  ///
+  /// In id, this message translates to:
+  /// **'Harga beli'**
+  String get purchaseCost;
+
+  /// No description provided for @purchaseUnit.
+  ///
+  /// In id, this message translates to:
+  /// **'Satuan'**
+  String get purchaseUnit;
+
+  /// No description provided for @purchasePdfTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Purchase order {number}'**
+  String purchasePdfTitle(String number);
+
+  /// No description provided for @transferNew.
+  ///
+  /// In id, this message translates to:
+  /// **'Minta transfer'**
+  String get transferNew;
+
+  /// No description provided for @transferEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada transfer.'**
+  String get transferEmpty;
+
+  /// No description provided for @transferIncoming.
+  ///
+  /// In id, this message translates to:
+  /// **'Masuk'**
+  String get transferIncoming;
+
+  /// No description provided for @transferOutgoing.
+  ///
+  /// In id, this message translates to:
+  /// **'Keluar'**
+  String get transferOutgoing;
+
+  /// No description provided for @transferStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'{status, select, requested{Diminta} approved{Disetujui} in_transit{Dikirim} received{Diterima} rejected{Ditolak} cancelled{Dibatalkan} other{{status}}}'**
+  String transferStatus(String status);
+
+  /// No description provided for @transferEvent.
+  ///
+  /// In id, this message translates to:
+  /// **'{event, select, requested{Diminta} approved{Disetujui} shipped{Dikirim} received{Diterima} rejected{Ditolak} cancelled{Dibatalkan} other{{event}}}'**
+  String transferEvent(String event);
+
+  /// No description provided for @transferFrom.
+  ///
+  /// In id, this message translates to:
+  /// **'Dari toko (pengirim)'**
+  String get transferFrom;
+
+  /// No description provided for @transferTo.
+  ///
+  /// In id, this message translates to:
+  /// **'Ke toko (penerima)'**
+  String get transferTo;
+
+  /// No description provided for @transferIncomplete.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih dua toko yang berbeda dan minimal satu barang.'**
+  String get transferIncomplete;
+
+  /// No description provided for @transferSubmit.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim permintaan'**
+  String get transferSubmit;
+
+  /// No description provided for @transferApprove.
+  ///
+  /// In id, this message translates to:
+  /// **'Setujui'**
+  String get transferApprove;
+
+  /// No description provided for @transferReject.
+  ///
+  /// In id, this message translates to:
+  /// **'Tolak'**
+  String get transferReject;
+
+  /// No description provided for @transferRejectReason.
+  ///
+  /// In id, this message translates to:
+  /// **'Alasan'**
+  String get transferRejectReason;
+
+  /// No description provided for @transferRejectedBecause.
+  ///
+  /// In id, this message translates to:
+  /// **'Ditolak: {reason}'**
+  String transferRejectedBecause(String reason);
+
+  /// No description provided for @transferShip.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim barang'**
+  String get transferShip;
+
+  /// No description provided for @transferShipTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim barang · {number}'**
+  String transferShipTitle(String number);
+
+  /// No description provided for @transferReceiveTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Terima · {number}'**
+  String transferReceiveTitle(String number);
+
+  /// No description provided for @transferCancel.
+  ///
+  /// In id, this message translates to:
+  /// **'Batalkan transfer'**
+  String get transferCancel;
+
+  /// No description provided for @transferRequested.
+  ///
+  /// In id, this message translates to:
+  /// **'Diminta'**
+  String get transferRequested;
+
+  /// No description provided for @transferShipped.
+  ///
+  /// In id, this message translates to:
+  /// **'Dikirim'**
+  String get transferShipped;
+
+  /// No description provided for @transferSenderStock.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok pengirim'**
+  String get transferSenderStock;
+
+  /// No description provided for @transferHistory.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat'**
+  String get transferHistory;
+
+  /// No description provided for @fnbMode.
+  ///
+  /// In id, this message translates to:
+  /// **'Mode F&B (resto/kafe)'**
+  String get fnbMode;
+
+  /// No description provided for @fnbModeHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengaktifkan meja, tiket dapur dan layar dapur di terminal toko ini.'**
+  String get fnbModeHint;
+
+  /// No description provided for @fnbModeOwnerOnly.
+  ///
+  /// In id, this message translates to:
+  /// **'Hanya pemilik yang dapat mengubah ini.'**
+  String get fnbModeOwnerOnly;
+
+  /// No description provided for @tablesEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada meja.'**
+  String get tablesEmpty;
+
+  /// No description provided for @tableNew.
+  ///
+  /// In id, this message translates to:
+  /// **'Meja baru'**
+  String get tableNew;
+
+  /// No description provided for @tableEdit.
+  ///
+  /// In id, this message translates to:
+  /// **'Ubah meja'**
+  String get tableEdit;
+
+  /// No description provided for @tableName.
+  ///
+  /// In id, this message translates to:
+  /// **'Nama'**
+  String get tableName;
+
+  /// No description provided for @tableArea.
+  ///
+  /// In id, this message translates to:
+  /// **'Area (opsional)'**
+  String get tableArea;
+
+  /// No description provided for @tableCapacity.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah kursi'**
+  String get tableCapacity;
+
+  /// No description provided for @tableSeats.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} kursi'**
+  String tableSeats(int count);
+
+  /// No description provided for @tableInvalid.
+  ///
+  /// In id, this message translates to:
+  /// **'Isi nama dan minimal 1 kursi.'**
+  String get tableInvalid;
+
+  /// No description provided for @kitchenTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Dapur'**
+  String get kitchenTitle;
+
+  /// No description provided for @kitchenRefresh.
+  ///
+  /// In id, this message translates to:
+  /// **'Muat ulang'**
+  String get kitchenRefresh;
+
+  /// No description provided for @kitchenEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada pesanan.'**
+  String get kitchenEmpty;
+
+  /// No description provided for @kitchenOffline.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak terhubung ke server. Menampilkan daftar terakhir.'**
+  String get kitchenOffline;
+
+  /// No description provided for @kitchenAge.
+  ///
+  /// In id, this message translates to:
+  /// **'{minutes}\''**
+  String kitchenAge(int minutes);
+
+  /// No description provided for @kitchenStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'{status, select, new{Baru} preparing{Dimasak} ready{Siap} served{Disajikan} other{{status}}}'**
+  String kitchenStatus(String status);
+
+  /// No description provided for @kitchenStart.
+  ///
+  /// In id, this message translates to:
+  /// **'Mulai'**
+  String get kitchenStart;
+
+  /// No description provided for @kitchenReady.
+  ///
+  /// In id, this message translates to:
+  /// **'Siap'**
+  String get kitchenReady;
+
+  /// No description provided for @kitchenServed.
+  ///
+  /// In id, this message translates to:
+  /// **'Disajikan'**
+  String get kitchenServed;
+
+  /// No description provided for @kitchenSend.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim ke dapur'**
+  String get kitchenSend;
+
+  /// No description provided for @kitchenSent.
+  ///
+  /// In id, this message translates to:
+  /// **'Terkirim ke dapur: {number}'**
+  String kitchenSent(String number);
+
+  /// No description provided for @kitchenNoPrinter.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada printer untuk {stations}: pesanan tampil di layar dapur.'**
+  String kitchenNoPrinter(String stations);
+
+  /// No description provided for @stationKitchen.
+  ///
+  /// In id, this message translates to:
+  /// **'Dapur'**
+  String get stationKitchen;
+
+  /// No description provided for @stationBar.
+  ///
+  /// In id, this message translates to:
+  /// **'Bar'**
+  String get stationBar;
+
+  /// No description provided for @orderTakeaway.
+  ///
+  /// In id, this message translates to:
+  /// **'Bawa pulang'**
+  String get orderTakeaway;
+
+  /// No description provided for @ticketTable.
+  ///
+  /// In id, this message translates to:
+  /// **'{table} · {guests} tamu'**
+  String ticketTable(String table, int guests);
+
+  /// No description provided for @ticketAddition.
+  ///
+  /// In id, this message translates to:
+  /// **'-- TAMBAHAN --'**
+  String get ticketAddition;
+
+  /// No description provided for @posErrTableOccupied.
+  ///
+  /// In id, this message translates to:
+  /// **'Meja ini sudah punya bill terbuka. Lanjutkan bill tersebut.'**
+  String get posErrTableOccupied;
+
+  /// No description provided for @posErrTableHasBill.
+  ///
+  /// In id, this message translates to:
+  /// **'Selesaikan atau batalkan bill di meja ini dulu.'**
+  String get posErrTableHasBill;
+
+  /// No description provided for @posTablesHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Bill makan di tempat per meja'**
+  String get posTablesHint;
+
+  /// No description provided for @posKitchenHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Pesanan untuk dapur dan bar'**
+  String get posKitchenHint;
+
+  /// No description provided for @printerSlotReceipt.
+  ///
+  /// In id, this message translates to:
+  /// **'Struk'**
+  String get printerSlotReceipt;
+
+  /// No description provided for @printerSlotKitchen.
+  ///
+  /// In id, this message translates to:
+  /// **'Dapur'**
+  String get printerSlotKitchen;
+
+  /// No description provided for @printerSlotBar.
+  ///
+  /// In id, this message translates to:
+  /// **'Bar'**
+  String get printerSlotBar;
+
+  /// No description provided for @tablesEmptyTerminal.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada meja. Tambahkan di back office (Meja).'**
+  String get tablesEmptyTerminal;
+
+  /// No description provided for @tableStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'{status, select, available{Kosong} occupied{Terisi} reserved{Dipesan} cleaning{Perlu dibereskan} other{{status}}}'**
+  String tableStatus(String status);
+
+  /// No description provided for @tableClear.
+  ///
+  /// In id, this message translates to:
+  /// **'Kosongkan meja'**
+  String get tableClear;
+
+  /// No description provided for @tableCleared.
+  ///
+  /// In id, this message translates to:
+  /// **'{table} kosong kembali'**
+  String tableCleared(String table);
+
+  /// No description provided for @tableFinishCurrent.
+  ///
+  /// In id, this message translates to:
+  /// **'Tahan atau selesaikan bill yang sedang dibuka dulu.'**
+  String get tableFinishCurrent;
+
+  /// No description provided for @tableOccupiedElsewhere.
+  ///
+  /// In id, this message translates to:
+  /// **'{table} punya bill di terminal lain.'**
+  String tableOccupiedElsewhere(String table);
+
+  /// No description provided for @tableGuests.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah tamu'**
+  String get tableGuests;
+
+  /// No description provided for @tableGuestsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Tamu di {table}'**
+  String tableGuestsTitle(String table);
+
+  /// No description provided for @tableSeat.
+  ///
+  /// In id, this message translates to:
+  /// **'Mulai bill'**
+  String get tableSeat;
 }
 
 class _AppLocalizationsDelegate

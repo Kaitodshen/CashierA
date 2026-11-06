@@ -113,6 +113,7 @@ class CartController extends _$CartController {
       trackStock: item.trackStock,
       quantity: quantity ?? Qty.one,
       modifiers: modifiers,
+      kitchenStation: item.kitchenStation,
     );
     final lines = [...state.lines];
     final same = item.allowDecimal
@@ -183,6 +184,21 @@ class CartController extends _$CartController {
   );
 
   void clear() => state = _fresh();
+
+  /// Starts a dine-in bill on [tableId] (F&B), or moves the current one there.
+  void seatAt({
+    required String tableId,
+    required String tableName,
+    required int guests,
+  }) => state = state.copyWith(
+    orderType: 'dine_in',
+    tableId: tableId,
+    tableName: tableName,
+    guestCount: guests,
+  );
+
+  /// Back to a takeaway bill.
+  void clearTable() => state = state.copyWith(clearTable: true);
 
   void _update(String lineId, CartLine Function(CartLine) change) =>
       state = state.copyWith(

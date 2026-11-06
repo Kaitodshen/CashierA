@@ -39,6 +39,8 @@ abstract final class AppRoutes {
   /// X or Z report of one of this terminal's shifts.
   static String shiftReport(String shiftId) => '/pos/shift/report/$shiftId';
   static const printer = '/pos/printer';
+  static const tables = '/pos/tables';
+  static const kitchen = '/pos/kitchen';
   static const customers = '/pos/customers';
 
   /// One customer on the terminal.
@@ -60,6 +62,15 @@ abstract final class AppRoutes {
   static const adminKasbon = '/admin/kasbon';
   static const adminLoyalty = '/admin/loyalty';
   static const adminReports = '/admin/reports';
+  static const adminPurchaseOrders = '/admin/purchase-orders';
+  static const adminTransfers = '/admin/transfers';
+  static const adminTables = '/admin/tables';
+
+  /// Purchase order detail or editor; `new` creates one.
+  static String adminPurchaseOrder(String id) => '$adminPurchaseOrders/$id';
+
+  /// One stock transfer.
+  static String adminTransfer(String id) => '$adminTransfers/$id';
 
   /// One customer in the back office.
   static String adminCustomer(String id) => '$adminCustomers/$id';

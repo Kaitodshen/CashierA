@@ -1,3 +1,4 @@
+import 'package:cashiera/core/pos/cart.dart';
 import 'package:cashiera/core/pos/receipt.dart';
 import 'package:cashiera/core/pos/shift_report_text.dart';
 import 'package:cashiera_core/cashiera_core.dart';
@@ -198,5 +199,34 @@ ReceiptDocument kasbonSlipDocument(
     ),
   ],
   const PrintFeed(2),
+  const PrintCut(),
+]);
+
+/// One station's order ticket (F&B): large table and order number, then
+/// the items with their modifiers and notes, no prices.
+ReceiptDocument kitchenTicketDocument({
+  required String stationLabel,
+  required String orderNumber,
+  required String timeText,
+  required List<(CartLine, Qty)> lines,
+  String? tableLine,
+  String? note,
+  String? additionLabel,
+}) => ReceiptDocument([
+  PrintText(stationLabel.toUpperCase(), align: PrintAlign.center, bold: true),
+  if (tableLine != null)
+    PrintText(tableLine, align: PrintAlign.center, bold: true, large: true),
+  if (additionLabel != null)
+    PrintText(additionLabel, align: PrintAlign.center, bold: true),
+  PrintRow(orderNumber, timeText),
+  const PrintRule(),
+  for (final (line, qty) in lines) ...[
+    PrintText('${qty.toPlain()} x ${line.displayName}', bold: true),
+    for (final m in line.modifiers) PrintText('  + ${m.name}'),
+    if (line.note != null && line.note!.isNotEmpty)
+      PrintText('  ! ${line.note}'),
+  ],
+  if (note != null && note.isNotEmpty) ...[const PrintRule(), PrintText(note)],
+  const PrintFeed(3),
   const PrintCut(),
 ]);

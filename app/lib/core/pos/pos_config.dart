@@ -92,6 +92,7 @@ class PosConfig {
     this.storeAddress,
     this.storePhone,
     this.receiptHeader,
+    this.fnbMode = false,
   });
 
   final String storeId;
@@ -110,6 +111,9 @@ class PosConfig {
   final int paperMm;
   final BusinessInfo business;
   final List<PaymentOption> paymentOptions;
+
+  /// Restaurant / cafe store: tables, kitchen tickets and the kitchen display.
+  final bool fnbMode;
 
   /// Store-local wall-clock time of [instant].
   DateTime localTime(DateTime instant) =>
@@ -172,6 +176,7 @@ class PosConfigRepository {
       storeName: store.name,
       storeAddress: store.address,
       storePhone: store.phone,
+      fnbMode: store.fnbMode,
       utcOffsetMinutes: utcOffsetMinutesFor(store.timezone),
       pricing: PricingSettings(
         taxRateBps: s.taxEnabled ? s.taxRateBps : 0,

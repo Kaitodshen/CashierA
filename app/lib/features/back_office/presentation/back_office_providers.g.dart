@@ -1441,3 +1441,560 @@ final class AdminLoyaltySettingsProvider
 
 String _$adminLoyaltySettingsHash() =>
     r'9ce0d6498301816495f7cd646ae554f6b94951fe';
+
+@ProviderFor(purchasing)
+final purchasingProvider = PurchasingProvider._();
+
+final class PurchasingProvider
+    extends
+        $FunctionalProvider<
+          PurchasingRepository,
+          PurchasingRepository,
+          PurchasingRepository
+        >
+    with $Provider<PurchasingRepository> {
+  PurchasingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'purchasingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$purchasingHash();
+
+  @$internal
+  @override
+  $ProviderElement<PurchasingRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  PurchasingRepository create(Ref ref) {
+    return purchasing(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PurchasingRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PurchasingRepository>(value),
+    );
+  }
+}
+
+String _$purchasingHash() => r'd2c41047da4eb55126e955e427c14430a0cb92f7';
+
+@ProviderFor(stockVariants)
+final stockVariantsProvider = StockVariantsProvider._();
+
+final class StockVariantsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<StockVariant>>,
+          List<StockVariant>,
+          FutureOr<List<StockVariant>>
+        >
+    with
+        $FutureModifier<List<StockVariant>>,
+        $FutureProvider<List<StockVariant>> {
+  StockVariantsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'stockVariantsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$stockVariantsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<StockVariant>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<StockVariant>> create(Ref ref) {
+    return stockVariants(ref);
+  }
+}
+
+String _$stockVariantsHash() => r'acfb2b6aafbaec5c3be7bbb71cf63fe33f4d7d5e';
+
+@ProviderFor(purchaseOrders)
+final purchaseOrdersProvider = PurchaseOrdersFamily._();
+
+final class PurchaseOrdersProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<PoListRow>>,
+          List<PoListRow>,
+          FutureOr<List<PoListRow>>
+        >
+    with $FutureModifier<List<PoListRow>>, $FutureProvider<List<PoListRow>> {
+  PurchaseOrdersProvider._({
+    required PurchaseOrdersFamily super.from,
+    required ({String? storeId, String? status}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'purchaseOrdersProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$purchaseOrdersHash();
+
+  @override
+  String toString() {
+    return r'purchaseOrdersProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<PoListRow>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<PoListRow>> create(Ref ref) {
+    final argument = this.argument as ({String? storeId, String? status});
+    return purchaseOrders(
+      ref,
+      storeId: argument.storeId,
+      status: argument.status,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PurchaseOrdersProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$purchaseOrdersHash() => r'205c90a5c352fcf2ae40363506d3e3b985e40261';
+
+final class PurchaseOrdersFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<PoListRow>>,
+          ({String? storeId, String? status})
+        > {
+  PurchaseOrdersFamily._()
+    : super(
+        retry: null,
+        name: r'purchaseOrdersProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  PurchaseOrdersProvider call({String? storeId, String? status}) =>
+      PurchaseOrdersProvider._(
+        argument: (storeId: storeId, status: status),
+        from: this,
+      );
+
+  @override
+  String toString() => r'purchaseOrdersProvider';
+}
+
+@ProviderFor(purchaseOrder)
+final purchaseOrderProvider = PurchaseOrderFamily._();
+
+final class PurchaseOrderProvider
+    extends
+        $FunctionalProvider<AsyncValue<PoDetail>, PoDetail, FutureOr<PoDetail>>
+    with $FutureModifier<PoDetail>, $FutureProvider<PoDetail> {
+  PurchaseOrderProvider._({
+    required PurchaseOrderFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'purchaseOrderProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$purchaseOrderHash();
+
+  @override
+  String toString() {
+    return r'purchaseOrderProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<PoDetail> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<PoDetail> create(Ref ref) {
+    final argument = this.argument as String;
+    return purchaseOrder(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PurchaseOrderProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$purchaseOrderHash() => r'af7b35e1a5ab86a5972d52e68fd5c6fa6d0f44e5';
+
+final class PurchaseOrderFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<PoDetail>, String> {
+  PurchaseOrderFamily._()
+    : super(
+        retry: null,
+        name: r'purchaseOrderProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  PurchaseOrderProvider call(String id) =>
+      PurchaseOrderProvider._(argument: id, from: this);
+
+  @override
+  String toString() => r'purchaseOrderProvider';
+}
+
+@ProviderFor(transfers)
+final transfersProvider = TransfersFamily._();
+
+final class TransfersProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<TransferListRow>>,
+          List<TransferListRow>,
+          FutureOr<List<TransferListRow>>
+        >
+    with
+        $FutureModifier<List<TransferListRow>>,
+        $FutureProvider<List<TransferListRow>> {
+  TransfersProvider._({
+    required TransfersFamily super.from,
+    required ({String? storeId, String? direction}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'transfersProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$transfersHash();
+
+  @override
+  String toString() {
+    return r'transfersProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<TransferListRow>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<TransferListRow>> create(Ref ref) {
+    final argument = this.argument as ({String? storeId, String? direction});
+    return transfers(
+      ref,
+      storeId: argument.storeId,
+      direction: argument.direction,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TransfersProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$transfersHash() => r'262f8924c3c38de0627718879db15dcbb435f3d2';
+
+final class TransfersFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<TransferListRow>>,
+          ({String? storeId, String? direction})
+        > {
+  TransfersFamily._()
+    : super(
+        retry: null,
+        name: r'transfersProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  TransfersProvider call({String? storeId, String? direction}) =>
+      TransfersProvider._(
+        argument: (storeId: storeId, direction: direction),
+        from: this,
+      );
+
+  @override
+  String toString() => r'transfersProvider';
+}
+
+@ProviderFor(transfer)
+final transferProvider = TransferFamily._();
+
+final class TransferProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<TransferDetail>,
+          TransferDetail,
+          FutureOr<TransferDetail>
+        >
+    with $FutureModifier<TransferDetail>, $FutureProvider<TransferDetail> {
+  TransferProvider._({
+    required TransferFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'transferProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$transferHash();
+
+  @override
+  String toString() {
+    return r'transferProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<TransferDetail> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<TransferDetail> create(Ref ref) {
+    final argument = this.argument as String;
+    return transfer(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TransferProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$transferHash() => r'3328968e51a4ff45093f18fa0c572fa3714d11d3';
+
+final class TransferFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<TransferDetail>, String> {
+  TransferFamily._()
+    : super(
+        retry: null,
+        name: r'transferProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  TransferProvider call(String id) =>
+      TransferProvider._(argument: id, from: this);
+
+  @override
+  String toString() => r'transferProvider';
+}
+
+@ProviderFor(diningTables)
+final diningTablesProvider = DiningTablesFamily._();
+
+final class DiningTablesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Map<String, dynamic>>>,
+          List<Map<String, dynamic>>,
+          FutureOr<List<Map<String, dynamic>>>
+        >
+    with
+        $FutureModifier<List<Map<String, dynamic>>>,
+        $FutureProvider<List<Map<String, dynamic>>> {
+  DiningTablesProvider._({
+    required DiningTablesFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'diningTablesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$diningTablesHash();
+
+  @override
+  String toString() {
+    return r'diningTablesProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Map<String, dynamic>>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Map<String, dynamic>>> create(Ref ref) {
+    final argument = this.argument as String;
+    return diningTables(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DiningTablesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$diningTablesHash() => r'62a84493c095734709b3802bf4f83dbfcfbaa382';
+
+final class DiningTablesFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<Map<String, dynamic>>>,
+          String
+        > {
+  DiningTablesFamily._()
+    : super(
+        retry: null,
+        name: r'diningTablesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  DiningTablesProvider call(String storeId) =>
+      DiningTablesProvider._(argument: storeId, from: this);
+
+  @override
+  String toString() => r'diningTablesProvider';
+}
+
+@ProviderFor(storeFnbMode)
+final storeFnbModeProvider = StoreFnbModeFamily._();
+
+final class StoreFnbModeProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  StoreFnbModeProvider._({
+    required StoreFnbModeFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'storeFnbModeProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$storeFnbModeHash();
+
+  @override
+  String toString() {
+    return r'storeFnbModeProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    final argument = this.argument as String;
+    return storeFnbMode(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is StoreFnbModeProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$storeFnbModeHash() => r'1bdeaa1c23c13bb1826f0267d0fb5cd1a4c1d8c3';
+
+final class StoreFnbModeFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<bool>, String> {
+  StoreFnbModeFamily._()
+    : super(
+        retry: null,
+        name: r'storeFnbModeProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  StoreFnbModeProvider call(String storeId) =>
+      StoreFnbModeProvider._(argument: storeId, from: this);
+
+  @override
+  String toString() => r'storeFnbModeProvider';
+}

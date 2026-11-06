@@ -17,11 +17,13 @@ SELECT v.id AS variant_id, p.id AS product_id, p.name AS product_name,
        COALESCE(st.quantity_milli, 0) AS stock_milli,
        s.reorder_point_milli, COALESCE(s.is_available, 1) AS is_available,
        v.cost, fav.sort_order AS favorite_order,
+       COALESCE(p.kitchen_station, c.kitchen_station) AS kitchen_station,
        EXISTS (SELECT 1 FROM product_modifier_groups pmg
                WHERE pmg.product_id = p.id) AS has_modifiers
 FROM product_variants v
 JOIN products p ON p.id = v.product_id
 JOIN units u ON u.id = p.unit_id
+LEFT JOIN categories c ON c.id = p.category_id
 LEFT JOIN store_variant_settings s ON s.variant_id = v.id
 LEFT JOIN stock_levels st ON st.variant_id = v.id
 LEFT JOIN store_favorites fav ON fav.product_id = p.id
@@ -36,6 +38,7 @@ WHERE v.is_active = 1 AND p.is_active = 1 AND p.product_type <> 'ingredient'
     _db.stockLevels,
     _db.storeFavorites,
     _db.productModifierGroups,
+    _db.categories,
   };
 
   /// Items matching [search] (name, variant, SKU contains; barcode exact) in
@@ -155,6 +158,7 @@ WHERE v.is_active = 1 AND p.is_active = 1 AND p.product_type <> 'ingredient'
       cost: Money(r.read<int>('cost')),
       favoriteOrder: r.readNullable<int>('favorite_order'),
       hasModifiers: r.read<bool>('has_modifiers'),
+      kitchenStation: r.readNullable<String>('kitchen_station'),
     );
   }
 }

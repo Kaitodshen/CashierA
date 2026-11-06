@@ -61,7 +61,9 @@ Map<String, dynamic> buildOrderPayload({
     'shift_id': shiftId,
     'cashier_id': cashierId,
     'order_number': orderNumber,
-    'order_type': 'takeaway',
+    'order_type': cart.orderType,
+    'table_id': cart.tableId,
+    'guest_count': cart.guestCount,
     'status': status.code,
     'version': version,
     'customer_id': cart.customer?.id,
@@ -151,6 +153,7 @@ Map<String, dynamic> _item(CartLine line, BillLine b, int index, Uuid uuid) => {
   'unit_cost': line.unitCost.rupiah,
   'cost_amount': line.quantity.times(line.unitCost).rupiah,
   'note': line.note,
+  'kitchen_station': line.kitchenStation,
   'sort_order': index,
   'modifiers': [
     for (final m in line.modifiers)

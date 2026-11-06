@@ -61,6 +61,23 @@ class PosHomeScreen extends ConsumerWidget {
         lines: [l10n.posSellHint],
         onTap: () => context.go(AppRoutes.sell),
       ),
+      if (config?.fnbMode ?? false) ...[
+        _InfoCard(
+          key: const Key('pos-tables'),
+          icon: Icons.table_restaurant_outlined,
+          title: l10n.navTables,
+          lines: [l10n.posTablesHint],
+          onTap: () => context.go(AppRoutes.tables),
+        ),
+        if (staff?.can('kitchen.view') ?? false)
+          _InfoCard(
+            key: const Key('pos-kitchen'),
+            icon: Icons.soup_kitchen_outlined,
+            title: l10n.kitchenTitle,
+            lines: [l10n.posKitchenHint],
+            onTap: () => context.go(AppRoutes.kitchen),
+          ),
+      ],
       _InfoCard(
         key: const Key('pos-shift'),
         icon: Icons.lock_clock_outlined,

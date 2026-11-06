@@ -2733,4 +2733,388 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get dashAllReports => 'Semua laporan';
+
+  @override
+  String get navPurchasing => 'Pembelian';
+
+  @override
+  String get navTransfers => 'Transfer';
+
+  @override
+  String get navTables => 'Meja';
+
+  @override
+  String poStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'draft': 'Draf',
+      'ordered': 'Dipesan',
+      'partially_received': 'Diterima sebagian',
+      'received': 'Diterima',
+      'cancelled': 'Dibatalkan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get purchaseNew => 'PO baru';
+
+  @override
+  String get purchaseEmpty => 'Belum ada purchase order.';
+
+  @override
+  String purchaseLines(int count) {
+    return '$count baris';
+  }
+
+  @override
+  String get purchaseExpected => 'Tanggal diharapkan';
+
+  @override
+  String purchaseExpectedShort(String date) {
+    return 'Diharapkan $date';
+  }
+
+  @override
+  String get purchaseSupplier => 'Pemasok';
+
+  @override
+  String get purchaseAddItem => 'Tambah barang';
+
+  @override
+  String get purchaseSearchItem => 'Cari nama atau SKU';
+
+  @override
+  String get purchaseIncomplete =>
+      'Pilih toko, pemasok dan minimal satu barang.';
+
+  @override
+  String purchaseQtyInvalid(String name) {
+    return 'Periksa angka untuk $name.';
+  }
+
+  @override
+  String purchaseQtyTooMuch(String name, String max) {
+    return '$name: maksimal $max.';
+  }
+
+  @override
+  String get purchaseQtyNone => 'Isi minimal satu jumlah.';
+
+  @override
+  String purchaseMax(String max) {
+    return 'maks $max';
+  }
+
+  @override
+  String get purchaseOrder => 'Pesan';
+
+  @override
+  String get purchaseOrdered => 'Pesanan dikirim';
+
+  @override
+  String get purchaseCancel => 'Batalkan';
+
+  @override
+  String get purchaseCancelled => 'PO dibatalkan';
+
+  @override
+  String get purchaseReceive => 'Terima barang';
+
+  @override
+  String purchaseReceiveTitle(String number) {
+    return 'Terima barang · $number';
+  }
+
+  @override
+  String purchaseReceived(String number) {
+    return 'Diterima dengan nomor $number';
+  }
+
+  @override
+  String get purchaseReceipts => 'Penerimaan barang';
+
+  @override
+  String get purchaseOrderedCol => 'Dipesan';
+
+  @override
+  String get purchaseReceivedCol => 'Diterima';
+
+  @override
+  String get purchaseCost => 'Harga beli';
+
+  @override
+  String get purchaseUnit => 'Satuan';
+
+  @override
+  String purchasePdfTitle(String number) {
+    return 'Purchase order $number';
+  }
+
+  @override
+  String get transferNew => 'Minta transfer';
+
+  @override
+  String get transferEmpty => 'Belum ada transfer.';
+
+  @override
+  String get transferIncoming => 'Masuk';
+
+  @override
+  String get transferOutgoing => 'Keluar';
+
+  @override
+  String transferStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'requested': 'Diminta',
+      'approved': 'Disetujui',
+      'in_transit': 'Dikirim',
+      'received': 'Diterima',
+      'rejected': 'Ditolak',
+      'cancelled': 'Dibatalkan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String transferEvent(String event) {
+    String _temp0 = intl.Intl.selectLogic(event, {
+      'requested': 'Diminta',
+      'approved': 'Disetujui',
+      'shipped': 'Dikirim',
+      'received': 'Diterima',
+      'rejected': 'Ditolak',
+      'cancelled': 'Dibatalkan',
+      'other': '$event',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get transferFrom => 'Dari toko (pengirim)';
+
+  @override
+  String get transferTo => 'Ke toko (penerima)';
+
+  @override
+  String get transferIncomplete =>
+      'Pilih dua toko yang berbeda dan minimal satu barang.';
+
+  @override
+  String get transferSubmit => 'Kirim permintaan';
+
+  @override
+  String get transferApprove => 'Setujui';
+
+  @override
+  String get transferReject => 'Tolak';
+
+  @override
+  String get transferRejectReason => 'Alasan';
+
+  @override
+  String transferRejectedBecause(String reason) {
+    return 'Ditolak: $reason';
+  }
+
+  @override
+  String get transferShip => 'Kirim barang';
+
+  @override
+  String transferShipTitle(String number) {
+    return 'Kirim barang · $number';
+  }
+
+  @override
+  String transferReceiveTitle(String number) {
+    return 'Terima · $number';
+  }
+
+  @override
+  String get transferCancel => 'Batalkan transfer';
+
+  @override
+  String get transferRequested => 'Diminta';
+
+  @override
+  String get transferShipped => 'Dikirim';
+
+  @override
+  String get transferSenderStock => 'Stok pengirim';
+
+  @override
+  String get transferHistory => 'Riwayat';
+
+  @override
+  String get fnbMode => 'Mode F&B (resto/kafe)';
+
+  @override
+  String get fnbModeHint =>
+      'Mengaktifkan meja, tiket dapur dan layar dapur di terminal toko ini.';
+
+  @override
+  String get fnbModeOwnerOnly => 'Hanya pemilik yang dapat mengubah ini.';
+
+  @override
+  String get tablesEmpty => 'Belum ada meja.';
+
+  @override
+  String get tableNew => 'Meja baru';
+
+  @override
+  String get tableEdit => 'Ubah meja';
+
+  @override
+  String get tableName => 'Nama';
+
+  @override
+  String get tableArea => 'Area (opsional)';
+
+  @override
+  String get tableCapacity => 'Jumlah kursi';
+
+  @override
+  String tableSeats(int count) {
+    return '$count kursi';
+  }
+
+  @override
+  String get tableInvalid => 'Isi nama dan minimal 1 kursi.';
+
+  @override
+  String get kitchenTitle => 'Dapur';
+
+  @override
+  String get kitchenRefresh => 'Muat ulang';
+
+  @override
+  String get kitchenEmpty => 'Tidak ada pesanan.';
+
+  @override
+  String get kitchenOffline =>
+      'Tidak terhubung ke server. Menampilkan daftar terakhir.';
+
+  @override
+  String kitchenAge(int minutes) {
+    return '$minutes\'';
+  }
+
+  @override
+  String kitchenStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'new': 'Baru',
+      'preparing': 'Dimasak',
+      'ready': 'Siap',
+      'served': 'Disajikan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get kitchenStart => 'Mulai';
+
+  @override
+  String get kitchenReady => 'Siap';
+
+  @override
+  String get kitchenServed => 'Disajikan';
+
+  @override
+  String get kitchenSend => 'Kirim ke dapur';
+
+  @override
+  String kitchenSent(String number) {
+    return 'Terkirim ke dapur: $number';
+  }
+
+  @override
+  String kitchenNoPrinter(String stations) {
+    return 'Tidak ada printer untuk $stations: pesanan tampil di layar dapur.';
+  }
+
+  @override
+  String get stationKitchen => 'Dapur';
+
+  @override
+  String get stationBar => 'Bar';
+
+  @override
+  String get orderTakeaway => 'Bawa pulang';
+
+  @override
+  String ticketTable(String table, int guests) {
+    return '$table · $guests tamu';
+  }
+
+  @override
+  String get ticketAddition => '-- TAMBAHAN --';
+
+  @override
+  String get posErrTableOccupied =>
+      'Meja ini sudah punya bill terbuka. Lanjutkan bill tersebut.';
+
+  @override
+  String get posErrTableHasBill =>
+      'Selesaikan atau batalkan bill di meja ini dulu.';
+
+  @override
+  String get posTablesHint => 'Bill makan di tempat per meja';
+
+  @override
+  String get posKitchenHint => 'Pesanan untuk dapur dan bar';
+
+  @override
+  String get printerSlotReceipt => 'Struk';
+
+  @override
+  String get printerSlotKitchen => 'Dapur';
+
+  @override
+  String get printerSlotBar => 'Bar';
+
+  @override
+  String get tablesEmptyTerminal =>
+      'Belum ada meja. Tambahkan di back office (Meja).';
+
+  @override
+  String tableStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'available': 'Kosong',
+      'occupied': 'Terisi',
+      'reserved': 'Dipesan',
+      'cleaning': 'Perlu dibereskan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get tableClear => 'Kosongkan meja';
+
+  @override
+  String tableCleared(String table) {
+    return '$table kosong kembali';
+  }
+
+  @override
+  String get tableFinishCurrent =>
+      'Tahan atau selesaikan bill yang sedang dibuka dulu.';
+
+  @override
+  String tableOccupiedElsewhere(String table) {
+    return '$table punya bill di terminal lain.';
+  }
+
+  @override
+  String get tableGuests => 'Jumlah tamu';
+
+  @override
+  String tableGuestsTitle(String table) {
+    return 'Tamu di $table';
+  }
+
+  @override
+  String get tableSeat => 'Mulai bill';
 }

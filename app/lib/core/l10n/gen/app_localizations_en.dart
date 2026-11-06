@@ -2774,4 +2774,393 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashAllReports => 'All reports';
+
+  @override
+  String get navPurchasing => 'Purchasing';
+
+  @override
+  String get navTransfers => 'Transfers';
+
+  @override
+  String get navTables => 'Tables';
+
+  @override
+  String poStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'draft': 'Draft',
+      'ordered': 'Ordered',
+      'partially_received': 'Partly received',
+      'received': 'Received',
+      'cancelled': 'Cancelled',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get purchaseNew => 'New purchase order';
+
+  @override
+  String get purchaseEmpty => 'No purchase orders yet.';
+
+  @override
+  String purchaseLines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lines',
+      one: '1 line',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get purchaseExpected => 'Expected date';
+
+  @override
+  String purchaseExpectedShort(String date) {
+    return 'Expected $date';
+  }
+
+  @override
+  String get purchaseSupplier => 'Supplier';
+
+  @override
+  String get purchaseAddItem => 'Add item';
+
+  @override
+  String get purchaseSearchItem => 'Search name or SKU';
+
+  @override
+  String get purchaseIncomplete =>
+      'Choose a store, a supplier and at least one item.';
+
+  @override
+  String purchaseQtyInvalid(String name) {
+    return 'Check the numbers for $name.';
+  }
+
+  @override
+  String purchaseQtyTooMuch(String name, String max) {
+    return '$name: at most $max.';
+  }
+
+  @override
+  String get purchaseQtyNone => 'Enter at least one quantity.';
+
+  @override
+  String purchaseMax(String max) {
+    return 'max $max';
+  }
+
+  @override
+  String get purchaseOrder => 'Place order';
+
+  @override
+  String get purchaseOrdered => 'Order placed';
+
+  @override
+  String get purchaseCancel => 'Cancel order';
+
+  @override
+  String get purchaseCancelled => 'Order cancelled';
+
+  @override
+  String get purchaseReceive => 'Receive goods';
+
+  @override
+  String purchaseReceiveTitle(String number) {
+    return 'Receive goods · $number';
+  }
+
+  @override
+  String purchaseReceived(String number) {
+    return 'Received as $number';
+  }
+
+  @override
+  String get purchaseReceipts => 'Goods receipts';
+
+  @override
+  String get purchaseOrderedCol => 'Ordered';
+
+  @override
+  String get purchaseReceivedCol => 'Received';
+
+  @override
+  String get purchaseCost => 'Unit cost';
+
+  @override
+  String get purchaseUnit => 'Unit';
+
+  @override
+  String purchasePdfTitle(String number) {
+    return 'Purchase order $number';
+  }
+
+  @override
+  String get transferNew => 'Request transfer';
+
+  @override
+  String get transferEmpty => 'No transfers yet.';
+
+  @override
+  String get transferIncoming => 'Incoming';
+
+  @override
+  String get transferOutgoing => 'Outgoing';
+
+  @override
+  String transferStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'requested': 'Requested',
+      'approved': 'Approved',
+      'in_transit': 'In transit',
+      'received': 'Received',
+      'rejected': 'Rejected',
+      'cancelled': 'Cancelled',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String transferEvent(String event) {
+    String _temp0 = intl.Intl.selectLogic(event, {
+      'requested': 'Requested',
+      'approved': 'Approved',
+      'shipped': 'Shipped',
+      'received': 'Received',
+      'rejected': 'Rejected',
+      'cancelled': 'Cancelled',
+      'other': '$event',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get transferFrom => 'From store (sender)';
+
+  @override
+  String get transferTo => 'To store (receiver)';
+
+  @override
+  String get transferIncomplete =>
+      'Choose two different stores and at least one item.';
+
+  @override
+  String get transferSubmit => 'Send request';
+
+  @override
+  String get transferApprove => 'Approve';
+
+  @override
+  String get transferReject => 'Reject';
+
+  @override
+  String get transferRejectReason => 'Reason';
+
+  @override
+  String transferRejectedBecause(String reason) {
+    return 'Rejected: $reason';
+  }
+
+  @override
+  String get transferShip => 'Ship';
+
+  @override
+  String transferShipTitle(String number) {
+    return 'Ship · $number';
+  }
+
+  @override
+  String transferReceiveTitle(String number) {
+    return 'Receive · $number';
+  }
+
+  @override
+  String get transferCancel => 'Cancel transfer';
+
+  @override
+  String get transferRequested => 'Requested';
+
+  @override
+  String get transferShipped => 'Shipped';
+
+  @override
+  String get transferSenderStock => 'Sender stock';
+
+  @override
+  String get transferHistory => 'History';
+
+  @override
+  String get fnbMode => 'Food & beverage mode';
+
+  @override
+  String get fnbModeHint =>
+      'Turns on tables, kitchen tickets and the kitchen display on this store\'s terminals.';
+
+  @override
+  String get fnbModeOwnerOnly => 'Only the owner can change this.';
+
+  @override
+  String get tablesEmpty => 'No tables yet.';
+
+  @override
+  String get tableNew => 'New table';
+
+  @override
+  String get tableEdit => 'Edit table';
+
+  @override
+  String get tableName => 'Name';
+
+  @override
+  String get tableArea => 'Area (optional)';
+
+  @override
+  String get tableCapacity => 'Seats';
+
+  @override
+  String tableSeats(int count) {
+    return '$count seats';
+  }
+
+  @override
+  String get tableInvalid => 'Enter a name and at least 1 seat.';
+
+  @override
+  String get kitchenTitle => 'Kitchen display';
+
+  @override
+  String get kitchenRefresh => 'Refresh';
+
+  @override
+  String get kitchenEmpty => 'No open tickets.';
+
+  @override
+  String get kitchenOffline =>
+      'Cannot reach the server. Showing the last list.';
+
+  @override
+  String kitchenAge(int minutes) {
+    return '$minutes\'';
+  }
+
+  @override
+  String kitchenStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'new': 'New',
+      'preparing': 'Preparing',
+      'ready': 'Ready',
+      'served': 'Served',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get kitchenStart => 'Start';
+
+  @override
+  String get kitchenReady => 'Ready';
+
+  @override
+  String get kitchenServed => 'Served';
+
+  @override
+  String get kitchenSend => 'Send to kitchen';
+
+  @override
+  String kitchenSent(String number) {
+    return 'Sent to the kitchen: $number';
+  }
+
+  @override
+  String kitchenNoPrinter(String stations) {
+    return 'No printer for $stations: the ticket is on the kitchen display.';
+  }
+
+  @override
+  String get stationKitchen => 'Kitchen';
+
+  @override
+  String get stationBar => 'Bar';
+
+  @override
+  String get orderTakeaway => 'Takeaway';
+
+  @override
+  String ticketTable(String table, int guests) {
+    return '$table · $guests guests';
+  }
+
+  @override
+  String get ticketAddition => '-- ADDITION --';
+
+  @override
+  String get posErrTableOccupied =>
+      'This table already has an open bill. Resume that bill instead.';
+
+  @override
+  String get posErrTableHasBill =>
+      'Finish or cancel the bill on this table first.';
+
+  @override
+  String get posTablesHint => 'Dine-in bills by table';
+
+  @override
+  String get posKitchenHint => 'Open orders for the kitchen and bar';
+
+  @override
+  String get printerSlotReceipt => 'Receipt';
+
+  @override
+  String get printerSlotKitchen => 'Kitchen';
+
+  @override
+  String get printerSlotBar => 'Bar';
+
+  @override
+  String get tablesEmptyTerminal =>
+      'No tables yet. Add them in the back office (Tables).';
+
+  @override
+  String tableStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'available': 'Free',
+      'occupied': 'Occupied',
+      'reserved': 'Reserved',
+      'cleaning': 'Needs clearing',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get tableClear => 'Clear table';
+
+  @override
+  String tableCleared(String table) {
+    return '$table is free again';
+  }
+
+  @override
+  String get tableFinishCurrent => 'Hold or finish the current bill first.';
+
+  @override
+  String tableOccupiedElsewhere(String table) {
+    return '$table has a bill on another terminal.';
+  }
+
+  @override
+  String get tableGuests => 'Guests';
+
+  @override
+  String tableGuestsTitle(String table) {
+    return 'Seat guests at $table';
+  }
+
+  @override
+  String get tableSeat => 'Start bill';
 }

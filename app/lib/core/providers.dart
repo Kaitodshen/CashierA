@@ -104,6 +104,13 @@ CustomerService customerService(Ref ref) =>
     CustomerService(ref.watch(appDatabaseProvider));
 
 @Riverpod(keepAlive: true)
+FnbService fnbService(Ref ref) => FnbService(ref.watch(appDatabaseProvider));
+
+@Riverpod(keepAlive: true)
+KitchenQueueSource kitchenQueueSource(Ref ref) =>
+    SupabaseKitchenQueueSource(ref.watch(supabaseClientProvider));
+
+@Riverpod(keepAlive: true)
 PrinterRepository printerRepository(Ref ref) =>
     PrinterRepository(ref.watch(appDatabaseProvider));
 
@@ -120,6 +127,11 @@ PrinterService printerService(Ref ref) => PrinterService(
 @riverpod
 Stream<PrinterSetting?> receiptPrinter(Ref ref) =>
     ref.watch(printerRepositoryProvider).watch();
+
+/// The printer set up for [slot] (receipt, kitchen or bar), or null.
+@riverpod
+Stream<PrinterSetting?> slotPrinter(Ref ref, String slot) =>
+    ref.watch(printerRepositoryProvider).watch(slot: slot);
 
 @Riverpod(keepAlive: true)
 CatalogSource catalogSource(Ref ref) =>

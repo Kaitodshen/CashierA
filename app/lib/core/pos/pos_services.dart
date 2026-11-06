@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 export 'package:cashiera/core/pos/audit_service.dart';
+export 'package:cashiera/core/pos/fnb_service.dart';
 export 'package:cashiera/core/pos/kasbon_service.dart';
 export 'package:cashiera/core/pos/pos_errors.dart';
 export 'package:cashiera/core/pos/refund_service.dart';
@@ -185,6 +186,22 @@ class OrderService {
     }
   }
 
+  /// Refuses a second open bill on a dining table of this terminal.
+  Future<void> _checkTable(Cart cart) async {
+    final tableId = cart.tableId;
+    if (tableId == null) return;
+    final held =
+        await (_db.select(_db.localOrders)..where(
+              (o) => o.status.equals('held') & o.id.equals(cart.orderId).not(),
+            ))
+            .get();
+    for (final o in held) {
+      if ((jsonDecode(o.cartJson) as Map)['table_id'] == tableId) {
+        throw const PosStateException('table_occupied');
+      }
+    }
+  }
+
   /// Parks the bill (status `held`). Returns the cart with its number and
   /// version, to keep editing or to finish later.
   Future<Cart> hold({
@@ -195,6 +212,7 @@ class OrderService {
     if (cart.isEmpty) throw const PosStateException('empty');
     _checkDiscounts(cart, bill, ctx);
     return await _db.transaction(() async {
+      await _checkTable(cart);
       final now = clock.now();
       final number = cart.orderNumber ?? await _nextNumber(ctx, now);
       final saved = cart.copyWith(
@@ -251,6 +269,7 @@ class OrderService {
     _checkDiscounts(cart, bill, ctx);
 
     return await _db.transaction(() async {
+      await _checkTable(cart);
       final now = clock.now();
       final number = cart.orderNumber ?? await _nextNumber(ctx, now);
       final saved = cart.copyWith(
