@@ -1,4 +1,5 @@
 import 'package:cashiera/app/app_mode.dart';
+import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
@@ -129,6 +130,20 @@ class ShiftScreen extends ConsumerWidget {
     final input = await showCashMovementDialog(context, isIn: isIn);
     if (input == null || !context.mounted) return;
     final (amount, reason) = input;
+    // The drawer opens for the cash: the same approval as a no-sale open.
+    StaffMember? approver;
+    if (!ctx.staff.can('pos.open_drawer')) {
+      approver = await showApprovalDialog(
+        context,
+        permission: 'pos.open_drawer',
+        reason: l10n.cashMovementApproval(
+          isIn ? l10n.shiftCashIn : l10n.shiftCashOut,
+          amount.format(),
+          reason,
+        ),
+      );
+      if (approver == null || !context.mounted) return;
+    }
     try {
       await ref
           .read(shiftServiceProvider)
@@ -139,6 +154,7 @@ class ShiftScreen extends ConsumerWidget {
             amount: amount,
             reason: reason,
             config: ctx.config,
+            approver: approver,
           );
       ref.read(syncSchedulerProvider.notifier).syncNow().ignore();
       if (!context.mounted) return;

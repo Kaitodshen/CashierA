@@ -1,3 +1,4 @@
+import 'package:cashiera/core/pos/cart.dart';
 import 'package:cashiera/core/pos/receipt.dart';
 import 'package:cashiera/core/pos/shift_report_text.dart';
 import 'package:cashiera_core/cashiera_core.dart';
@@ -36,6 +37,7 @@ ReceiptDocument receiptDocument(
   PrintText(l.items(r.itemCount)),
   for (final (label, value, :strong) in receiptTotals(r, l))
     PrintRow(label, value, bold: strong),
+  if (r.pointsEarned > 0) PrintText(l.pointsEarned(r.pointsEarned)),
   if (r.kasbonDueDate != null) PrintText(l.kasbonDue(r.kasbonDueDate!)),
   const PrintRule(),
   PrintText(r.footer, align: PrintAlign.center),
@@ -141,5 +143,90 @@ ReceiptDocument testPageDocument({
   const PrintRow('Rp', '1.234.567'),
   const PrintQr('CashierA'),
   const PrintFeed(2),
+  const PrintCut(),
+]);
+
+/// What a kasbon installment slip shows.
+class KasbonSlipData {
+  const new({
+    required this.headerLines,
+    required this.title,
+    required this.dateText,
+    required this.customerLine,
+    required this.cashierLine,
+    required this.rows,
+    required this.methodLine,
+    this.settledText,
+  });
+
+  final List<String> headerLines;
+  final String title;
+  final String dateText;
+  final String customerLine;
+  final String cashierLine;
+
+  /// (label, value, strong): before, paid, after.
+  final List<(String, String, bool)> rows;
+  final String methodLine;
+
+  /// Printed large when nothing is owed any more.
+  final String? settledText;
+}
+
+ReceiptDocument kasbonSlipDocument(
+  KasbonSlipData r, {
+  bool openDrawer = false,
+}) => ReceiptDocument([
+  if (openDrawer) const PrintDrawer(),
+  for (final (i, line) in r.headerLines.indexed)
+    PrintText(line, align: PrintAlign.center, bold: i == 0),
+  PrintText(r.title, align: PrintAlign.center, bold: true),
+  const PrintRule(),
+  PrintText(r.dateText),
+  PrintText(r.customerLine),
+  PrintText(r.cashierLine),
+  const PrintRule(),
+  for (final (label, value, strong) in r.rows)
+    PrintRow(label, value, bold: strong),
+  PrintText(r.methodLine),
+  if (r.settledText != null) ...[
+    const PrintFeed(),
+    PrintText(
+      r.settledText!,
+      align: PrintAlign.center,
+      bold: true,
+      large: true,
+    ),
+  ],
+  const PrintFeed(2),
+  const PrintCut(),
+]);
+
+/// One station's order ticket (F&B): large table and order number, then
+/// the items with their modifiers and notes, no prices.
+ReceiptDocument kitchenTicketDocument({
+  required String stationLabel,
+  required String orderNumber,
+  required String timeText,
+  required List<(CartLine, Qty)> lines,
+  String? tableLine,
+  String? note,
+  String? additionLabel,
+}) => ReceiptDocument([
+  PrintText(stationLabel.toUpperCase(), align: PrintAlign.center, bold: true),
+  if (tableLine != null)
+    PrintText(tableLine, align: PrintAlign.center, bold: true, large: true),
+  if (additionLabel != null)
+    PrintText(additionLabel, align: PrintAlign.center, bold: true),
+  PrintRow(orderNumber, timeText),
+  const PrintRule(),
+  for (final (line, qty) in lines) ...[
+    PrintText('${qty.toPlain()} x ${line.displayName}', bold: true),
+    for (final m in line.modifiers) PrintText('  + ${m.name}'),
+    if (line.note != null && line.note!.isNotEmpty)
+      PrintText('  ! ${line.note}'),
+  ],
+  if (note != null && note.isNotEmpty) ...[const PrintRule(), PrintText(note)],
+  const PrintFeed(3),
   const PrintCut(),
 ]);

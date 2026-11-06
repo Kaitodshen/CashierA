@@ -28,6 +28,7 @@ class ReceiptLabels {
     required this.voided,
     required this.copy,
     required this.items,
+    required this.pointsEarned,
   });
 
   final String cashier;
@@ -53,6 +54,9 @@ class ReceiptLabels {
   /// Printed on reprints.
   final String copy;
   final String Function(int count) items;
+
+  /// e.g. `Poin didapat: 3`.
+  final String Function(int points) pointsEarned;
 }
 
 /// The banner for a receipt that is not a finished sale.
@@ -122,6 +126,7 @@ class ReceiptData {
     required this.paperMm,
     this.customerName,
     this.kasbonDueDate,
+    this.pointsEarned = 0,
   });
 
   factory fromOrder(LocalOrderRow order, PosConfig config) {
@@ -224,6 +229,7 @@ class ReceiptData {
       itemCount: order.itemCount,
       paperMm: config.paperMm,
       kasbonDueDate: p['kasbon_due_date'] as String?,
+      pointsEarned: (p['points_earned'] as num? ?? 0).toInt(),
     );
   }
 
@@ -253,6 +259,9 @@ class ReceiptData {
   final int itemCount;
   final int paperMm;
   final String? kasbonDueDate;
+
+  /// Loyalty points this sale earned.
+  final int pointsEarned;
 
   Money get changeTotal =>
       payments.fold(Money.zero, (a, p) => a + (p.change ?? Money.zero));
@@ -362,6 +371,8 @@ Future<Uint8List> buildReceiptPdf(ReceiptData r, ReceiptLabels l) {
             pw.Text(pdfSafe(l.items(r.itemCount)), style: small),
             for (final (label, value, strong: isStrong) in receiptTotals(r, l))
               row(label, value, isStrong: isStrong),
+            if (r.pointsEarned > 0)
+              pw.Text(pdfSafe(l.pointsEarned(r.pointsEarned)), style: small),
             if (r.kasbonDueDate != null)
               pw.Text(pdfSafe(l.kasbonDue(r.kasbonDueDate!)), style: small),
             rule(),

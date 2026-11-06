@@ -16,6 +16,7 @@ class _Destination {
 
 final _destinations = <_Destination>[
   _Destination(AppRoutes.admin, Icons.dashboard_outlined, (l) => l.navHome),
+  _Destination(AppRoutes.adminReports, Icons.bar_chart, (l) => l.navReports),
   _Destination(
     AppRoutes.adminProducts,
     Icons.inventory_2_outlined,
@@ -36,6 +37,21 @@ final _destinations = <_Destination>[
     Icons.warehouse_outlined,
     (l) => l.navStock,
   ),
+  _Destination(
+    AppRoutes.adminPurchaseOrders,
+    Icons.shopping_cart_outlined,
+    (l) => l.navPurchasing,
+  ),
+  _Destination(
+    AppRoutes.adminTransfers,
+    Icons.swap_horiz,
+    (l) => l.navTransfers,
+  ),
+  _Destination(
+    AppRoutes.adminTables,
+    Icons.table_restaurant_outlined,
+    (l) => l.navTables,
+  ),
   _Destination(AppRoutes.adminImport, Icons.import_export, (l) => l.navImport),
   _Destination(
     AppRoutes.adminPromotions,
@@ -53,6 +69,21 @@ final _destinations = <_Destination>[
     (l) => l.navShifts,
   ),
   _Destination(AppRoutes.adminAudit, Icons.policy_outlined, (l) => l.navAudit),
+  _Destination(
+    AppRoutes.adminCustomers,
+    Icons.people_outline,
+    (l) => l.navCustomers,
+  ),
+  _Destination(
+    AppRoutes.adminKasbon,
+    Icons.request_quote_outlined,
+    (l) => l.navKasbon,
+  ),
+  _Destination(
+    AppRoutes.adminLoyalty,
+    Icons.stars_outlined,
+    (l) => l.navLoyalty,
+  ),
   _Destination(
     AppRoutes.adminSettings,
     Icons.settings_outlined,

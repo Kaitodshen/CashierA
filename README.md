@@ -10,8 +10,10 @@ A multi-store point of sale and back office for Indonesian retail, offline-first
 | 3 · Catalog, inventory, CSV/XLSX import and export | ✅ done | [app/README.md](app/README.md), [plan](docs/superpowers/plans/2026-11-05-phase-3-catalog-inventory.md), [import template](docs/templates/README.md) |
 | 4 · Cashier: pricing engine, cart, promos, vouchers, split payments, kasbon, receipts | ✅ done | [app/README.md](app/README.md), [plan](docs/superpowers/plans/2026-11-06-phase-4-cashier.md) |
 | 5 · Shift close, X/Z reports, cash in/out, voids, refunds, approvals, audit log, thermal printing and drawer | ✅ done | [app/README.md](app/README.md), [plan](docs/superpowers/plans/2026-11-06-phase-5-shifts-printing.md) |
-| 6 · Customers, loyalty, kasbon ledger | next | — |
-| 7 to 9 | planned | see the phase plan in the architecture doc |
+| 6 · Customers, loyalty points, kasbon ledger and installments | ✅ done | [app/README.md](app/README.md), [plan](docs/superpowers/plans/2026-11-07-phase-6-customers-loyalty-kasbon.md) |
+| 7 · Dashboard and reports (sales, payments, products, staff, tax, stock value) with PDF/Excel export | ✅ done | [app/README.md](app/README.md), [plan](docs/superpowers/plans/2026-11-07-phase-7-reports.md) |
+| 8 · F&B tables, KDS, transfers, purchase orders | next | — |
+| 9 | planned | see the phase plan in the architecture doc |
 
 ## Run the tests
 

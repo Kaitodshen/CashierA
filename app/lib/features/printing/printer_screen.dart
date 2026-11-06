@@ -22,8 +22,15 @@ String connectionLabel(AppLocalizations l10n, PrinterConnection c) =>
       PrinterConnection.network => l10n.printerNetwork,
     };
 
-/// Sets up the terminal's receipt printer: find a Bluetooth or USB printer
-/// or type a network address, paper width, drawer and auto-print, test.
+String printerSlotLabel(AppLocalizations l10n, String slot) => switch (slot) {
+  PrinterRepository.kitchenId => l10n.printerSlotKitchen,
+  PrinterRepository.barId => l10n.printerSlotBar,
+  _ => l10n.printerSlotReceipt,
+};
+
+/// Sets up the terminal's printers: find a Bluetooth or USB printer or type
+/// a network address, paper width, drawer and auto-print, test. F&B stores
+/// also get a kitchen and a bar printer for order tickets.
 class PrinterScreen extends ConsumerStatefulWidget {
   const new({super.key});
 
@@ -43,6 +50,9 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
   bool _busy = false;
   bool _searching = false;
   List<DiscoveredPrinter>? _found;
+  String _slot = PrinterRepository.receiptId;
+
+  bool get _isReceipt => _slot == PrinterRepository.receiptId;
 
   @override
   void initState() {
@@ -51,10 +61,18 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
   }
 
   Future<void> _load() async {
-    final current = await ref.read(printerRepositoryProvider).current();
+    final current = await ref
+        .read(printerRepositoryProvider)
+        .current(slot: _slot);
     final paper = ref.read(posConfigProvider).value?.paperMm;
     if (!mounted) return;
     setState(() {
+      _found = null;
+      _name.clear();
+      _address.clear();
+      _connection = PrinterConnection.ble;
+      _opensDrawer = false;
+      _autoPrint = false;
       if (current != null) {
         _name.text = current.name;
         _address.text = current.address;
@@ -84,8 +102,8 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
       connection: _connection,
       address: address,
       paperMm: _paperMm,
-      opensCashDrawer: _opensDrawer,
-      autoPrint: _autoPrint,
+      opensCashDrawer: _isReceipt && _opensDrawer,
+      autoPrint: _isReceipt && _autoPrint,
     );
   }
 
@@ -115,7 +133,7 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
   Future<void> _save() async {
     final setting = _setting();
     if (setting == null) return;
-    await ref.read(printerRepositoryProvider).save(setting);
+    await ref.read(printerRepositoryProvider).save(setting, slot: _slot);
     if (mounted) AppToast.success(context, context.l10n.printerSaved);
   }
 
@@ -152,7 +170,7 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
   }
 
   Future<void> _remove() async {
-    await ref.read(printerRepositoryProvider).remove();
+    await ref.read(printerRepositoryProvider).remove(slot: _slot);
     if (!mounted) return;
     setState(() {
       _name.clear();
@@ -165,7 +183,8 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final current = ref.watch(receiptPrinterProvider).value;
+    final current = ref.watch(slotPrinterProvider(_slot)).value;
+    final fnb = ref.watch(posConfigProvider).value?.fnbMode ?? false;
     final canDiscover = ref.watch(printerTransportProvider).canDiscover;
     final network = _connection == PrinterConnection.network;
 
@@ -184,6 +203,24 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
                   child: ListView(
                     padding: const EdgeInsets.all(AppSpacing.lg),
                     children: [
+                      if (fnb || !_isReceipt) ...[
+                        SegmentedButton<String>(
+                          key: const Key('printer-slot'),
+                          segments: [
+                            for (final s in PrinterRepository.slots)
+                              ButtonSegment(
+                                value: s,
+                                label: Text(printerSlotLabel(l10n, s)),
+                              ),
+                          ],
+                          selected: {_slot},
+                          onSelectionChanged: (v) {
+                            setState(() => _slot = v.single);
+                            unawaited(_load());
+                          },
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                      ],
                       Card(
                         child: ListTile(
                           leading: const Icon(Icons.print_outlined),
@@ -299,20 +336,22 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
                         onSelectionChanged: (v) =>
                             setState(() => _paperMm = v.single),
                       ),
-                      SwitchListTile(
-                        key: const Key('printer-drawer'),
-                        contentPadding: EdgeInsets.zero,
-                        value: _opensDrawer,
-                        onChanged: (v) => setState(() => _opensDrawer = v),
-                        title: Text(l10n.printerOpensDrawer),
-                      ),
-                      SwitchListTile(
-                        key: const Key('printer-auto'),
-                        contentPadding: EdgeInsets.zero,
-                        value: _autoPrint,
-                        onChanged: (v) => setState(() => _autoPrint = v),
-                        title: Text(l10n.printerAutoPrint),
-                      ),
+                      if (_isReceipt) ...[
+                        SwitchListTile(
+                          key: const Key('printer-drawer'),
+                          contentPadding: EdgeInsets.zero,
+                          value: _opensDrawer,
+                          onChanged: (v) => setState(() => _opensDrawer = v),
+                          title: Text(l10n.printerOpensDrawer),
+                        ),
+                        SwitchListTile(
+                          key: const Key('printer-auto'),
+                          contentPadding: EdgeInsets.zero,
+                          value: _autoPrint,
+                          onChanged: (v) => setState(() => _autoPrint = v),
+                          title: Text(l10n.printerAutoPrint),
+                        ),
+                      ],
                       const SizedBox(height: AppSpacing.lg),
                       Wrap(
                         spacing: AppSpacing.md,

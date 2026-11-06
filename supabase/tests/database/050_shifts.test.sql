@@ -18,7 +18,7 @@ insert into t_payload values
      '{"payments":[{"method":"cash","amount":50000,"tendered":50000},{"method":"debit","reference":"APR123"}]}'::jsonb)),
   ('s4', tests.order_payload(tests.uuid('050:order:4'), tests.id('store.pst'), tests.uuid('050:shift:1'), tests.id('emp.eko'),
      'PST-T1-261105-0304', '[{"sku":"SMB-GLA-1KG","qty":"1"}]'::jsonb, 'completed', 1,
-     jsonb_build_object('customer_id', tests.customer(4), 'earn_points', false,
+     jsonb_build_object('customer_id', tests.customer(4),
                         'payments', jsonb_build_array(jsonb_build_object('method', 'kasbon')))));
 
 create or replace function pg_temp.cash(p_seed text, p_type text, p_amount bigint, p_reason text, p_shift text default '050:shift:1')

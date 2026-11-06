@@ -12491,6 +12491,1110 @@ class LocalPrintersCompanion extends UpdateCompanion<PrinterRow> {
   }
 }
 
+class $LocalReceivablesTable extends LocalReceivables
+    with TableInfo<$LocalReceivablesTable, ReceivableRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalReceivablesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _orderIdMeta = const VerificationMeta(
+    'orderId',
+  );
+  @override
+  late final GeneratedColumn<String> orderId = GeneratedColumn<String>(
+    'order_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _receivableIdMeta = const VerificationMeta(
+    'receivableId',
+  );
+  @override
+  late final GeneratedColumn<String> receivableId = GeneratedColumn<String>(
+    'receivable_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _customerIdMeta = const VerificationMeta(
+    'customerId',
+  );
+  @override
+  late final GeneratedColumn<String> customerId = GeneratedColumn<String>(
+    'customer_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paidAmountMeta = const VerificationMeta(
+    'paidAmount',
+  );
+  @override
+  late final GeneratedColumn<int> paidAmount = GeneratedColumn<int>(
+    'paid_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dueDateMeta = const VerificationMeta(
+    'dueDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dueDate = GeneratedColumn<DateTime>(
+    'due_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    orderId,
+    receivableId,
+    customerId,
+    amount,
+    paidAmount,
+    dueDate,
+    status,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_receivables';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ReceivableRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('order_id')) {
+      context.handle(
+        _orderIdMeta,
+        orderId.isAcceptableOrUnknown(data['order_id']!, _orderIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_orderIdMeta);
+    }
+    if (data.containsKey('receivable_id')) {
+      context.handle(
+        _receivableIdMeta,
+        receivableId.isAcceptableOrUnknown(
+          data['receivable_id']!,
+          _receivableIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('customer_id')) {
+      context.handle(
+        _customerIdMeta,
+        customerId.isAcceptableOrUnknown(data['customer_id']!, _customerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_customerIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('paid_amount')) {
+      context.handle(
+        _paidAmountMeta,
+        paidAmount.isAcceptableOrUnknown(data['paid_amount']!, _paidAmountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paidAmountMeta);
+    }
+    if (data.containsKey('due_date')) {
+      context.handle(
+        _dueDateMeta,
+        dueDate.isAcceptableOrUnknown(data['due_date']!, _dueDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dueDateMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {orderId};
+  @override
+  ReceivableRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReceivableRow(
+      orderId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}order_id'],
+      )!,
+      receivableId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}receivable_id'],
+      ),
+      customerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}customer_id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+      paidAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}paid_amount'],
+      )!,
+      dueDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}due_date'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalReceivablesTable createAlias(String alias) {
+    return $LocalReceivablesTable(attachedDatabase, alias);
+  }
+}
+
+class ReceivableRow extends DataClass implements Insertable<ReceivableRow> {
+  final String orderId;
+
+  /// The server's receivable id, once pulled.
+  final String? receivableId;
+  final String customerId;
+  final int amount;
+  final int paidAmount;
+
+  /// Store-local due date (midnight UTC of that day).
+  final DateTime dueDate;
+
+  /// `open`, `partial`, `paid` or `void`.
+  final String status;
+  final DateTime updatedAt;
+  const ReceivableRow({
+    required this.orderId,
+    this.receivableId,
+    required this.customerId,
+    required this.amount,
+    required this.paidAmount,
+    required this.dueDate,
+    required this.status,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['order_id'] = Variable<String>(orderId);
+    if (!nullToAbsent || receivableId != null) {
+      map['receivable_id'] = Variable<String>(receivableId);
+    }
+    map['customer_id'] = Variable<String>(customerId);
+    map['amount'] = Variable<int>(amount);
+    map['paid_amount'] = Variable<int>(paidAmount);
+    map['due_date'] = Variable<DateTime>(dueDate);
+    map['status'] = Variable<String>(status);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  LocalReceivablesCompanion toCompanion(bool nullToAbsent) {
+    return LocalReceivablesCompanion(
+      orderId: Value(orderId),
+      receivableId: receivableId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(receivableId),
+      customerId: Value(customerId),
+      amount: Value(amount),
+      paidAmount: Value(paidAmount),
+      dueDate: Value(dueDate),
+      status: Value(status),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory ReceivableRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReceivableRow(
+      orderId: serializer.fromJson<String>(json['orderId']),
+      receivableId: serializer.fromJson<String?>(json['receivableId']),
+      customerId: serializer.fromJson<String>(json['customerId']),
+      amount: serializer.fromJson<int>(json['amount']),
+      paidAmount: serializer.fromJson<int>(json['paidAmount']),
+      dueDate: serializer.fromJson<DateTime>(json['dueDate']),
+      status: serializer.fromJson<String>(json['status']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'orderId': serializer.toJson<String>(orderId),
+      'receivableId': serializer.toJson<String?>(receivableId),
+      'customerId': serializer.toJson<String>(customerId),
+      'amount': serializer.toJson<int>(amount),
+      'paidAmount': serializer.toJson<int>(paidAmount),
+      'dueDate': serializer.toJson<DateTime>(dueDate),
+      'status': serializer.toJson<String>(status),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  ReceivableRow copyWith({
+    String? orderId,
+    Value<String?> receivableId = const Value.absent(),
+    String? customerId,
+    int? amount,
+    int? paidAmount,
+    DateTime? dueDate,
+    String? status,
+    DateTime? updatedAt,
+  }) => ReceivableRow(
+    orderId: orderId ?? this.orderId,
+    receivableId: receivableId.present ? receivableId.value : this.receivableId,
+    customerId: customerId ?? this.customerId,
+    amount: amount ?? this.amount,
+    paidAmount: paidAmount ?? this.paidAmount,
+    dueDate: dueDate ?? this.dueDate,
+    status: status ?? this.status,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  ReceivableRow copyWithCompanion(LocalReceivablesCompanion data) {
+    return ReceivableRow(
+      orderId: data.orderId.present ? data.orderId.value : this.orderId,
+      receivableId: data.receivableId.present
+          ? data.receivableId.value
+          : this.receivableId,
+      customerId: data.customerId.present
+          ? data.customerId.value
+          : this.customerId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      paidAmount: data.paidAmount.present
+          ? data.paidAmount.value
+          : this.paidAmount,
+      dueDate: data.dueDate.present ? data.dueDate.value : this.dueDate,
+      status: data.status.present ? data.status.value : this.status,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReceivableRow(')
+          ..write('orderId: $orderId, ')
+          ..write('receivableId: $receivableId, ')
+          ..write('customerId: $customerId, ')
+          ..write('amount: $amount, ')
+          ..write('paidAmount: $paidAmount, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('status: $status, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    orderId,
+    receivableId,
+    customerId,
+    amount,
+    paidAmount,
+    dueDate,
+    status,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReceivableRow &&
+          other.orderId == this.orderId &&
+          other.receivableId == this.receivableId &&
+          other.customerId == this.customerId &&
+          other.amount == this.amount &&
+          other.paidAmount == this.paidAmount &&
+          other.dueDate == this.dueDate &&
+          other.status == this.status &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LocalReceivablesCompanion extends UpdateCompanion<ReceivableRow> {
+  final Value<String> orderId;
+  final Value<String?> receivableId;
+  final Value<String> customerId;
+  final Value<int> amount;
+  final Value<int> paidAmount;
+  final Value<DateTime> dueDate;
+  final Value<String> status;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const LocalReceivablesCompanion({
+    this.orderId = const Value.absent(),
+    this.receivableId = const Value.absent(),
+    this.customerId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.paidAmount = const Value.absent(),
+    this.dueDate = const Value.absent(),
+    this.status = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalReceivablesCompanion.insert({
+    required String orderId,
+    this.receivableId = const Value.absent(),
+    required String customerId,
+    required int amount,
+    required int paidAmount,
+    required DateTime dueDate,
+    required String status,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : orderId = Value(orderId),
+       customerId = Value(customerId),
+       amount = Value(amount),
+       paidAmount = Value(paidAmount),
+       dueDate = Value(dueDate),
+       status = Value(status),
+       updatedAt = Value(updatedAt);
+  static Insertable<ReceivableRow> custom({
+    Expression<String>? orderId,
+    Expression<String>? receivableId,
+    Expression<String>? customerId,
+    Expression<int>? amount,
+    Expression<int>? paidAmount,
+    Expression<DateTime>? dueDate,
+    Expression<String>? status,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (orderId != null) 'order_id': orderId,
+      if (receivableId != null) 'receivable_id': receivableId,
+      if (customerId != null) 'customer_id': customerId,
+      if (amount != null) 'amount': amount,
+      if (paidAmount != null) 'paid_amount': paidAmount,
+      if (dueDate != null) 'due_date': dueDate,
+      if (status != null) 'status': status,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalReceivablesCompanion copyWith({
+    Value<String>? orderId,
+    Value<String?>? receivableId,
+    Value<String>? customerId,
+    Value<int>? amount,
+    Value<int>? paidAmount,
+    Value<DateTime>? dueDate,
+    Value<String>? status,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LocalReceivablesCompanion(
+      orderId: orderId ?? this.orderId,
+      receivableId: receivableId ?? this.receivableId,
+      customerId: customerId ?? this.customerId,
+      amount: amount ?? this.amount,
+      paidAmount: paidAmount ?? this.paidAmount,
+      dueDate: dueDate ?? this.dueDate,
+      status: status ?? this.status,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (orderId.present) {
+      map['order_id'] = Variable<String>(orderId.value);
+    }
+    if (receivableId.present) {
+      map['receivable_id'] = Variable<String>(receivableId.value);
+    }
+    if (customerId.present) {
+      map['customer_id'] = Variable<String>(customerId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (paidAmount.present) {
+      map['paid_amount'] = Variable<int>(paidAmount.value);
+    }
+    if (dueDate.present) {
+      map['due_date'] = Variable<DateTime>(dueDate.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalReceivablesCompanion(')
+          ..write('orderId: $orderId, ')
+          ..write('receivableId: $receivableId, ')
+          ..write('customerId: $customerId, ')
+          ..write('amount: $amount, ')
+          ..write('paidAmount: $paidAmount, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('status: $status, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LocalReceivablePaymentsTable extends LocalReceivablePayments
+    with TableInfo<$LocalReceivablePaymentsTable, ReceivablePaymentRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalReceivablePaymentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _orderIdMeta = const VerificationMeta(
+    'orderId',
+  );
+  @override
+  late final GeneratedColumn<String> orderId = GeneratedColumn<String>(
+    'order_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _customerIdMeta = const VerificationMeta(
+    'customerId',
+  );
+  @override
+  late final GeneratedColumn<String> customerId = GeneratedColumn<String>(
+    'customer_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _shiftIdMeta = const VerificationMeta(
+    'shiftId',
+  );
+  @override
+  late final GeneratedColumn<String> shiftId = GeneratedColumn<String>(
+    'shift_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _methodTypeMeta = const VerificationMeta(
+    'methodType',
+  );
+  @override
+  late final GeneratedColumn<String> methodType = GeneratedColumn<String>(
+    'method_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _referenceMeta = const VerificationMeta(
+    'reference',
+  );
+  @override
+  late final GeneratedColumn<String> reference = GeneratedColumn<String>(
+    'reference',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _employeeNameMeta = const VerificationMeta(
+    'employeeName',
+  );
+  @override
+  late final GeneratedColumn<String> employeeName = GeneratedColumn<String>(
+    'employee_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _paidAtMeta = const VerificationMeta('paidAt');
+  @override
+  late final GeneratedColumn<DateTime> paidAt = GeneratedColumn<DateTime>(
+    'paid_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    orderId,
+    customerId,
+    shiftId,
+    amount,
+    methodType,
+    reference,
+    employeeName,
+    paidAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_receivable_payments';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ReceivablePaymentRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('order_id')) {
+      context.handle(
+        _orderIdMeta,
+        orderId.isAcceptableOrUnknown(data['order_id']!, _orderIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_orderIdMeta);
+    }
+    if (data.containsKey('customer_id')) {
+      context.handle(
+        _customerIdMeta,
+        customerId.isAcceptableOrUnknown(data['customer_id']!, _customerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_customerIdMeta);
+    }
+    if (data.containsKey('shift_id')) {
+      context.handle(
+        _shiftIdMeta,
+        shiftId.isAcceptableOrUnknown(data['shift_id']!, _shiftIdMeta),
+      );
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('method_type')) {
+      context.handle(
+        _methodTypeMeta,
+        methodType.isAcceptableOrUnknown(data['method_type']!, _methodTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_methodTypeMeta);
+    }
+    if (data.containsKey('reference')) {
+      context.handle(
+        _referenceMeta,
+        reference.isAcceptableOrUnknown(data['reference']!, _referenceMeta),
+      );
+    }
+    if (data.containsKey('employee_name')) {
+      context.handle(
+        _employeeNameMeta,
+        employeeName.isAcceptableOrUnknown(
+          data['employee_name']!,
+          _employeeNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_employeeNameMeta);
+    }
+    if (data.containsKey('paid_at')) {
+      context.handle(
+        _paidAtMeta,
+        paidAt.isAcceptableOrUnknown(data['paid_at']!, _paidAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paidAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ReceivablePaymentRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReceivablePaymentRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      orderId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}order_id'],
+      )!,
+      customerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}customer_id'],
+      )!,
+      shiftId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}shift_id'],
+      ),
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+      methodType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}method_type'],
+      )!,
+      reference: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference'],
+      ),
+      employeeName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}employee_name'],
+      )!,
+      paidAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}paid_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalReceivablePaymentsTable createAlias(String alias) {
+    return $LocalReceivablePaymentsTable(attachedDatabase, alias);
+  }
+}
+
+class ReceivablePaymentRow extends DataClass
+    implements Insertable<ReceivablePaymentRow> {
+  final String id;
+  final String orderId;
+  final String customerId;
+
+  /// The open shift (required for cash).
+  final String? shiftId;
+  final int amount;
+
+  /// `cash`, `qris`, `card`, `transfer` or `ewallet`.
+  final String methodType;
+  final String? reference;
+  final String employeeName;
+  final DateTime paidAt;
+  const ReceivablePaymentRow({
+    required this.id,
+    required this.orderId,
+    required this.customerId,
+    this.shiftId,
+    required this.amount,
+    required this.methodType,
+    this.reference,
+    required this.employeeName,
+    required this.paidAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['order_id'] = Variable<String>(orderId);
+    map['customer_id'] = Variable<String>(customerId);
+    if (!nullToAbsent || shiftId != null) {
+      map['shift_id'] = Variable<String>(shiftId);
+    }
+    map['amount'] = Variable<int>(amount);
+    map['method_type'] = Variable<String>(methodType);
+    if (!nullToAbsent || reference != null) {
+      map['reference'] = Variable<String>(reference);
+    }
+    map['employee_name'] = Variable<String>(employeeName);
+    map['paid_at'] = Variable<DateTime>(paidAt);
+    return map;
+  }
+
+  LocalReceivablePaymentsCompanion toCompanion(bool nullToAbsent) {
+    return LocalReceivablePaymentsCompanion(
+      id: Value(id),
+      orderId: Value(orderId),
+      customerId: Value(customerId),
+      shiftId: shiftId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(shiftId),
+      amount: Value(amount),
+      methodType: Value(methodType),
+      reference: reference == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reference),
+      employeeName: Value(employeeName),
+      paidAt: Value(paidAt),
+    );
+  }
+
+  factory ReceivablePaymentRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReceivablePaymentRow(
+      id: serializer.fromJson<String>(json['id']),
+      orderId: serializer.fromJson<String>(json['orderId']),
+      customerId: serializer.fromJson<String>(json['customerId']),
+      shiftId: serializer.fromJson<String?>(json['shiftId']),
+      amount: serializer.fromJson<int>(json['amount']),
+      methodType: serializer.fromJson<String>(json['methodType']),
+      reference: serializer.fromJson<String?>(json['reference']),
+      employeeName: serializer.fromJson<String>(json['employeeName']),
+      paidAt: serializer.fromJson<DateTime>(json['paidAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'orderId': serializer.toJson<String>(orderId),
+      'customerId': serializer.toJson<String>(customerId),
+      'shiftId': serializer.toJson<String?>(shiftId),
+      'amount': serializer.toJson<int>(amount),
+      'methodType': serializer.toJson<String>(methodType),
+      'reference': serializer.toJson<String?>(reference),
+      'employeeName': serializer.toJson<String>(employeeName),
+      'paidAt': serializer.toJson<DateTime>(paidAt),
+    };
+  }
+
+  ReceivablePaymentRow copyWith({
+    String? id,
+    String? orderId,
+    String? customerId,
+    Value<String?> shiftId = const Value.absent(),
+    int? amount,
+    String? methodType,
+    Value<String?> reference = const Value.absent(),
+    String? employeeName,
+    DateTime? paidAt,
+  }) => ReceivablePaymentRow(
+    id: id ?? this.id,
+    orderId: orderId ?? this.orderId,
+    customerId: customerId ?? this.customerId,
+    shiftId: shiftId.present ? shiftId.value : this.shiftId,
+    amount: amount ?? this.amount,
+    methodType: methodType ?? this.methodType,
+    reference: reference.present ? reference.value : this.reference,
+    employeeName: employeeName ?? this.employeeName,
+    paidAt: paidAt ?? this.paidAt,
+  );
+  ReceivablePaymentRow copyWithCompanion(
+    LocalReceivablePaymentsCompanion data,
+  ) {
+    return ReceivablePaymentRow(
+      id: data.id.present ? data.id.value : this.id,
+      orderId: data.orderId.present ? data.orderId.value : this.orderId,
+      customerId: data.customerId.present
+          ? data.customerId.value
+          : this.customerId,
+      shiftId: data.shiftId.present ? data.shiftId.value : this.shiftId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      methodType: data.methodType.present
+          ? data.methodType.value
+          : this.methodType,
+      reference: data.reference.present ? data.reference.value : this.reference,
+      employeeName: data.employeeName.present
+          ? data.employeeName.value
+          : this.employeeName,
+      paidAt: data.paidAt.present ? data.paidAt.value : this.paidAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReceivablePaymentRow(')
+          ..write('id: $id, ')
+          ..write('orderId: $orderId, ')
+          ..write('customerId: $customerId, ')
+          ..write('shiftId: $shiftId, ')
+          ..write('amount: $amount, ')
+          ..write('methodType: $methodType, ')
+          ..write('reference: $reference, ')
+          ..write('employeeName: $employeeName, ')
+          ..write('paidAt: $paidAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    orderId,
+    customerId,
+    shiftId,
+    amount,
+    methodType,
+    reference,
+    employeeName,
+    paidAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReceivablePaymentRow &&
+          other.id == this.id &&
+          other.orderId == this.orderId &&
+          other.customerId == this.customerId &&
+          other.shiftId == this.shiftId &&
+          other.amount == this.amount &&
+          other.methodType == this.methodType &&
+          other.reference == this.reference &&
+          other.employeeName == this.employeeName &&
+          other.paidAt == this.paidAt);
+}
+
+class LocalReceivablePaymentsCompanion
+    extends UpdateCompanion<ReceivablePaymentRow> {
+  final Value<String> id;
+  final Value<String> orderId;
+  final Value<String> customerId;
+  final Value<String?> shiftId;
+  final Value<int> amount;
+  final Value<String> methodType;
+  final Value<String?> reference;
+  final Value<String> employeeName;
+  final Value<DateTime> paidAt;
+  final Value<int> rowid;
+  const LocalReceivablePaymentsCompanion({
+    this.id = const Value.absent(),
+    this.orderId = const Value.absent(),
+    this.customerId = const Value.absent(),
+    this.shiftId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.methodType = const Value.absent(),
+    this.reference = const Value.absent(),
+    this.employeeName = const Value.absent(),
+    this.paidAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalReceivablePaymentsCompanion.insert({
+    required String id,
+    required String orderId,
+    required String customerId,
+    this.shiftId = const Value.absent(),
+    required int amount,
+    required String methodType,
+    this.reference = const Value.absent(),
+    required String employeeName,
+    required DateTime paidAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       orderId = Value(orderId),
+       customerId = Value(customerId),
+       amount = Value(amount),
+       methodType = Value(methodType),
+       employeeName = Value(employeeName),
+       paidAt = Value(paidAt);
+  static Insertable<ReceivablePaymentRow> custom({
+    Expression<String>? id,
+    Expression<String>? orderId,
+    Expression<String>? customerId,
+    Expression<String>? shiftId,
+    Expression<int>? amount,
+    Expression<String>? methodType,
+    Expression<String>? reference,
+    Expression<String>? employeeName,
+    Expression<DateTime>? paidAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (orderId != null) 'order_id': orderId,
+      if (customerId != null) 'customer_id': customerId,
+      if (shiftId != null) 'shift_id': shiftId,
+      if (amount != null) 'amount': amount,
+      if (methodType != null) 'method_type': methodType,
+      if (reference != null) 'reference': reference,
+      if (employeeName != null) 'employee_name': employeeName,
+      if (paidAt != null) 'paid_at': paidAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalReceivablePaymentsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? orderId,
+    Value<String>? customerId,
+    Value<String?>? shiftId,
+    Value<int>? amount,
+    Value<String>? methodType,
+    Value<String?>? reference,
+    Value<String>? employeeName,
+    Value<DateTime>? paidAt,
+    Value<int>? rowid,
+  }) {
+    return LocalReceivablePaymentsCompanion(
+      id: id ?? this.id,
+      orderId: orderId ?? this.orderId,
+      customerId: customerId ?? this.customerId,
+      shiftId: shiftId ?? this.shiftId,
+      amount: amount ?? this.amount,
+      methodType: methodType ?? this.methodType,
+      reference: reference ?? this.reference,
+      employeeName: employeeName ?? this.employeeName,
+      paidAt: paidAt ?? this.paidAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (orderId.present) {
+      map['order_id'] = Variable<String>(orderId.value);
+    }
+    if (customerId.present) {
+      map['customer_id'] = Variable<String>(customerId.value);
+    }
+    if (shiftId.present) {
+      map['shift_id'] = Variable<String>(shiftId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (methodType.present) {
+      map['method_type'] = Variable<String>(methodType.value);
+    }
+    if (reference.present) {
+      map['reference'] = Variable<String>(reference.value);
+    }
+    if (employeeName.present) {
+      map['employee_name'] = Variable<String>(employeeName.value);
+    }
+    if (paidAt.present) {
+      map['paid_at'] = Variable<DateTime>(paidAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalReceivablePaymentsCompanion(')
+          ..write('id: $id, ')
+          ..write('orderId: $orderId, ')
+          ..write('customerId: $customerId, ')
+          ..write('shiftId: $shiftId, ')
+          ..write('amount: $amount, ')
+          ..write('methodType: $methodType, ')
+          ..write('reference: $reference, ')
+          ..write('employeeName: $employeeName, ')
+          ..write('paidAt: $paidAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -12525,6 +13629,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $LocalCashMovementsTable(this);
   late final $LocalRefundsTable localRefunds = $LocalRefundsTable(this);
   late final $LocalPrintersTable localPrinters = $LocalPrintersTable(this);
+  late final $LocalReceivablesTable localReceivables = $LocalReceivablesTable(
+    this,
+  );
+  late final $LocalReceivablePaymentsTable localReceivablePayments =
+      $LocalReceivablePaymentsTable(this);
   late final SyncQueueDao syncQueueDao = SyncQueueDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -12556,6 +13665,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     localCashMovements,
     localRefunds,
     localPrinters,
+    localReceivables,
+    localReceivablePayments,
   ];
   @override
   DriftDatabaseOptions get options =>
@@ -19131,6 +20242,597 @@ typedef $$LocalPrintersTableProcessedTableManager =
       PrinterRow,
       PrefetchHooks Function()
     >;
+typedef $$LocalReceivablesTableCreateCompanionBuilder =
+    LocalReceivablesCompanion Function({
+      required String orderId,
+      Value<String?> receivableId,
+      required String customerId,
+      required int amount,
+      required int paidAmount,
+      required DateTime dueDate,
+      required String status,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocalReceivablesTableUpdateCompanionBuilder =
+    LocalReceivablesCompanion Function({
+      Value<String> orderId,
+      Value<String?> receivableId,
+      Value<String> customerId,
+      Value<int> amount,
+      Value<int> paidAmount,
+      Value<DateTime> dueDate,
+      Value<String> status,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$LocalReceivablesTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalReceivablesTable> {
+  $$LocalReceivablesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get orderId => $composableBuilder(
+    column: $table.orderId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get receivableId => $composableBuilder(
+    column: $table.receivableId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get customerId => $composableBuilder(
+    column: $table.customerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get paidAmount => $composableBuilder(
+    column: $table.paidAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LocalReceivablesTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalReceivablesTable> {
+  $$LocalReceivablesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get orderId => $composableBuilder(
+    column: $table.orderId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get receivableId => $composableBuilder(
+    column: $table.receivableId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get customerId => $composableBuilder(
+    column: $table.customerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get paidAmount => $composableBuilder(
+    column: $table.paidAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalReceivablesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalReceivablesTable> {
+  $$LocalReceivablesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get orderId =>
+      $composableBuilder(column: $table.orderId, builder: (column) => column);
+
+  GeneratedColumn<String> get receivableId => $composableBuilder(
+    column: $table.receivableId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get customerId => $composableBuilder(
+    column: $table.customerId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<int> get paidAmount => $composableBuilder(
+    column: $table.paidAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dueDate =>
+      $composableBuilder(column: $table.dueDate, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$LocalReceivablesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalReceivablesTable,
+          ReceivableRow,
+          $$LocalReceivablesTableFilterComposer,
+          $$LocalReceivablesTableOrderingComposer,
+          $$LocalReceivablesTableAnnotationComposer,
+          $$LocalReceivablesTableCreateCompanionBuilder,
+          $$LocalReceivablesTableUpdateCompanionBuilder,
+          (
+            ReceivableRow,
+            BaseReferences<
+              _$AppDatabase,
+              $LocalReceivablesTable,
+              ReceivableRow
+            >,
+          ),
+          ReceivableRow,
+          PrefetchHooks Function()
+        > {
+  $$LocalReceivablesTableTableManager(
+    _$AppDatabase db,
+    $LocalReceivablesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalReceivablesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalReceivablesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalReceivablesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> orderId = const Value.absent(),
+                Value<String?> receivableId = const Value.absent(),
+                Value<String> customerId = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+                Value<int> paidAmount = const Value.absent(),
+                Value<DateTime> dueDate = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalReceivablesCompanion(
+                orderId: orderId,
+                receivableId: receivableId,
+                customerId: customerId,
+                amount: amount,
+                paidAmount: paidAmount,
+                dueDate: dueDate,
+                status: status,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String orderId,
+                Value<String?> receivableId = const Value.absent(),
+                required String customerId,
+                required int amount,
+                required int paidAmount,
+                required DateTime dueDate,
+                required String status,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalReceivablesCompanion.insert(
+                orderId: orderId,
+                receivableId: receivableId,
+                customerId: customerId,
+                amount: amount,
+                paidAmount: paidAmount,
+                dueDate: dueDate,
+                status: status,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$LocalReceivablesTable, ReceivableRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LocalReceivablesTable,
+                    ReceivableRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LocalReceivablesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalReceivablesTable,
+      ReceivableRow,
+      $$LocalReceivablesTableFilterComposer,
+      $$LocalReceivablesTableOrderingComposer,
+      $$LocalReceivablesTableAnnotationComposer,
+      $$LocalReceivablesTableCreateCompanionBuilder,
+      $$LocalReceivablesTableUpdateCompanionBuilder,
+      (
+        ReceivableRow,
+        BaseReferences<_$AppDatabase, $LocalReceivablesTable, ReceivableRow>,
+      ),
+      ReceivableRow,
+      PrefetchHooks Function()
+    >;
+typedef $$LocalReceivablePaymentsTableCreateCompanionBuilder =
+    LocalReceivablePaymentsCompanion Function({
+      required String id,
+      required String orderId,
+      required String customerId,
+      Value<String?> shiftId,
+      required int amount,
+      required String methodType,
+      Value<String?> reference,
+      required String employeeName,
+      required DateTime paidAt,
+      Value<int> rowid,
+    });
+typedef $$LocalReceivablePaymentsTableUpdateCompanionBuilder =
+    LocalReceivablePaymentsCompanion Function({
+      Value<String> id,
+      Value<String> orderId,
+      Value<String> customerId,
+      Value<String?> shiftId,
+      Value<int> amount,
+      Value<String> methodType,
+      Value<String?> reference,
+      Value<String> employeeName,
+      Value<DateTime> paidAt,
+      Value<int> rowid,
+    });
+
+class $$LocalReceivablePaymentsTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalReceivablePaymentsTable> {
+  $$LocalReceivablePaymentsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get orderId => $composableBuilder(
+    column: $table.orderId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get customerId => $composableBuilder(
+    column: $table.customerId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get shiftId => $composableBuilder(
+    column: $table.shiftId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get methodType => $composableBuilder(
+    column: $table.methodType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reference => $composableBuilder(
+    column: $table.reference,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get employeeName => $composableBuilder(
+    column: $table.employeeName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get paidAt => $composableBuilder(
+    column: $table.paidAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LocalReceivablePaymentsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalReceivablePaymentsTable> {
+  $$LocalReceivablePaymentsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get orderId => $composableBuilder(
+    column: $table.orderId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get customerId => $composableBuilder(
+    column: $table.customerId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get shiftId => $composableBuilder(
+    column: $table.shiftId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get methodType => $composableBuilder(
+    column: $table.methodType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reference => $composableBuilder(
+    column: $table.reference,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get employeeName => $composableBuilder(
+    column: $table.employeeName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get paidAt => $composableBuilder(
+    column: $table.paidAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalReceivablePaymentsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalReceivablePaymentsTable> {
+  $$LocalReceivablePaymentsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get orderId =>
+      $composableBuilder(column: $table.orderId, builder: (column) => column);
+
+  GeneratedColumn<String> get customerId => $composableBuilder(
+    column: $table.customerId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get shiftId =>
+      $composableBuilder(column: $table.shiftId, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get methodType => $composableBuilder(
+    column: $table.methodType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reference =>
+      $composableBuilder(column: $table.reference, builder: (column) => column);
+
+  GeneratedColumn<String> get employeeName => $composableBuilder(
+    column: $table.employeeName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get paidAt =>
+      $composableBuilder(column: $table.paidAt, builder: (column) => column);
+}
+
+class $$LocalReceivablePaymentsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalReceivablePaymentsTable,
+          ReceivablePaymentRow,
+          $$LocalReceivablePaymentsTableFilterComposer,
+          $$LocalReceivablePaymentsTableOrderingComposer,
+          $$LocalReceivablePaymentsTableAnnotationComposer,
+          $$LocalReceivablePaymentsTableCreateCompanionBuilder,
+          $$LocalReceivablePaymentsTableUpdateCompanionBuilder,
+          (
+            ReceivablePaymentRow,
+            BaseReferences<
+              _$AppDatabase,
+              $LocalReceivablePaymentsTable,
+              ReceivablePaymentRow
+            >,
+          ),
+          ReceivablePaymentRow,
+          PrefetchHooks Function()
+        > {
+  $$LocalReceivablePaymentsTableTableManager(
+    _$AppDatabase db,
+    $LocalReceivablePaymentsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalReceivablePaymentsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LocalReceivablePaymentsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LocalReceivablePaymentsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> orderId = const Value.absent(),
+                Value<String> customerId = const Value.absent(),
+                Value<String?> shiftId = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+                Value<String> methodType = const Value.absent(),
+                Value<String?> reference = const Value.absent(),
+                Value<String> employeeName = const Value.absent(),
+                Value<DateTime> paidAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalReceivablePaymentsCompanion(
+                id: id,
+                orderId: orderId,
+                customerId: customerId,
+                shiftId: shiftId,
+                amount: amount,
+                methodType: methodType,
+                reference: reference,
+                employeeName: employeeName,
+                paidAt: paidAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String orderId,
+                required String customerId,
+                Value<String?> shiftId = const Value.absent(),
+                required int amount,
+                required String methodType,
+                Value<String?> reference = const Value.absent(),
+                required String employeeName,
+                required DateTime paidAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalReceivablePaymentsCompanion.insert(
+                id: id,
+                orderId: orderId,
+                customerId: customerId,
+                shiftId: shiftId,
+                amount: amount,
+                methodType: methodType,
+                reference: reference,
+                employeeName: employeeName,
+                paidAt: paidAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $LocalReceivablePaymentsTable,
+                    ReceivablePaymentRow
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $LocalReceivablePaymentsTable,
+                    ReceivablePaymentRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LocalReceivablePaymentsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalReceivablePaymentsTable,
+      ReceivablePaymentRow,
+      $$LocalReceivablePaymentsTableFilterComposer,
+      $$LocalReceivablePaymentsTableOrderingComposer,
+      $$LocalReceivablePaymentsTableAnnotationComposer,
+      $$LocalReceivablePaymentsTableCreateCompanionBuilder,
+      $$LocalReceivablePaymentsTableUpdateCompanionBuilder,
+      (
+        ReceivablePaymentRow,
+        BaseReferences<
+          _$AppDatabase,
+          $LocalReceivablePaymentsTable,
+          ReceivablePaymentRow
+        >,
+      ),
+      ReceivablePaymentRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -19185,4 +20887,11 @@ class $AppDatabaseManager {
       $$LocalRefundsTableTableManager(_db, _db.localRefunds);
   $$LocalPrintersTableTableManager get localPrinters =>
       $$LocalPrintersTableTableManager(_db, _db.localPrinters);
+  $$LocalReceivablesTableTableManager get localReceivables =>
+      $$LocalReceivablesTableTableManager(_db, _db.localReceivables);
+  $$LocalReceivablePaymentsTableTableManager get localReceivablePayments =>
+      $$LocalReceivablePaymentsTableTableManager(
+        _db,
+        _db.localReceivablePayments,
+      );
 }

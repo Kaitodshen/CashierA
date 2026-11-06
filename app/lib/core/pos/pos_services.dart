@@ -13,6 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 export 'package:cashiera/core/pos/audit_service.dart';
+export 'package:cashiera/core/pos/fnb_service.dart';
+export 'package:cashiera/core/pos/kasbon_service.dart';
 export 'package:cashiera/core/pos/pos_errors.dart';
 export 'package:cashiera/core/pos/refund_service.dart';
 export 'package:cashiera/core/pos/shift_service.dart';
@@ -72,6 +74,52 @@ class CustomerService {
         },
       );
       return CartCustomer(id: id, name: cleanName, phone: phoneValue);
+    });
+  }
+
+  /// Changes a customer's name and phone (`customer.upsert` on an existing
+  /// id). Points and kasbon are not touched.
+  Future<void> update({
+    required StaffMember staff,
+    required String storeId,
+    required String id,
+    required String name,
+    String? phone,
+  }) async {
+    if (!staff.can('customer.manage')) {
+      throw const PosPermissionException('customer.manage');
+    }
+    final cleanName = name.trim();
+    final cleanPhone = phone?.replaceAll(RegExp(r'[\s-]'), '');
+    final phoneValue = cleanPhone == null || cleanPhone.isEmpty
+        ? null
+        : cleanPhone;
+    if (cleanName.isEmpty) throw ArgumentError.value(name, 'name');
+    if (phoneValue != null && !phonePattern.hasMatch(phoneValue)) {
+      throw ArgumentError.value(phone, 'phone');
+    }
+    await _db.transaction(() async {
+      await (_db.update(
+        _db.localCustomers,
+      )..where((c) => c.id.equals(id))).write(
+        LocalCustomersCompanion(
+          name: Value(cleanName),
+          phone: Value(phoneValue),
+          updatedAt: Value(clock.now()),
+        ),
+      );
+      await _db.syncQueueDao.enqueue(
+        entity: 'customer',
+        action: 'upsert',
+        clientUuid: _uuid.v7(),
+        payload: {
+          'id': id,
+          'store_id': storeId,
+          'name': cleanName,
+          'phone': phoneValue,
+          'employee_id': staff.employeeId,
+        },
+      );
     });
   }
 }
@@ -138,6 +186,22 @@ class OrderService {
     }
   }
 
+  /// Refuses a second open bill on a dining table of this terminal.
+  Future<void> _checkTable(Cart cart) async {
+    final tableId = cart.tableId;
+    if (tableId == null) return;
+    final held =
+        await (_db.select(_db.localOrders)..where(
+              (o) => o.status.equals('held') & o.id.equals(cart.orderId).not(),
+            ))
+            .get();
+    for (final o in held) {
+      if ((jsonDecode(o.cartJson) as Map)['table_id'] == tableId) {
+        throw const PosStateException('table_occupied');
+      }
+    }
+  }
+
   /// Parks the bill (status `held`). Returns the cart with its number and
   /// version, to keep editing or to finish later.
   Future<Cart> hold({
@@ -148,6 +212,7 @@ class OrderService {
     if (cart.isEmpty) throw const PosStateException('empty');
     _checkDiscounts(cart, bill, ctx);
     return await _db.transaction(() async {
+      await _checkTable(cart);
       final now = clock.now();
       final number = cart.orderNumber ?? await _nextNumber(ctx, now);
       final saved = cart.copyWith(
@@ -181,6 +246,18 @@ class OrderService {
     if (cart.isEmpty) throw const PosStateException('empty');
     if (ctx.shiftId == null) throw const PosStateException('shift_required');
     if (!settlement.isComplete) throw const PosStateException('not_paid');
+    if (bill.pointsRedeemed > 0) {
+      final balance = cart.customer == null
+          ? 0
+          : await _pointsBalance(cart.customer!.id);
+      final problem = ctx.config.business.loyalty.check(
+        points: bill.pointsRedeemed,
+        balance: balance,
+      );
+      if (problem != null || cart.customer == null) {
+        throw const PosStateException('points');
+      }
+    }
     if (settlement.kasbonAmount.rupiah > 0) {
       if (cart.customer == null) {
         throw const PosStateException('kasbon_requires_customer');
@@ -192,6 +269,7 @@ class OrderService {
     _checkDiscounts(cart, bill, ctx);
 
     return await _db.transaction(() async {
+      await _checkTable(cart);
       final now = clock.now();
       final number = cart.orderNumber ?? await _nextNumber(ctx, now);
       final saved = cart.copyWith(
@@ -222,7 +300,16 @@ class OrderService {
           updates: {_db.stockLevels},
         );
       }
-      return await _save(saved, payload, bill, ctx, OrderStatus.completed, now);
+      final row = await _save(
+        saved,
+        payload,
+        bill,
+        ctx,
+        OrderStatus.completed,
+        now,
+      );
+      await _customerEffects(payload, sign: 1, now: now);
+      return row;
     });
   }
 
@@ -307,7 +394,18 @@ class OrderService {
       if (refunds.isNotEmpty) {
         throw const PosStateException('void_after_refund');
       }
+      final kasbon = await (_db.select(
+        _db.localReceivables,
+      )..where((r) => r.orderId.equals(order.id))).getSingleOrNull();
+      if (kasbon != null && kasbon.paidAmount > 0) {
+        throw const PosStateException('void_with_kasbon_payments');
+      }
       final now = clock.now();
+      await _customerEffects(
+        (jsonDecode(order.payloadJson) as Map).cast<String, dynamic>(),
+        sign: -1,
+        now: now,
+      );
       final by = canVoid ? ctx.staff : approver!;
       await (_db.update(
         _db.localOrders,
@@ -350,6 +448,68 @@ class OrderService {
         },
       );
     });
+  }
+
+  Future<int> _pointsBalance(String customerId) async =>
+      (await (_db.select(
+            _db.localCustomers,
+          )..where((c) => c.id.equals(customerId))).getSingleOrNull())
+          ?.pointsBalance ??
+      0;
+
+  /// A sale's points and kasbon on this terminal's copy: [sign] 1 when it
+  /// completes, -1 when it is voided. The server does the same on its side;
+  /// the next pull brings its figures once the outbox is empty.
+  Future<void> _customerEffects(
+    Map<String, dynamic> payload, {
+    required int sign,
+    required DateTime now,
+  }) async {
+    final customerId = payload['customer_id'] as String?;
+    if (customerId == null) return;
+    final earned = (payload['points_earned'] as num? ?? 0).toInt();
+    final redeemed = (payload['points_redeemed'] as num? ?? 0).toInt();
+    final delta = sign * (earned - redeemed);
+    if (delta != 0) {
+      await _db.customUpdate(
+        'UPDATE local_customers SET points_balance = points_balance + ? '
+        'WHERE id = ?',
+        variables: [Variable.withInt(delta), Variable.withString(customerId)],
+        updates: {_db.localCustomers},
+      );
+    }
+    final orderId = payload['id'] as String;
+    if (sign < 0) {
+      await (_db.update(
+        _db.localReceivables,
+      )..where((r) => r.orderId.equals(orderId))).write(
+        LocalReceivablesCompanion(
+          status: const Value('void'),
+          updatedAt: Value(now),
+        ),
+      );
+      return;
+    }
+    final kasbon = [
+      for (final p in payload['payments'] as List? ?? const [])
+        if ((p as Map)['method_type'] == 'kasbon') (p['amount'] as num).toInt(),
+    ].fold(0, (a, b) => a + b);
+    final due = payload['kasbon_due_date'] as String?;
+    if (kasbon > 0 && due != null) {
+      await _db
+          .into(_db.localReceivables)
+          .insertOnConflictUpdate(
+            LocalReceivablesCompanion.insert(
+              orderId: orderId,
+              customerId: customerId,
+              amount: kasbon,
+              paidAmount: 0,
+              dueDate: DateTime.parse('${due}T00:00:00Z'),
+              status: 'open',
+              updatedAt: now,
+            ),
+          );
+    }
   }
 
   /// The receipt went to a printer: later voids need approval.

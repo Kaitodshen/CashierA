@@ -5,7 +5,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('a Phase 4 terminal (v3) keeps its shifts and orders on v4', () async {
+  test('a Phase 4 terminal (v3) keeps its shifts and orders on v5', () async {
     final dir = await Directory.systemTemp.createTemp('cashiera-migration');
     addTearDown(() => dir.delete(recursive: true));
     final file = File('${dir.path}/terminal.sqlite');
@@ -17,6 +17,8 @@ void main() {
       'DROP TABLE local_cash_movements',
       'DROP TABLE local_refunds',
       'DROP TABLE local_printers',
+      'DROP TABLE local_receivables',
+      'DROP TABLE local_receivable_payments',
       for (final c in [
         'closed_by',
         'closed_by_name',
@@ -75,6 +77,8 @@ VALUES ('o-1', 'PST-T1-261106-0001', 'completed', 1, '{}', '{}', 7000, 2,
     expect(await v4.select(v4.localRefunds).get(), isEmpty);
     expect(await v4.select(v4.localPrinters).get(), isEmpty);
     final version = await v4.customSelect('PRAGMA user_version').getSingle();
-    expect(version.data.values.single, 4);
+    expect(version.data.values.single, 5);
+    expect(await v4.select(v4.localReceivables).get(), isEmpty);
+    expect(await v4.select(v4.localReceivablePayments).get(), isEmpty);
   });
 }

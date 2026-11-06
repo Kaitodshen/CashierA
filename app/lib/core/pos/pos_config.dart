@@ -40,6 +40,10 @@ class BusinessInfo {
     this.address,
     this.phone,
     this.kasbonDueDays = 30,
+    this.loyalty = const LoyaltyRules(
+      earnAmount: Money(10000),
+      pointValue: Money(100),
+    ),
   });
 
   factory fromJson(Map<String, dynamic> j) => BusinessInfo(
@@ -49,6 +53,12 @@ class BusinessInfo {
     address: j['address'] as String?,
     phone: j['phone'] as String?,
     kasbonDueDays: (j['kasbon_default_due_days'] as num? ?? 30).toInt(),
+    loyalty: LoyaltyRules(
+      enabled: j['loyalty_enabled'] as bool? ?? true,
+      earnAmount: Money((j['loyalty_earn_amount'] as num? ?? 10000).toInt()),
+      pointValue: Money((j['loyalty_point_value'] as num? ?? 100).toInt()),
+      minRedeemPoints: (j['loyalty_min_redeem_points'] as num? ?? 0).toInt(),
+    ),
   );
 
   final String name;
@@ -57,6 +67,9 @@ class BusinessInfo {
   final String? address;
   final String? phone;
   final int kasbonDueDays;
+
+  /// Company loyalty settings (A6).
+  final LoyaltyRules loyalty;
 }
 
 /// Everything about the store that changes how a sale is rung up.
@@ -79,6 +92,7 @@ class PosConfig {
     this.storeAddress,
     this.storePhone,
     this.receiptHeader,
+    this.fnbMode = false,
   });
 
   final String storeId;
@@ -97,6 +111,9 @@ class PosConfig {
   final int paperMm;
   final BusinessInfo business;
   final List<PaymentOption> paymentOptions;
+
+  /// Restaurant / cafe store: tables, kitchen tickets and the kitchen display.
+  final bool fnbMode;
 
   /// Store-local wall-clock time of [instant].
   DateTime localTime(DateTime instant) =>
@@ -159,6 +176,7 @@ class PosConfigRepository {
       storeName: store.name,
       storeAddress: store.address,
       storePhone: store.phone,
+      fnbMode: store.fnbMode,
       utcOffsetMinutes: utcOffsetMinutesFor(store.timezone),
       pricing: PricingSettings(
         taxRateBps: s.taxEnabled ? s.taxRateBps : 0,

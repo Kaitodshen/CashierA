@@ -36,6 +36,9 @@ part 'app_database.g.dart';
     LocalCashMovements,
     LocalRefunds,
     LocalPrinters,
+    // v5: kasbon (Phase 6)
+    LocalReceivables,
+    LocalReceivablePayments,
   ],
   daos: [SyncQueueDao],
 )
@@ -43,7 +46,7 @@ class AppDatabase extends _$AppDatabase {
   new(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -103,6 +106,11 @@ class AppDatabase extends _$AppDatabase {
         }
         await _createShiftIndexes();
       }
+      if (from < 5) {
+        await m.createTable(localReceivables);
+        await m.createTable(localReceivablePayments);
+        await _createKasbonIndexes();
+      }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -117,6 +125,18 @@ class AppDatabase extends _$AppDatabase {
     await _createCatalogIndexes();
     await _createPosIndexes();
     await _createShiftIndexes();
+    await _createKasbonIndexes();
+  }
+
+  Future<void> _createKasbonIndexes() async {
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS local_receivables_customer_idx '
+      'ON local_receivables (customer_id, status)',
+    );
+    await customStatement(
+      'CREATE INDEX IF NOT EXISTS local_receivable_payments_shift_idx '
+      'ON local_receivable_payments (shift_id)',
+    );
   }
 
   Future<void> _createShiftIndexes() async {
@@ -181,6 +201,8 @@ class AppDatabase extends _$AppDatabase {
       localOrders,
       localCashMovements,
       localRefunds,
+      localReceivables,
+      localReceivablePayments,
     ]) {
       await delete(table).go();
     }

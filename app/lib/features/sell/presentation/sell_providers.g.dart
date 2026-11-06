@@ -164,7 +164,7 @@ final class CartControllerProvider
   }
 }
 
-String _$cartControllerHash() => r'a1ace3beabe6a55f0784d5b827d202aed623775e';
+String _$cartControllerHash() => r'7cd34ce2823f8c169032fe72d770d2e9efbc6e92';
 
 /// The bill being rung up. Lives across screens (sell → pay → back) and
 /// across staff switches, until it is finished, held or cleared.
@@ -290,7 +290,7 @@ final class CurrentBillProvider extends $FunctionalProvider<Bill?, Bill?, Bill?>
   }
 }
 
-String _$currentBillHash() => r'7c1354f9a34d0ed74743838c382494bf4d1d0ece';
+String _$currentBillHash() => r'8c57aee17eca84618f1cb90572a9e08ef14fb019';
 
 /// The current cart priced with this store's settings and the promotions
 /// active right now.

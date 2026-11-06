@@ -1,26 +1,36 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/session/session_controller.dart';
+import 'package:cashiera/features/back_office/presentation/admin_customers_screen.dart';
+import 'package:cashiera/features/back_office/presentation/admin_kasbon_screen.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shell.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shifts_screen.dart';
 import 'package:cashiera/features/back_office/presentation/audit_screen.dart';
 import 'package:cashiera/features/back_office/presentation/back_office_home_screen.dart';
 import 'package:cashiera/features/back_office/presentation/categories_screen.dart';
+import 'package:cashiera/features/back_office/presentation/dining_tables_screen.dart';
 import 'package:cashiera/features/back_office/presentation/import_screen.dart';
+import 'package:cashiera/features/back_office/presentation/loyalty_settings_screen.dart';
 import 'package:cashiera/features/back_office/presentation/product_editor_screen.dart';
 import 'package:cashiera/features/back_office/presentation/products_screen.dart';
 import 'package:cashiera/features/back_office/presentation/promotion_editor_screen.dart';
 import 'package:cashiera/features/back_office/presentation/promotions_screen.dart';
+import 'package:cashiera/features/back_office/presentation/purchase_orders_screen.dart';
 import 'package:cashiera/features/back_office/presentation/sign_in_screen.dart';
 import 'package:cashiera/features/back_office/presentation/stock_screen.dart';
 import 'package:cashiera/features/back_office/presentation/store_settings_screen.dart';
 import 'package:cashiera/features/back_office/presentation/suppliers_screen.dart';
+import 'package:cashiera/features/back_office/presentation/transfers_screen.dart';
 import 'package:cashiera/features/back_office/presentation/vouchers_screen.dart';
 import 'package:cashiera/features/catalog/presentation/catalog_browser_screen.dart';
 import 'package:cashiera/features/catalog/presentation/opname_screen.dart';
+import 'package:cashiera/features/customers/presentation/customers_screen.dart';
+import 'package:cashiera/features/fnb/kitchen_screen.dart';
+import 'package:cashiera/features/fnb/tables_screen.dart';
 import 'package:cashiera/features/pairing/presentation/pairing_screen.dart';
 import 'package:cashiera/features/pin_login/presentation/pin_lock_screen.dart';
 import 'package:cashiera/features/pos_home/presentation/pos_home_screen.dart';
 import 'package:cashiera/features/printing/printer_screen.dart';
+import 'package:cashiera/features/reports/presentation/reports_screen.dart';
 import 'package:cashiera/features/sell/presentation/orders_screen.dart';
 import 'package:cashiera/features/sell/presentation/payment_screen.dart';
 import 'package:cashiera/features/sell/presentation/receipt_screen.dart';
@@ -102,6 +112,22 @@ GoRouter router(Ref ref) {
         path: AppRoutes.printer,
         builder: (_, _) => const PrinterScreen(),
       ),
+      GoRoute(path: AppRoutes.tables, builder: (_, _) => const TablesScreen()),
+      GoRoute(
+        path: AppRoutes.kitchen,
+        builder: (_, _) => const KitchenScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.customers,
+        builder: (_, _) => const CustomersScreen(),
+      ),
+      GoRoute(
+        path: '${AppRoutes.customers}/:id',
+        builder: (_, state) => CustomerDetailScreen(
+          key: ValueKey(state.pathParameters['id']),
+          customerId: state.pathParameters['id']!,
+        ),
+      ),
       GoRoute(path: AppRoutes.sync, builder: (_, _) => const SyncScreen()),
       GoRoute(
         path: AppRoutes.adminSignIn,
@@ -172,6 +198,55 @@ GoRouter router(Ref ref) {
           GoRoute(
             path: AppRoutes.adminAudit,
             builder: (_, _) => const AuditScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminCustomers,
+            builder: (_, _) => const AdminCustomersScreen(),
+          ),
+          GoRoute(
+            path: '${AppRoutes.adminCustomers}/:id',
+            builder: (_, state) => AdminCustomerScreen(
+              key: ValueKey(state.pathParameters['id']),
+              customerId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.adminKasbon,
+            builder: (_, _) => const AdminKasbonScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminLoyalty,
+            builder: (_, _) => const LoyaltySettingsScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminReports,
+            builder: (_, _) => const ReportsScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminPurchaseOrders,
+            builder: (_, _) => const PurchaseOrdersScreen(),
+          ),
+          GoRoute(
+            path: '${AppRoutes.adminPurchaseOrders}/:id',
+            builder: (_, state) => PurchaseOrderScreen(
+              key: ValueKey(state.pathParameters['id']),
+              purchaseOrderId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.adminTransfers,
+            builder: (_, _) => const TransfersScreen(),
+          ),
+          GoRoute(
+            path: '${AppRoutes.adminTransfers}/:id',
+            builder: (_, state) => TransferScreen(
+              key: ValueKey(state.pathParameters['id']),
+              transferId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.adminTables,
+            builder: (_, _) => const DiningTablesScreen(),
           ),
         ],
       ),

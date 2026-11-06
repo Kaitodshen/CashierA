@@ -39,6 +39,12 @@ abstract final class AppRoutes {
   /// X or Z report of one of this terminal's shifts.
   static String shiftReport(String shiftId) => '/pos/shift/report/$shiftId';
   static const printer = '/pos/printer';
+  static const tables = '/pos/tables';
+  static const kitchen = '/pos/kitchen';
+  static const customers = '/pos/customers';
+
+  /// One customer on the terminal.
+  static String customer(String id) => '$customers/$id';
   static const sync = '/sync';
   static const adminSignIn = '/admin/sign-in';
   static const admin = '/admin';
@@ -52,6 +58,22 @@ abstract final class AppRoutes {
   static const adminSettings = '/admin/settings';
   static const adminShifts = '/admin/shifts';
   static const adminAudit = '/admin/audit';
+  static const adminCustomers = '/admin/customers';
+  static const adminKasbon = '/admin/kasbon';
+  static const adminLoyalty = '/admin/loyalty';
+  static const adminReports = '/admin/reports';
+  static const adminPurchaseOrders = '/admin/purchase-orders';
+  static const adminTransfers = '/admin/transfers';
+  static const adminTables = '/admin/tables';
+
+  /// Purchase order detail or editor; `new` creates one.
+  static String adminPurchaseOrder(String id) => '$adminPurchaseOrders/$id';
+
+  /// One stock transfer.
+  static String adminTransfer(String id) => '$adminTransfers/$id';
+
+  /// One customer in the back office.
+  static String adminCustomer(String id) => '$adminCustomers/$id';
 
   /// X or Z report of a shift, from the server.
   static String adminShift(String id) => '$adminShifts/$id';
