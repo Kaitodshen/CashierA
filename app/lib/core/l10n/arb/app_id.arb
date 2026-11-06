@@ -1872,5 +1872,140 @@
         "type": "String"
       }
     }
-  }
+  },
+  "navReports": "Laporan",
+  "reportTabSales": "Penjualan",
+  "reportTabPayments": "Pembayaran",
+  "reportTabProducts": "Produk",
+  "reportTabStaff": "Staf",
+  "reportTabTax": "Pajak",
+  "reportTabStock": "Nilai stok",
+  "periodToday": "Hari ini",
+  "periodYesterday": "Kemarin",
+  "periodLast7": "7 hari",
+  "periodThisMonth": "Bulan ini",
+  "periodLastMonth": "Bulan lalu",
+  "periodCustom": "Pilih tanggal",
+  "exportPdf": "PDF",
+  "exportExcel": "Excel",
+  "exportSaved": "File disimpan.",
+  "reportEmpty": "Tidak ada data di periode ini.",
+  "reportStockSubtitle": "{store} · per {time}",
+  "@reportStockSubtitle": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reportSummary": "Ringkasan",
+  "reportItem": "Rincian",
+  "summaryGross": "Penjualan kotor",
+  "summaryDiscounts": "Diskon",
+  "summaryNet": "Penjualan setelah diskon",
+  "summaryService": "Biaya layanan",
+  "summaryTax": "Pajak ditambahkan atau termasuk",
+  "summaryRounding": "Pembulatan",
+  "reportByHour": "Penjualan per jam",
+  "reportSalesNote": "Penjualan = transaksi selesai. Void tidak termasuk penjualan. Refund dihitung pada tanggal refund.",
+  "reportProductsNote": "Bersih sebelum refund; refund ditampilkan sebagai qty refund.",
+  "reportProductsMore": "Menampilkan {shown} dari {total} produk. Ekspor berisi daftar yang sama.",
+  "@reportProductsMore": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reportTaxNote": "Harga termasuk pajak: DPP = dasar pajak − PPN. Barang bebas pajak (sembako) tidak masuk dasar pajak.",
+  "reportStockNote": "Nilai = stok × HPP saat ini. Stok minus tidak menambah nilai.",
+  "reportNegativeNote": "Periksa dengan stok opname.",
+  "colDate": "Tanggal",
+  "colOrders": "Transaksi",
+  "colSales": "Penjualan",
+  "colRefunds": "Refund",
+  "colNetSales": "Penjualan bersih",
+  "colStore": "Toko",
+  "colMethod": "Metode",
+  "colCount": "Jumlah",
+  "colAmount": "Nilai",
+  "colShare": "Porsi",
+  "colProduct": "Produk",
+  "colSku": "SKU",
+  "colCategory": "Kategori",
+  "colQty": "Qty",
+  "colRefundedQty": "Qty refund",
+  "colNet": "Bersih",
+  "colCost": "HPP",
+  "colMargin": "Margin",
+  "colStaff": "Staf",
+  "colAverage": "Rata-rata",
+  "colDiscounts": "Diskon",
+  "colVoids": "Void",
+  "colBase": "Dasar pajak",
+  "colDpp": "DPP",
+  "colTax": "PPN",
+  "colExempt": "Bebas pajak",
+  "colStock": "Stok",
+  "colValue": "Nilai",
+  "totalRow": "Total",
+  "sumItems": "Barang terjual",
+  "sumKasbonIssued": "Kasbon baru",
+  "sumKasbonRepaid": "Kasbon dibayar",
+  "sumMargin": "Margin kotor",
+  "sumStockValue": "Nilai stok",
+  "sumNegative": "Stok minus",
+  "sumLow": "Stok menipis",
+  "dashTitle": "Hari ini",
+  "dashVsYesterday": "Kemarin {value}",
+  "@dashVsYesterday": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "dashLast7": "Penjualan 7 hari terakhir",
+  "dashTop": "Produk terlaris hari ini",
+  "dashPayments": "Pembayaran hari ini",
+  "dashOpenShifts": "{count} shift terbuka",
+  "@dashOpenShifts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashLowStock": "{count} stok menipis",
+  "@dashLowStock": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashAlerts": "{count} peringatan",
+  "@dashAlerts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashOverdue": "Kasbon terlambat {amount}",
+  "@dashOverdue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "dashNothing": "Belum ada penjualan hari ini.",
+  "dashAllReports": "Semua laporan"
 }

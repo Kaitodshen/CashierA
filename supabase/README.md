@@ -23,10 +23,11 @@ This folder is the complete server side so far: the Phase 1 schema, row level se
 | `migrations/…1400_catalog_rpc.sql` | Phase 3: `save_product`, `import_catalog`, `stock_overview`, `catalog_export` |
 | `migrations/…1500_pos.sql` | Phase 4: `save_promotion`, and the line-tax rule for bills whose only taxable part is the service charge |
 | `migrations/…1600_shift_audit.sql` | Phase 5: `shift_overview`, `audit_entries`, names in `shift_summary`, and an audit entry for every approved manual discount |
+| `migrations/…1900_reports.sql` | Phase 7: `report_sales`, `report_payments`, `report_products`, `report_staff`, `report_tax`, `report_stock_value`, `dashboard_summary` |
 | `migrations/…1800_review_fixes.sql` | Review fixes: an approval naming another employee only from a paired terminal; payments only on completed orders; expected cash from completed and voided sales only |
 | `migrations/…1700_loyalty_kasbon.sql` | Phase 6: points checked against `business_profile`, the `loyalty.adjust` permission, `adjust_points`, `kasbon_overview`, `customer_statement` |
 | `seed.sql` | Demo data. The demo sign-ins and PINs are listed in its header |
-| `tests/database/*.test.sql` | 19 pgTAP files, 356 assertions |
+| `tests/database/*.test.sql` | 20 pgTAP files, 386 assertions |
 
 ## 1. Test it on this PC (no Docker)
 
@@ -38,7 +39,7 @@ npm install
 npm test
 ```
 
-Expected output ends with `All 19 test files passed (356 assertions)`. To run a single file, use `node run.mjs --only 030`.
+Expected output ends with `All 20 test files passed (386 assertions)`. To run a single file, use `node run.mjs --only 030`.
 
 ## 2. Use a hosted Supabase project
 
@@ -167,6 +168,9 @@ Rejection codes the app should translate for cashiers include `tax_mismatch`, `p
 | `shift_summary(shift_id)` | Terminal, `shift.manage` or `reports.view` | X-report (open shift) or Z-report (closed) data, with the terminal code and the opener and closer names |
 | `shift_overview(store_id, from, to)` | `shift.manage` or `reports.view` | Shifts by business date (newest first, at most 500) with expected and counted cash, selisih, order count and sales |
 | `audit_entries(store_id, from, to, only_approvals, action_prefix, limit, before, before_id)` | `audit.view` | Audit log with actor, approver, store and terminal names, newest first (at most 200 per page). Page with the `occurred_at` and `id` of the last row shown. Company-wide entries are for owners |
+| `report_sales(store_id, from, to)` and `report_payments`, `report_products(…, limit)`, `report_staff`, `report_tax` | `reports.view` | One store or (null) every store the caller may report on, inclusive business dates, at most 367 days. Sales = completed orders; voids separate; refunds by refund date; net sales = grand − refunds. `180_reports.test.sql` pins the identities: Σ by day = Σ by store = Σ payments = Σ staff = total, Σ products = Σ categories = net, tax report = tax, DPP + PPN = base |
+| `report_stock_value(store_id)` | `reports.view` | On-hand stock × current cost per store and variant; negative stock adds no value |
+| `dashboard_summary(store_id, today)` | `reports.view` | Today and yesterday totals, last 7 days, today's top products and payments, open shifts, low stock, open alerts, overdue kasbon |
 | `adjust_points(customer_id, points, note)` | `loyalty.adjust` (owner, manager) | Adds or removes points with a note of at least 3 characters; refuses a balance below 0 (`points_insufficient`); audited as `loyalty.adjusted` |
 | `kasbon_overview(store_id, as_of)` | `kasbon.manage` or `reports.view` | Outstanding kasbon per customer and store: open count, outstanding, overdue, oldest due date, most overdue first |
 | `customer_statement(customer_id)` | Staff | The customer, their kasbon (with installments) in the stores the caller may see, and the last 100 points entries |
@@ -212,6 +216,6 @@ Terminals pass `employee_id` (the PIN-verified user). Back-office callers always
 
 ## 9. What has and hasn't been verified
 
-- ✅ All migrations, the seed and the 356 assertions pass on PGlite 0.5.15 (PostgreSQL 18.6), checked on 2026-11-07. `140_shift_audit.test.sql` closes a shift built the same way as `cashiera_core/test/shift/server_fixture_test.dart`, so the terminal's X/Z report and the server's agree on one shared example. `130_pos.test.sql` books a sale priced by the Dart engine (`cashiera_core/test/pricing/server_fixture_test.dart` builds the same numbers), so the server and the terminal are checked against one shared example.
+- ✅ All migrations, the seed and the 386 assertions pass on PGlite 0.5.15 (PostgreSQL 18.6), checked on 2026-11-07. `140_shift_audit.test.sql` closes a shift built the same way as `cashiera_core/test/shift/server_fixture_test.dart`, so the terminal's X/Z report and the server's agree on one shared example. `130_pos.test.sql` books a sale priced by the Dart engine (`cashiera_core/test/pricing/server_fixture_test.dart` builds the same numbers), so the server and the terminal are checked against one shared example.
 - ⚠️ Hosted Supabase runs PostgreSQL 17. The SQL avoids PostgreSQL 18-only features, but it has **not yet been run on a real Supabase stack** (this PC has no Docker). Run `supabase db push --remote` plus `supabase test db --remote` on a staging project, or the local Docker stack, before going live.
 - ⚠️ The Supabase stand-ins in `tools/db-test/supabase-shim.sql` cover only what these migrations touch (auth users, JWT claims, storage tables, the realtime publication). They are not a full Supabase emulation.

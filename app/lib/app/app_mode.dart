@@ -59,6 +59,7 @@ abstract final class AppRoutes {
   static const adminCustomers = '/admin/customers';
   static const adminKasbon = '/admin/kasbon';
   static const adminLoyalty = '/admin/loyalty';
+  static const adminReports = '/admin/reports';
 
   /// One customer in the back office.
   static String adminCustomer(String id) => '$adminCustomers/$id';

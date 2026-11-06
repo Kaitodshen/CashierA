@@ -13,7 +13,7 @@ Read-only audit of the repository at commit `a7ab472` (the only commit). Uncommi
 | 4 · Cashier, pricing, payments, receipts | Done | `packages/cashiera_core/lib/src/pricing/`, `…1500_pos.sql`, `features/sell` |
 | 5 · Shifts, X/Z, PIN approvals, audit log, printing | Done (local only) | `…1600_shift_audit.sql`, `…1800_review_fixes.sql`, `features/shift`, `core/printing`. Review findings fixed (pgTAP `170`). Never run on a real printer or device |
 | 6 · Customers, loyalty, kasbon ledger | Done (local only) | `…1700_loyalty_kasbon.sql` (pgTAP `160`), `core/pos/kasbon_service.dart`, `features/customers`, back office customers / kasbon / loyalty; plan `2026-11-07-phase-6-customers-loyalty-kasbon.md`. Not run on devices or live Supabase |
-| 7 · Dashboard and reports | Not started (next) | No report RPCs besides `shift_summary`, `shift_overview`, `kasbon_overview`; no dashboard screen |
+| 7 · Dashboard and reports | Done (local only) | `…1900_reports.sql` (pgTAP `180` reconciles every report), `features/reports` (dashboard, six report tabs, PDF/Excel); plan `2026-11-07-phase-7-reports.md`. Not run on live Supabase |
 | 8 · F&B, KDS, transfers, purchase orders | Partial | Server only: `dining_tables`, `order_status`, `stock_transfers`, `purchase_orders`, `goods_receipts`, `request_stock_transfer`, `transition_stock_transfer` (pgTAP `070`, `100`). No app screens |
 | 9 · Payment gateway, deploy, backups | Not started | No `supabase/functions`, no `PaymentGateway` in the app, no release setup |
 
@@ -48,7 +48,7 @@ Read-only audit of the repository at commit `a7ab472` (the only commit). Uncommi
   - Shift list with X/Z report and PDF, and an audit log with filters and paging.
 - **Checks today:**
   - `flutter analyze`: no issues.
-  - `flutter test`: 137 passed, 0 failed (2026-11-07, after Phase 6 and the review fixes).
+  - `flutter test`: 144 passed, 0 failed (2026-11-07, after Phase 7).
   - `flutter build web --release` succeeded earlier on 2026-11-06.
 
 ## 3. In progress (half-built), Phase 5
@@ -64,7 +64,7 @@ No `TODO`, `FIXME` or `UnimplementedError` found in `app/lib`, `packages/cashier
 
 ## 4. Known problems
 
-- Analyzer errors: none. Failing tests: none (app 137, core 122, database 19 files / 356 assertions, 2026-11-07).
+- Analyzer errors: none. Failing tests: none (app 144, core 122, database 20 files / 386 assertions, 2026-11-07).
 - TODO/FIXME comments: none found.
 - Stray `GeneratedPluginRegistrant - Copy.java` in `app/android/app/src/main/java/io/flutter/plugins/`. A second public class with the same name would likely break the Android build. It is not committed.
 - Never run against a live Supabase project. Local tests run on PostgreSQL 18 (PGlite); hosted Supabase runs 17.
@@ -108,9 +108,8 @@ No `TODO`, `FIXME` or `UnimplementedError` found in `app/lib`, `packages/cashier
 
 1. Outbox behaviour on `not_a_member` (`sync_engine.dart`).
 2. PIN policy: length and hash cost (`set_employee_pin`, `PinVerifier`).
-3. Phase 7 report RPCs (sales, products, payments, staff, stock valuation) with PDF/Excel export.
-4. Phase 8 stock flows (transfers, purchase orders and receiving) and Phase 9 payments (gateway, webhooks).
-5. Running the migrations and pgTAP on a real Supabase stack (PostgreSQL 17).
+3. Phase 8 stock flows (transfers, purchase orders and receiving) and Phase 9 payments (gateway, webhooks).
+4. Running the migrations and pgTAP on a real Supabase stack (PostgreSQL 17).
 
 ## 7. Safe for Antigravity (UI only)
 
@@ -122,12 +121,12 @@ No `TODO`, `FIXME` or `UnimplementedError` found in `app/lib`, `packages/cashier
 
 ## 8. Next steps
 
-1. Delete the stray `GeneratedPluginRegistrant - Copy.java` and commit Phase 6 with the review fixes.
+1. Delete the stray `GeneratedPluginRegistrant - Copy.java`; merge the Phase 6 branch and commit Phase 7.
 2. Run the migrations and pgTAP on a staging Supabase project (PostgreSQL 17).
 3. Test printing, the drawer, points and kasbon on the real printers and terminals.
 4. Pause the outbox on `not_a_member` instead of failing each item, and require 6-digit PINs for approvers.
-5. Start Phase 7 (dashboard and reports).
+5. Start Phase 8 (F&B tables, kitchen display, stock transfers, purchase orders).
 
 ## 9. Last updated
 
-2026-11-06 · Claude Code audit; updated 2026-11-07 after Phase 6 and the review fixes
+2026-11-06 · Claude Code audit; updated 2026-11-07 after Phase 7

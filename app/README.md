@@ -71,6 +71,15 @@ Works offline. The terminal keeps its own copy of each customer's points and of 
 ### Catalog and stock
 
 - **Back office → Import / Export.** Download the template, fill it in Excel or Google Sheets, and upload the `.csv` or `.xlsx`. The preview lists every problem with its row number. Nothing is saved until the whole file is clean, and then it is saved in one transaction, so a failed import changes nothing. Importing the same file again updates the same products (matched by SKU). Stock columns set the counted stock per store and show up in the stock history as an opname. Export gives the same columns back, so export → edit → import works.
+- **Back office → Ringkasan (dashboard).** For staff with `reports.view`, the home page shows today against yesterday (net sales, number of sales, average), the last 7 days as a bar chart, today's top products and payment mix, and chips for open shifts, low stock, overdue kasbon and open alerts. The store filter switches between one store and all of them.
+- **Back office → Laporan.** Pick a store (or all) and a period (today, yesterday, 7 days, this month, last month, or any dates).
+  - **Penjualan:** by day (empty days included) with a chart, the money summary, by store, and by hour in each store's own time.
+  - **Pembayaran:** by method with each method's share, refunds by method, kasbon issued and repaid.
+  - **Produk:** by category and by product, with quantity, refunded quantity, net, cost and margin.
+  - **Staf:** sales, average, discounts, voids and refunds per person.
+  - **Pajak:** taxable base, DPP, PPN and exempt sales per day.
+  - **Nilai stok:** stock × current cost per store, with the low and negative counts.
+  - Every table has **PDF** and **Excel** buttons. Excel keeps numbers as numbers. Sales are completed sales; voids are not sales; refunds count on the day of the refund; net sales = sales − refunds.
 - **Back office → Pelanggan / Kasbon / Loyalti & kasbon.**
   - **Pelanggan:** search, add and edit customers (phone, e-mail, kasbon limit, active). A customer's page shows their kasbon with every installment and their points history. **Sesuaikan poin** adds or removes points with a reason; it needs the new `loyalty.adjust` permission (owner and manager), and the balance can't go below 0.
   - **Kasbon:** what each customer owes per store, most overdue first, with the total and overdue amount, flagging customers over their limit.
@@ -117,7 +126,8 @@ lib/
     providers.dart  Riverpod wiring
   features/       startup, pairing, pin_login, pos_home, catalog (terminal), sell (cashier,
                   payment, receipt, refund, sales), shift (X/Z, close), printing (printer setup,
-                  print actions), customers (points, kasbon, installments), sync_status, back_office
+                  print actions), customers (points, kasbon, installments), reports (dashboard, report
+                  tabs, PDF/Excel export), sync_status, back_office
                   (shell, products, categories, suppliers, stock, import/export, promotions,
                   vouchers, store settings, shifts, audit log, customers, kasbon, loyalty)
 test/             unit, sync and widget tests (in-memory SQLite, fake transport)

@@ -6,6 +6,7 @@ import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
 import 'package:cashiera/features/back_office/presentation/back_office_providers.dart';
+import 'package:cashiera/features/reports/presentation/dashboard_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -69,6 +70,10 @@ class _Stores extends ConsumerWidget {
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
+        if (principal.can('reports.view')) ...[
+          const SizedBox(height: AppSpacing.xl),
+          const DashboardPanel(),
+        ],
         const SizedBox(height: AppSpacing.xl),
         Text(l10n.adminStores, style: theme.textTheme.titleMedium),
         const SizedBox(height: AppSpacing.md),

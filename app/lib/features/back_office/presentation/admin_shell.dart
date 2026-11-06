@@ -16,6 +16,7 @@ class _Destination {
 
 final _destinations = <_Destination>[
   _Destination(AppRoutes.admin, Icons.dashboard_outlined, (l) => l.navHome),
+  _Destination(AppRoutes.adminReports, Icons.bar_chart, (l) => l.navReports),
   _Destination(
     AppRoutes.adminProducts,
     Icons.inventory_2_outlined,

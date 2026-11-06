@@ -4279,6 +4279,486 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'{kind} {amount} membuka laci: {reason}'**
   String cashMovementApproval(String kind, String amount, String reason);
+
+  /// No description provided for @navReports.
+  ///
+  /// In id, this message translates to:
+  /// **'Laporan'**
+  String get navReports;
+
+  /// No description provided for @reportTabSales.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan'**
+  String get reportTabSales;
+
+  /// No description provided for @reportTabPayments.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembayaran'**
+  String get reportTabPayments;
+
+  /// No description provided for @reportTabProducts.
+  ///
+  /// In id, this message translates to:
+  /// **'Produk'**
+  String get reportTabProducts;
+
+  /// No description provided for @reportTabStaff.
+  ///
+  /// In id, this message translates to:
+  /// **'Staf'**
+  String get reportTabStaff;
+
+  /// No description provided for @reportTabTax.
+  ///
+  /// In id, this message translates to:
+  /// **'Pajak'**
+  String get reportTabTax;
+
+  /// No description provided for @reportTabStock.
+  ///
+  /// In id, this message translates to:
+  /// **'Nilai stok'**
+  String get reportTabStock;
+
+  /// No description provided for @periodToday.
+  ///
+  /// In id, this message translates to:
+  /// **'Hari ini'**
+  String get periodToday;
+
+  /// No description provided for @periodYesterday.
+  ///
+  /// In id, this message translates to:
+  /// **'Kemarin'**
+  String get periodYesterday;
+
+  /// No description provided for @periodLast7.
+  ///
+  /// In id, this message translates to:
+  /// **'7 hari'**
+  String get periodLast7;
+
+  /// No description provided for @periodThisMonth.
+  ///
+  /// In id, this message translates to:
+  /// **'Bulan ini'**
+  String get periodThisMonth;
+
+  /// No description provided for @periodLastMonth.
+  ///
+  /// In id, this message translates to:
+  /// **'Bulan lalu'**
+  String get periodLastMonth;
+
+  /// No description provided for @periodCustom.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih tanggal'**
+  String get periodCustom;
+
+  /// No description provided for @exportPdf.
+  ///
+  /// In id, this message translates to:
+  /// **'PDF'**
+  String get exportPdf;
+
+  /// No description provided for @exportExcel.
+  ///
+  /// In id, this message translates to:
+  /// **'Excel'**
+  String get exportExcel;
+
+  /// No description provided for @exportSaved.
+  ///
+  /// In id, this message translates to:
+  /// **'File disimpan.'**
+  String get exportSaved;
+
+  /// No description provided for @reportEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada data di periode ini.'**
+  String get reportEmpty;
+
+  /// No description provided for @reportStockSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'{store} · per {time}'**
+  String reportStockSubtitle(String store, String time);
+
+  /// No description provided for @reportSummary.
+  ///
+  /// In id, this message translates to:
+  /// **'Ringkasan'**
+  String get reportSummary;
+
+  /// No description provided for @reportItem.
+  ///
+  /// In id, this message translates to:
+  /// **'Rincian'**
+  String get reportItem;
+
+  /// No description provided for @summaryGross.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan kotor'**
+  String get summaryGross;
+
+  /// No description provided for @summaryDiscounts.
+  ///
+  /// In id, this message translates to:
+  /// **'Diskon'**
+  String get summaryDiscounts;
+
+  /// No description provided for @summaryNet.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan setelah diskon'**
+  String get summaryNet;
+
+  /// No description provided for @summaryService.
+  ///
+  /// In id, this message translates to:
+  /// **'Biaya layanan'**
+  String get summaryService;
+
+  /// No description provided for @summaryTax.
+  ///
+  /// In id, this message translates to:
+  /// **'Pajak ditambahkan atau termasuk'**
+  String get summaryTax;
+
+  /// No description provided for @summaryRounding.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembulatan'**
+  String get summaryRounding;
+
+  /// No description provided for @reportByHour.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan per jam'**
+  String get reportByHour;
+
+  /// No description provided for @reportSalesNote.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan = transaksi selesai. Void tidak termasuk penjualan. Refund dihitung pada tanggal refund.'**
+  String get reportSalesNote;
+
+  /// No description provided for @reportProductsNote.
+  ///
+  /// In id, this message translates to:
+  /// **'Bersih sebelum refund; refund ditampilkan sebagai qty refund.'**
+  String get reportProductsNote;
+
+  /// No description provided for @reportProductsMore.
+  ///
+  /// In id, this message translates to:
+  /// **'Menampilkan {shown} dari {total} produk. Ekspor berisi daftar yang sama.'**
+  String reportProductsMore(int shown, int total);
+
+  /// No description provided for @reportTaxNote.
+  ///
+  /// In id, this message translates to:
+  /// **'Harga termasuk pajak: DPP = dasar pajak − PPN. Barang bebas pajak (sembako) tidak masuk dasar pajak.'**
+  String get reportTaxNote;
+
+  /// No description provided for @reportStockNote.
+  ///
+  /// In id, this message translates to:
+  /// **'Nilai = stok × HPP saat ini. Stok minus tidak menambah nilai.'**
+  String get reportStockNote;
+
+  /// No description provided for @reportNegativeNote.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa dengan stok opname.'**
+  String get reportNegativeNote;
+
+  /// No description provided for @colDate.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanggal'**
+  String get colDate;
+
+  /// No description provided for @colOrders.
+  ///
+  /// In id, this message translates to:
+  /// **'Transaksi'**
+  String get colOrders;
+
+  /// No description provided for @colSales.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan'**
+  String get colSales;
+
+  /// No description provided for @colRefunds.
+  ///
+  /// In id, this message translates to:
+  /// **'Refund'**
+  String get colRefunds;
+
+  /// No description provided for @colNetSales.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan bersih'**
+  String get colNetSales;
+
+  /// No description provided for @colStore.
+  ///
+  /// In id, this message translates to:
+  /// **'Toko'**
+  String get colStore;
+
+  /// No description provided for @colMethod.
+  ///
+  /// In id, this message translates to:
+  /// **'Metode'**
+  String get colMethod;
+
+  /// No description provided for @colCount.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah'**
+  String get colCount;
+
+  /// No description provided for @colAmount.
+  ///
+  /// In id, this message translates to:
+  /// **'Nilai'**
+  String get colAmount;
+
+  /// No description provided for @colShare.
+  ///
+  /// In id, this message translates to:
+  /// **'Porsi'**
+  String get colShare;
+
+  /// No description provided for @colProduct.
+  ///
+  /// In id, this message translates to:
+  /// **'Produk'**
+  String get colProduct;
+
+  /// No description provided for @colSku.
+  ///
+  /// In id, this message translates to:
+  /// **'SKU'**
+  String get colSku;
+
+  /// No description provided for @colCategory.
+  ///
+  /// In id, this message translates to:
+  /// **'Kategori'**
+  String get colCategory;
+
+  /// No description provided for @colQty.
+  ///
+  /// In id, this message translates to:
+  /// **'Qty'**
+  String get colQty;
+
+  /// No description provided for @colRefundedQty.
+  ///
+  /// In id, this message translates to:
+  /// **'Qty refund'**
+  String get colRefundedQty;
+
+  /// No description provided for @colNet.
+  ///
+  /// In id, this message translates to:
+  /// **'Bersih'**
+  String get colNet;
+
+  /// No description provided for @colCost.
+  ///
+  /// In id, this message translates to:
+  /// **'HPP'**
+  String get colCost;
+
+  /// No description provided for @colMargin.
+  ///
+  /// In id, this message translates to:
+  /// **'Margin'**
+  String get colMargin;
+
+  /// No description provided for @colStaff.
+  ///
+  /// In id, this message translates to:
+  /// **'Staf'**
+  String get colStaff;
+
+  /// No description provided for @colAverage.
+  ///
+  /// In id, this message translates to:
+  /// **'Rata-rata'**
+  String get colAverage;
+
+  /// No description provided for @colDiscounts.
+  ///
+  /// In id, this message translates to:
+  /// **'Diskon'**
+  String get colDiscounts;
+
+  /// No description provided for @colVoids.
+  ///
+  /// In id, this message translates to:
+  /// **'Void'**
+  String get colVoids;
+
+  /// No description provided for @colBase.
+  ///
+  /// In id, this message translates to:
+  /// **'Dasar pajak'**
+  String get colBase;
+
+  /// No description provided for @colDpp.
+  ///
+  /// In id, this message translates to:
+  /// **'DPP'**
+  String get colDpp;
+
+  /// No description provided for @colTax.
+  ///
+  /// In id, this message translates to:
+  /// **'PPN'**
+  String get colTax;
+
+  /// No description provided for @colExempt.
+  ///
+  /// In id, this message translates to:
+  /// **'Bebas pajak'**
+  String get colExempt;
+
+  /// No description provided for @colStock.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok'**
+  String get colStock;
+
+  /// No description provided for @colValue.
+  ///
+  /// In id, this message translates to:
+  /// **'Nilai'**
+  String get colValue;
+
+  /// No description provided for @totalRow.
+  ///
+  /// In id, this message translates to:
+  /// **'Total'**
+  String get totalRow;
+
+  /// No description provided for @sumItems.
+  ///
+  /// In id, this message translates to:
+  /// **'Barang terjual'**
+  String get sumItems;
+
+  /// No description provided for @sumKasbonIssued.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon baru'**
+  String get sumKasbonIssued;
+
+  /// No description provided for @sumKasbonRepaid.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon dibayar'**
+  String get sumKasbonRepaid;
+
+  /// No description provided for @sumMargin.
+  ///
+  /// In id, this message translates to:
+  /// **'Margin kotor'**
+  String get sumMargin;
+
+  /// No description provided for @sumStockValue.
+  ///
+  /// In id, this message translates to:
+  /// **'Nilai stok'**
+  String get sumStockValue;
+
+  /// No description provided for @sumNegative.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok minus'**
+  String get sumNegative;
+
+  /// No description provided for @sumLow.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok menipis'**
+  String get sumLow;
+
+  /// No description provided for @dashTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Hari ini'**
+  String get dashTitle;
+
+  /// No description provided for @dashVsYesterday.
+  ///
+  /// In id, this message translates to:
+  /// **'Kemarin {value}'**
+  String dashVsYesterday(String value);
+
+  /// No description provided for @dashLast7.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan 7 hari terakhir'**
+  String get dashLast7;
+
+  /// No description provided for @dashTop.
+  ///
+  /// In id, this message translates to:
+  /// **'Produk terlaris hari ini'**
+  String get dashTop;
+
+  /// No description provided for @dashPayments.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembayaran hari ini'**
+  String get dashPayments;
+
+  /// No description provided for @dashOpenShifts.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} shift terbuka'**
+  String dashOpenShifts(int count);
+
+  /// No description provided for @dashLowStock.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} stok menipis'**
+  String dashLowStock(int count);
+
+  /// No description provided for @dashAlerts.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} peringatan'**
+  String dashAlerts(int count);
+
+  /// No description provided for @dashOverdue.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon terlambat {amount}'**
+  String dashOverdue(String amount);
+
+  /// No description provided for @dashNothing.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada penjualan hari ini.'**
+  String get dashNothing;
+
+  /// No description provided for @dashAllReports.
+  ///
+  /// In id, this message translates to:
+  /// **'Semua laporan'**
+  String get dashAllReports;
 }
 
 class _AppLocalizationsDelegate

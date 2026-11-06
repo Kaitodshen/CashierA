@@ -25,6 +25,7 @@ import 'package:cashiera/features/pairing/presentation/pairing_screen.dart';
 import 'package:cashiera/features/pin_login/presentation/pin_lock_screen.dart';
 import 'package:cashiera/features/pos_home/presentation/pos_home_screen.dart';
 import 'package:cashiera/features/printing/printer_screen.dart';
+import 'package:cashiera/features/reports/presentation/reports_screen.dart';
 import 'package:cashiera/features/sell/presentation/orders_screen.dart';
 import 'package:cashiera/features/sell/presentation/payment_screen.dart';
 import 'package:cashiera/features/sell/presentation/receipt_screen.dart';
@@ -206,6 +207,10 @@ GoRouter router(Ref ref) {
           GoRoute(
             path: AppRoutes.adminLoyalty,
             builder: (_, _) => const LoyaltySettingsScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminReports,
+            builder: (_, _) => const ReportsScreen(),
           ),
         ],
       ),

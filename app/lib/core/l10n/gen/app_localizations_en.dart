@@ -2504,4 +2504,274 @@ class AppLocalizationsEn extends AppLocalizations {
   String cashMovementApproval(String kind, String amount, String reason) {
     return '$kind of $amount opens the drawer: $reason';
   }
+
+  @override
+  String get navReports => 'Reports';
+
+  @override
+  String get reportTabSales => 'Sales';
+
+  @override
+  String get reportTabPayments => 'Payments';
+
+  @override
+  String get reportTabProducts => 'Products';
+
+  @override
+  String get reportTabStaff => 'Staff';
+
+  @override
+  String get reportTabTax => 'Tax';
+
+  @override
+  String get reportTabStock => 'Stock value';
+
+  @override
+  String get periodToday => 'Today';
+
+  @override
+  String get periodYesterday => 'Yesterday';
+
+  @override
+  String get periodLast7 => '7 days';
+
+  @override
+  String get periodThisMonth => 'This month';
+
+  @override
+  String get periodLastMonth => 'Last month';
+
+  @override
+  String get periodCustom => 'Pick dates';
+
+  @override
+  String get exportPdf => 'PDF';
+
+  @override
+  String get exportExcel => 'Excel';
+
+  @override
+  String get exportSaved => 'File saved.';
+
+  @override
+  String get reportEmpty => 'No data in this period.';
+
+  @override
+  String reportStockSubtitle(String store, String time) {
+    return '$store · as of $time';
+  }
+
+  @override
+  String get reportSummary => 'Summary';
+
+  @override
+  String get reportItem => 'Item';
+
+  @override
+  String get summaryGross => 'Gross sales';
+
+  @override
+  String get summaryDiscounts => 'Discounts';
+
+  @override
+  String get summaryNet => 'Sales after discounts';
+
+  @override
+  String get summaryService => 'Service charge';
+
+  @override
+  String get summaryTax => 'Tax added or included';
+
+  @override
+  String get summaryRounding => 'Rounding';
+
+  @override
+  String get reportByHour => 'Sales by hour';
+
+  @override
+  String get reportSalesNote =>
+      'Sales are completed sales. Voids are not sales. Refunds count on the day of the refund.';
+
+  @override
+  String get reportProductsNote =>
+      'Net before refunds; refunds show as refunded quantity.';
+
+  @override
+  String reportProductsMore(int shown, int total) {
+    return 'Showing $shown of $total products. The export holds the same list.';
+  }
+
+  @override
+  String get reportTaxNote =>
+      'Tax-inclusive prices: DPP = taxable base − tax. Exempt goods (sembako) are outside the taxable base.';
+
+  @override
+  String get reportStockNote =>
+      'Value = stock × current cost. Negative stock adds no value.';
+
+  @override
+  String get reportNegativeNote => 'Check them with a stock count.';
+
+  @override
+  String get colDate => 'Date';
+
+  @override
+  String get colOrders => 'Sales';
+
+  @override
+  String get colSales => 'Sales amount';
+
+  @override
+  String get colRefunds => 'Refunds';
+
+  @override
+  String get colNetSales => 'Net sales';
+
+  @override
+  String get colStore => 'Store';
+
+  @override
+  String get colMethod => 'Method';
+
+  @override
+  String get colCount => 'Count';
+
+  @override
+  String get colAmount => 'Amount';
+
+  @override
+  String get colShare => 'Share';
+
+  @override
+  String get colProduct => 'Product';
+
+  @override
+  String get colSku => 'SKU';
+
+  @override
+  String get colCategory => 'Category';
+
+  @override
+  String get colQty => 'Qty';
+
+  @override
+  String get colRefundedQty => 'Refunded qty';
+
+  @override
+  String get colNet => 'Net';
+
+  @override
+  String get colCost => 'Cost';
+
+  @override
+  String get colMargin => 'Margin';
+
+  @override
+  String get colStaff => 'Staff';
+
+  @override
+  String get colAverage => 'Average';
+
+  @override
+  String get colDiscounts => 'Discounts';
+
+  @override
+  String get colVoids => 'Voids';
+
+  @override
+  String get colBase => 'Taxable base';
+
+  @override
+  String get colDpp => 'DPP';
+
+  @override
+  String get colTax => 'Tax';
+
+  @override
+  String get colExempt => 'Exempt';
+
+  @override
+  String get colStock => 'Stock';
+
+  @override
+  String get colValue => 'Value';
+
+  @override
+  String get totalRow => 'Total';
+
+  @override
+  String get sumItems => 'Items sold';
+
+  @override
+  String get sumKasbonIssued => 'Kasbon issued';
+
+  @override
+  String get sumKasbonRepaid => 'Kasbon repaid';
+
+  @override
+  String get sumMargin => 'Gross margin';
+
+  @override
+  String get sumStockValue => 'Stock value';
+
+  @override
+  String get sumNegative => 'Negative stock';
+
+  @override
+  String get sumLow => 'Low stock';
+
+  @override
+  String get dashTitle => 'Today';
+
+  @override
+  String dashVsYesterday(String value) {
+    return 'Yesterday $value';
+  }
+
+  @override
+  String get dashLast7 => 'Sales, last 7 days';
+
+  @override
+  String get dashTop => 'Top products today';
+
+  @override
+  String get dashPayments => 'Payments today';
+
+  @override
+  String dashOpenShifts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count open shifts',
+      one: '1 open shift',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashLowStock(int count) {
+    return '$count low stock';
+  }
+
+  @override
+  String dashAlerts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count alerts',
+      one: '1 alert',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashOverdue(String amount) {
+    return 'Overdue kasbon $amount';
+  }
+
+  @override
+  String get dashNothing => 'No sales yet today.';
+
+  @override
+  String get dashAllReports => 'All reports';
 }

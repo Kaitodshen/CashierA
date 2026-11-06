@@ -2475,4 +2475,262 @@ class AppLocalizationsId extends AppLocalizations {
   String cashMovementApproval(String kind, String amount, String reason) {
     return '$kind $amount membuka laci: $reason';
   }
+
+  @override
+  String get navReports => 'Laporan';
+
+  @override
+  String get reportTabSales => 'Penjualan';
+
+  @override
+  String get reportTabPayments => 'Pembayaran';
+
+  @override
+  String get reportTabProducts => 'Produk';
+
+  @override
+  String get reportTabStaff => 'Staf';
+
+  @override
+  String get reportTabTax => 'Pajak';
+
+  @override
+  String get reportTabStock => 'Nilai stok';
+
+  @override
+  String get periodToday => 'Hari ini';
+
+  @override
+  String get periodYesterday => 'Kemarin';
+
+  @override
+  String get periodLast7 => '7 hari';
+
+  @override
+  String get periodThisMonth => 'Bulan ini';
+
+  @override
+  String get periodLastMonth => 'Bulan lalu';
+
+  @override
+  String get periodCustom => 'Pilih tanggal';
+
+  @override
+  String get exportPdf => 'PDF';
+
+  @override
+  String get exportExcel => 'Excel';
+
+  @override
+  String get exportSaved => 'File disimpan.';
+
+  @override
+  String get reportEmpty => 'Tidak ada data di periode ini.';
+
+  @override
+  String reportStockSubtitle(String store, String time) {
+    return '$store · per $time';
+  }
+
+  @override
+  String get reportSummary => 'Ringkasan';
+
+  @override
+  String get reportItem => 'Rincian';
+
+  @override
+  String get summaryGross => 'Penjualan kotor';
+
+  @override
+  String get summaryDiscounts => 'Diskon';
+
+  @override
+  String get summaryNet => 'Penjualan setelah diskon';
+
+  @override
+  String get summaryService => 'Biaya layanan';
+
+  @override
+  String get summaryTax => 'Pajak ditambahkan atau termasuk';
+
+  @override
+  String get summaryRounding => 'Pembulatan';
+
+  @override
+  String get reportByHour => 'Penjualan per jam';
+
+  @override
+  String get reportSalesNote =>
+      'Penjualan = transaksi selesai. Void tidak termasuk penjualan. Refund dihitung pada tanggal refund.';
+
+  @override
+  String get reportProductsNote =>
+      'Bersih sebelum refund; refund ditampilkan sebagai qty refund.';
+
+  @override
+  String reportProductsMore(int shown, int total) {
+    return 'Menampilkan $shown dari $total produk. Ekspor berisi daftar yang sama.';
+  }
+
+  @override
+  String get reportTaxNote =>
+      'Harga termasuk pajak: DPP = dasar pajak − PPN. Barang bebas pajak (sembako) tidak masuk dasar pajak.';
+
+  @override
+  String get reportStockNote =>
+      'Nilai = stok × HPP saat ini. Stok minus tidak menambah nilai.';
+
+  @override
+  String get reportNegativeNote => 'Periksa dengan stok opname.';
+
+  @override
+  String get colDate => 'Tanggal';
+
+  @override
+  String get colOrders => 'Transaksi';
+
+  @override
+  String get colSales => 'Penjualan';
+
+  @override
+  String get colRefunds => 'Refund';
+
+  @override
+  String get colNetSales => 'Penjualan bersih';
+
+  @override
+  String get colStore => 'Toko';
+
+  @override
+  String get colMethod => 'Metode';
+
+  @override
+  String get colCount => 'Jumlah';
+
+  @override
+  String get colAmount => 'Nilai';
+
+  @override
+  String get colShare => 'Porsi';
+
+  @override
+  String get colProduct => 'Produk';
+
+  @override
+  String get colSku => 'SKU';
+
+  @override
+  String get colCategory => 'Kategori';
+
+  @override
+  String get colQty => 'Qty';
+
+  @override
+  String get colRefundedQty => 'Qty refund';
+
+  @override
+  String get colNet => 'Bersih';
+
+  @override
+  String get colCost => 'HPP';
+
+  @override
+  String get colMargin => 'Margin';
+
+  @override
+  String get colStaff => 'Staf';
+
+  @override
+  String get colAverage => 'Rata-rata';
+
+  @override
+  String get colDiscounts => 'Diskon';
+
+  @override
+  String get colVoids => 'Void';
+
+  @override
+  String get colBase => 'Dasar pajak';
+
+  @override
+  String get colDpp => 'DPP';
+
+  @override
+  String get colTax => 'PPN';
+
+  @override
+  String get colExempt => 'Bebas pajak';
+
+  @override
+  String get colStock => 'Stok';
+
+  @override
+  String get colValue => 'Nilai';
+
+  @override
+  String get totalRow => 'Total';
+
+  @override
+  String get sumItems => 'Barang terjual';
+
+  @override
+  String get sumKasbonIssued => 'Kasbon baru';
+
+  @override
+  String get sumKasbonRepaid => 'Kasbon dibayar';
+
+  @override
+  String get sumMargin => 'Margin kotor';
+
+  @override
+  String get sumStockValue => 'Nilai stok';
+
+  @override
+  String get sumNegative => 'Stok minus';
+
+  @override
+  String get sumLow => 'Stok menipis';
+
+  @override
+  String get dashTitle => 'Hari ini';
+
+  @override
+  String dashVsYesterday(String value) {
+    return 'Kemarin $value';
+  }
+
+  @override
+  String get dashLast7 => 'Penjualan 7 hari terakhir';
+
+  @override
+  String get dashTop => 'Produk terlaris hari ini';
+
+  @override
+  String get dashPayments => 'Pembayaran hari ini';
+
+  @override
+  String dashOpenShifts(int count) {
+    return '$count shift terbuka';
+  }
+
+  @override
+  String dashLowStock(int count) {
+    return '$count stok menipis';
+  }
+
+  @override
+  String dashAlerts(int count) {
+    return '$count peringatan';
+  }
+
+  @override
+  String dashOverdue(String amount) {
+    return 'Kasbon terlambat $amount';
+  }
+
+  @override
+  String get dashNothing => 'Belum ada penjualan hari ini.';
+
+  @override
+  String get dashAllReports => 'Semua laporan';
 }
