@@ -2163,4 +2163,1050 @@ class AppLocalizationsId extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get pointsTitle => 'Tukar poin';
+
+  @override
+  String pointsBalance(int points) {
+    return 'Saldo $points poin';
+  }
+
+  @override
+  String pointsMax(int points, String amount) {
+    return 'Maksimal $points poin ($amount)';
+  }
+
+  @override
+  String pointsMin(int points) {
+    return 'Minimal $points poin';
+  }
+
+  @override
+  String get pointsField => 'Jumlah poin';
+
+  @override
+  String get pointsAll => 'Maks';
+
+  @override
+  String get pointsRemove => 'Hapus';
+
+  @override
+  String get pointsUse => 'Pakai';
+
+  @override
+  String pointsTooMany(int points) {
+    return 'Paling banyak $points poin.';
+  }
+
+  @override
+  String pointsBelowMin(int points) {
+    return 'Paling sedikit $points poin.';
+  }
+
+  @override
+  String pointsUsed(int points) {
+    return '−$points poin';
+  }
+
+  @override
+  String pointsButton(int points) {
+    return '$points poin';
+  }
+
+  @override
+  String get posErrPoints => 'Poin tidak cukup atau di bawah minimum.';
+
+  @override
+  String get posErrVoidKasbonPaid =>
+      'Kasbon ini sudah dicicil; lakukan refund, bukan void.';
+
+  @override
+  String receiptPointsEarned(int points) {
+    return 'Poin didapat: $points';
+  }
+
+  @override
+  String get posCustomers => 'Pelanggan';
+
+  @override
+  String get posCustomersHint => 'Poin, kasbon dan cicilan';
+
+  @override
+  String get customersTitle => 'Pelanggan';
+
+  @override
+  String get customersSearch => 'Cari nama, nomor HP atau kode';
+
+  @override
+  String get customersEmpty => 'Tidak ada pelanggan.';
+
+  @override
+  String customersPoints(int points) {
+    return '$points poin';
+  }
+
+  @override
+  String customersOwes(String amount) {
+    return 'Kasbon $amount';
+  }
+
+  @override
+  String get customerEdit => 'Ubah pelanggan';
+
+  @override
+  String get customerSaved => 'Pelanggan disimpan.';
+
+  @override
+  String customerTotalOwed(String amount) {
+    return 'Kasbon $amount';
+  }
+
+  @override
+  String get customerPay => 'Bayar kasbon';
+
+  @override
+  String get customerKasbon => 'Kasbon';
+
+  @override
+  String get customerNoKasbon => 'Tidak ada kasbon.';
+
+  @override
+  String customerKasbonLine(String left, String amount) {
+    return 'Sisa $left dari $amount';
+  }
+
+  @override
+  String customerDue(String date) {
+    return 'Jatuh tempo $date';
+  }
+
+  @override
+  String customerOverdue(int days) {
+    return 'Terlambat $days hari';
+  }
+
+  @override
+  String get customerInstallments => 'Cicilan di terminal ini';
+
+  @override
+  String repayTitle(String name) {
+    return 'Bayar kasbon $name';
+  }
+
+  @override
+  String repayOwed(String amount) {
+    return 'Kasbon $amount';
+  }
+
+  @override
+  String get repayAmount => 'Jumlah';
+
+  @override
+  String get repayAll => 'Lunasi';
+
+  @override
+  String get repayMethod => 'Metode';
+
+  @override
+  String get repayReference => 'Referensi';
+
+  @override
+  String get repayInvalid => 'Isi jumlah.';
+
+  @override
+  String get repayNothing => 'Tidak ada kasbon.';
+
+  @override
+  String get repayExceeds => 'Melebihi sisa kasbon.';
+
+  @override
+  String repayDone(String amount, String left) {
+    return 'Cicilan $amount diterima. Sisa kasbon $left.';
+  }
+
+  @override
+  String get kasbonSlipTitle => 'PEMBAYARAN KASBON';
+
+  @override
+  String kasbonSlipCustomer(String name) {
+    return 'Pelanggan: $name';
+  }
+
+  @override
+  String kasbonSlipCashier(String name) {
+    return 'Kasir: $name';
+  }
+
+  @override
+  String get kasbonSlipBefore => 'Kasbon sebelumnya';
+
+  @override
+  String get kasbonSlipPaid => 'Dibayar';
+
+  @override
+  String get kasbonSlipAfter => 'Sisa kasbon';
+
+  @override
+  String kasbonSlipMethod(String method) {
+    return 'Metode: $method';
+  }
+
+  @override
+  String get kasbonSlipSettled => 'LUNAS';
+
+  @override
+  String get navCustomers => 'Pelanggan';
+
+  @override
+  String get navKasbon => 'Kasbon';
+
+  @override
+  String get navLoyalty => 'Loyalti & kasbon';
+
+  @override
+  String ledgerEntryType(String type) {
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'earn': 'Poin didapat',
+      'redeem': 'Poin ditukar',
+      'reverse_earn': 'Poin dibatalkan',
+      'reverse_redeem': 'Poin dikembalikan',
+      'adjust': 'Penyesuaian',
+      'other': '$type',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String kasbonStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'open': 'Belum dibayar',
+      'partial': 'Dicicil',
+      'paid': 'Lunas',
+      'void': 'Batal',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get adminCustomerEmail => 'E-mail';
+
+  @override
+  String get adminCustomerLimit => 'Batas kasbon';
+
+  @override
+  String get adminCustomerLimitHint => 'Kosongkan untuk tanpa batas';
+
+  @override
+  String adminCustomerLimitShort(String amount) {
+    return 'Batas $amount';
+  }
+
+  @override
+  String get adminAdjustPoints => 'Sesuaikan poin';
+
+  @override
+  String get adminAdjustPointsField => 'Poin (+ atau −)';
+
+  @override
+  String get adminAdjustNote => 'Alasan';
+
+  @override
+  String adminAdjustDone(int points) {
+    return 'Saldo poin sekarang $points.';
+  }
+
+  @override
+  String get adminPointsHistory => 'Riwayat poin';
+
+  @override
+  String adminKasbonPaidLine(String paid, String amount) {
+    return 'Dibayar $paid dari $amount';
+  }
+
+  @override
+  String adminKasbonTotal(String total, String overdue) {
+    return 'Total $total · terlambat $overdue';
+  }
+
+  @override
+  String get adminKasbonEmpty => 'Tidak ada kasbon terbuka.';
+
+  @override
+  String adminKasbonOldest(String date) {
+    return 'Tertua $date';
+  }
+
+  @override
+  String adminKasbonOverdue(String amount) {
+    return 'Terlambat $amount';
+  }
+
+  @override
+  String get loyaltyEnabled => 'Program poin aktif';
+
+  @override
+  String get loyaltyEarn => 'Belanja untuk 1 poin';
+
+  @override
+  String get loyaltyValue => 'Nilai 1 poin saat ditukar';
+
+  @override
+  String get loyaltyMin => 'Minimal poin sekali tukar';
+
+  @override
+  String get loyaltyDueDays => 'Jatuh tempo kasbon (hari)';
+
+  @override
+  String loyaltyRange(int min, int max) {
+    return 'Isi angka $min–$max.';
+  }
+
+  @override
+  String get loyaltyOwnerOnly =>
+      'Hanya pemilik yang bisa mengubah pengaturan ini.';
+
+  @override
+  String get loyaltyHint =>
+      'Berlaku untuk semua toko. Terminal memakai pengaturan baru setelah sinkron berikutnya.';
+
+  @override
+  String cashMovementApproval(String kind, String amount, String reason) {
+    return '$kind $amount membuka laci: $reason';
+  }
+
+  @override
+  String get navReports => 'Laporan';
+
+  @override
+  String get reportTabSales => 'Penjualan';
+
+  @override
+  String get reportTabPayments => 'Pembayaran';
+
+  @override
+  String get reportTabProducts => 'Produk';
+
+  @override
+  String get reportTabStaff => 'Staf';
+
+  @override
+  String get reportTabTax => 'Pajak';
+
+  @override
+  String get reportTabStock => 'Nilai stok';
+
+  @override
+  String get periodToday => 'Hari ini';
+
+  @override
+  String get periodYesterday => 'Kemarin';
+
+  @override
+  String get periodLast7 => '7 hari';
+
+  @override
+  String get periodThisMonth => 'Bulan ini';
+
+  @override
+  String get periodLastMonth => 'Bulan lalu';
+
+  @override
+  String get periodCustom => 'Pilih tanggal';
+
+  @override
+  String get exportPdf => 'PDF';
+
+  @override
+  String get exportExcel => 'Excel';
+
+  @override
+  String get exportSaved => 'File disimpan.';
+
+  @override
+  String get reportEmpty => 'Tidak ada data di periode ini.';
+
+  @override
+  String reportStockSubtitle(String store, String time) {
+    return '$store · per $time';
+  }
+
+  @override
+  String get reportSummary => 'Ringkasan';
+
+  @override
+  String get reportItem => 'Rincian';
+
+  @override
+  String get summaryGross => 'Penjualan kotor';
+
+  @override
+  String get summaryDiscounts => 'Diskon';
+
+  @override
+  String get summaryNet => 'Penjualan setelah diskon';
+
+  @override
+  String get summaryService => 'Biaya layanan';
+
+  @override
+  String get summaryTax => 'Pajak ditambahkan atau termasuk';
+
+  @override
+  String get summaryRounding => 'Pembulatan';
+
+  @override
+  String get reportByHour => 'Penjualan per jam';
+
+  @override
+  String get reportSalesNote =>
+      'Penjualan = transaksi selesai. Void tidak termasuk penjualan. Refund dihitung pada tanggal refund.';
+
+  @override
+  String get reportProductsNote =>
+      'Bersih sebelum refund; refund ditampilkan sebagai qty refund.';
+
+  @override
+  String reportProductsMore(int shown, int total) {
+    return 'Menampilkan $shown dari $total produk. Ekspor berisi daftar yang sama.';
+  }
+
+  @override
+  String get reportTaxNote =>
+      'Harga termasuk pajak: DPP = dasar pajak − PPN. Barang bebas pajak (sembako) tidak masuk dasar pajak.';
+
+  @override
+  String get reportStockNote =>
+      'Nilai = stok × HPP saat ini. Stok minus tidak menambah nilai.';
+
+  @override
+  String get reportNegativeNote => 'Periksa dengan stok opname.';
+
+  @override
+  String get colDate => 'Tanggal';
+
+  @override
+  String get colOrders => 'Transaksi';
+
+  @override
+  String get colSales => 'Penjualan';
+
+  @override
+  String get colRefunds => 'Refund';
+
+  @override
+  String get colNetSales => 'Penjualan bersih';
+
+  @override
+  String get colStore => 'Toko';
+
+  @override
+  String get colMethod => 'Metode';
+
+  @override
+  String get colCount => 'Jumlah';
+
+  @override
+  String get colAmount => 'Nilai';
+
+  @override
+  String get colShare => 'Porsi';
+
+  @override
+  String get colProduct => 'Produk';
+
+  @override
+  String get colSku => 'SKU';
+
+  @override
+  String get colCategory => 'Kategori';
+
+  @override
+  String get colQty => 'Qty';
+
+  @override
+  String get colRefundedQty => 'Qty refund';
+
+  @override
+  String get colNet => 'Bersih';
+
+  @override
+  String get colCost => 'HPP';
+
+  @override
+  String get colMargin => 'Margin';
+
+  @override
+  String get colStaff => 'Staf';
+
+  @override
+  String get colAverage => 'Rata-rata';
+
+  @override
+  String get colDiscounts => 'Diskon';
+
+  @override
+  String get colVoids => 'Void';
+
+  @override
+  String get colBase => 'Dasar pajak';
+
+  @override
+  String get colDpp => 'DPP';
+
+  @override
+  String get colTax => 'PPN';
+
+  @override
+  String get colExempt => 'Bebas pajak';
+
+  @override
+  String get colStock => 'Stok';
+
+  @override
+  String get colValue => 'Nilai';
+
+  @override
+  String get totalRow => 'Total';
+
+  @override
+  String get sumItems => 'Barang terjual';
+
+  @override
+  String get sumKasbonIssued => 'Kasbon baru';
+
+  @override
+  String get sumKasbonRepaid => 'Kasbon dibayar';
+
+  @override
+  String get sumMargin => 'Margin kotor';
+
+  @override
+  String get sumStockValue => 'Nilai stok';
+
+  @override
+  String get sumNegative => 'Stok minus';
+
+  @override
+  String get sumLow => 'Stok menipis';
+
+  @override
+  String get dashTitle => 'Hari ini';
+
+  @override
+  String dashVsYesterday(String value) {
+    return 'Kemarin $value';
+  }
+
+  @override
+  String get dashLast7 => 'Penjualan 7 hari terakhir';
+
+  @override
+  String get dashTop => 'Produk terlaris hari ini';
+
+  @override
+  String get dashPayments => 'Pembayaran hari ini';
+
+  @override
+  String dashOpenShifts(int count) {
+    return '$count shift terbuka';
+  }
+
+  @override
+  String dashLowStock(int count) {
+    return '$count stok menipis';
+  }
+
+  @override
+  String dashAlerts(int count) {
+    return '$count peringatan';
+  }
+
+  @override
+  String dashOverdue(String amount) {
+    return 'Kasbon terlambat $amount';
+  }
+
+  @override
+  String get dashNothing => 'Belum ada penjualan hari ini.';
+
+  @override
+  String get dashAllReports => 'Semua laporan';
+
+  @override
+  String get navPurchasing => 'Pembelian';
+
+  @override
+  String get navTransfers => 'Transfer';
+
+  @override
+  String get navTables => 'Meja';
+
+  @override
+  String poStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'draft': 'Draf',
+      'ordered': 'Dipesan',
+      'partially_received': 'Diterima sebagian',
+      'received': 'Diterima',
+      'cancelled': 'Dibatalkan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get purchaseNew => 'PO baru';
+
+  @override
+  String get purchaseEmpty => 'Belum ada purchase order.';
+
+  @override
+  String purchaseLines(int count) {
+    return '$count baris';
+  }
+
+  @override
+  String get purchaseExpected => 'Tanggal diharapkan';
+
+  @override
+  String purchaseExpectedShort(String date) {
+    return 'Diharapkan $date';
+  }
+
+  @override
+  String get purchaseSupplier => 'Pemasok';
+
+  @override
+  String get purchaseAddItem => 'Tambah barang';
+
+  @override
+  String get purchaseSearchItem => 'Cari nama atau SKU';
+
+  @override
+  String get purchaseIncomplete =>
+      'Pilih toko, pemasok dan minimal satu barang.';
+
+  @override
+  String purchaseQtyInvalid(String name) {
+    return 'Periksa angka untuk $name.';
+  }
+
+  @override
+  String purchaseQtyTooMuch(String name, String max) {
+    return '$name: maksimal $max.';
+  }
+
+  @override
+  String get purchaseQtyNone => 'Isi minimal satu jumlah.';
+
+  @override
+  String purchaseMax(String max) {
+    return 'maks $max';
+  }
+
+  @override
+  String get purchaseOrder => 'Pesan';
+
+  @override
+  String get purchaseOrdered => 'Pesanan dikirim';
+
+  @override
+  String get purchaseCancel => 'Batalkan';
+
+  @override
+  String get purchaseCancelled => 'PO dibatalkan';
+
+  @override
+  String get purchaseReceive => 'Terima barang';
+
+  @override
+  String purchaseReceiveTitle(String number) {
+    return 'Terima barang · $number';
+  }
+
+  @override
+  String purchaseReceived(String number) {
+    return 'Diterima dengan nomor $number';
+  }
+
+  @override
+  String get purchaseReceipts => 'Penerimaan barang';
+
+  @override
+  String get purchaseOrderedCol => 'Dipesan';
+
+  @override
+  String get purchaseReceivedCol => 'Diterima';
+
+  @override
+  String get purchaseCost => 'Harga beli';
+
+  @override
+  String get purchaseUnit => 'Satuan';
+
+  @override
+  String purchasePdfTitle(String number) {
+    return 'Purchase order $number';
+  }
+
+  @override
+  String get transferNew => 'Minta transfer';
+
+  @override
+  String get transferEmpty => 'Belum ada transfer.';
+
+  @override
+  String get transferIncoming => 'Masuk';
+
+  @override
+  String get transferOutgoing => 'Keluar';
+
+  @override
+  String transferStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'requested': 'Diminta',
+      'approved': 'Disetujui',
+      'in_transit': 'Dikirim',
+      'received': 'Diterima',
+      'rejected': 'Ditolak',
+      'cancelled': 'Dibatalkan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String transferEvent(String event) {
+    String _temp0 = intl.Intl.selectLogic(event, {
+      'requested': 'Diminta',
+      'approved': 'Disetujui',
+      'shipped': 'Dikirim',
+      'received': 'Diterima',
+      'rejected': 'Ditolak',
+      'cancelled': 'Dibatalkan',
+      'other': '$event',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get transferFrom => 'Dari toko (pengirim)';
+
+  @override
+  String get transferTo => 'Ke toko (penerima)';
+
+  @override
+  String get transferIncomplete =>
+      'Pilih dua toko yang berbeda dan minimal satu barang.';
+
+  @override
+  String get transferSubmit => 'Kirim permintaan';
+
+  @override
+  String get transferApprove => 'Setujui';
+
+  @override
+  String get transferReject => 'Tolak';
+
+  @override
+  String get transferRejectReason => 'Alasan';
+
+  @override
+  String transferRejectedBecause(String reason) {
+    return 'Ditolak: $reason';
+  }
+
+  @override
+  String get transferShip => 'Kirim barang';
+
+  @override
+  String transferShipTitle(String number) {
+    return 'Kirim barang · $number';
+  }
+
+  @override
+  String transferReceiveTitle(String number) {
+    return 'Terima · $number';
+  }
+
+  @override
+  String get transferCancel => 'Batalkan transfer';
+
+  @override
+  String get transferRequested => 'Diminta';
+
+  @override
+  String get transferShipped => 'Dikirim';
+
+  @override
+  String get transferSenderStock => 'Stok pengirim';
+
+  @override
+  String get transferHistory => 'Riwayat';
+
+  @override
+  String get fnbMode => 'Mode F&B (resto/kafe)';
+
+  @override
+  String get fnbModeHint =>
+      'Mengaktifkan meja, tiket dapur dan layar dapur di terminal toko ini.';
+
+  @override
+  String get fnbModeOwnerOnly => 'Hanya pemilik yang dapat mengubah ini.';
+
+  @override
+  String get tablesEmpty => 'Belum ada meja.';
+
+  @override
+  String get tableNew => 'Meja baru';
+
+  @override
+  String get tableEdit => 'Ubah meja';
+
+  @override
+  String get tableName => 'Nama';
+
+  @override
+  String get tableArea => 'Area (opsional)';
+
+  @override
+  String get tableCapacity => 'Jumlah kursi';
+
+  @override
+  String tableSeats(int count) {
+    return '$count kursi';
+  }
+
+  @override
+  String get tableInvalid => 'Isi nama dan minimal 1 kursi.';
+
+  @override
+  String get kitchenTitle => 'Dapur';
+
+  @override
+  String get kitchenRefresh => 'Muat ulang';
+
+  @override
+  String get kitchenEmpty => 'Tidak ada pesanan.';
+
+  @override
+  String get kitchenOffline =>
+      'Tidak terhubung ke server. Menampilkan daftar terakhir.';
+
+  @override
+  String kitchenAge(int minutes) {
+    return '$minutes\'';
+  }
+
+  @override
+  String kitchenStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'new': 'Baru',
+      'preparing': 'Dimasak',
+      'ready': 'Siap',
+      'served': 'Disajikan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get kitchenStart => 'Mulai';
+
+  @override
+  String get kitchenReady => 'Siap';
+
+  @override
+  String get kitchenServed => 'Disajikan';
+
+  @override
+  String get kitchenSend => 'Kirim ke dapur';
+
+  @override
+  String kitchenSent(String number) {
+    return 'Terkirim ke dapur: $number';
+  }
+
+  @override
+  String kitchenNoPrinter(String stations) {
+    return 'Tidak ada printer untuk $stations: pesanan tampil di layar dapur.';
+  }
+
+  @override
+  String get stationKitchen => 'Dapur';
+
+  @override
+  String get stationBar => 'Bar';
+
+  @override
+  String get orderTakeaway => 'Bawa pulang';
+
+  @override
+  String ticketTable(String table, int guests) {
+    return '$table · $guests tamu';
+  }
+
+  @override
+  String get ticketAddition => '-- TAMBAHAN --';
+
+  @override
+  String get posErrTableOccupied =>
+      'Meja ini sudah punya bill terbuka. Lanjutkan bill tersebut.';
+
+  @override
+  String get posErrTableHasBill =>
+      'Selesaikan atau batalkan bill di meja ini dulu.';
+
+  @override
+  String get posTablesHint => 'Bill makan di tempat per meja';
+
+  @override
+  String get posKitchenHint => 'Pesanan untuk dapur dan bar';
+
+  @override
+  String get printerSlotReceipt => 'Struk';
+
+  @override
+  String get printerSlotKitchen => 'Dapur';
+
+  @override
+  String get printerSlotBar => 'Bar';
+
+  @override
+  String get tablesEmptyTerminal =>
+      'Belum ada meja. Tambahkan di back office (Meja).';
+
+  @override
+  String tableStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'available': 'Kosong',
+      'occupied': 'Terisi',
+      'reserved': 'Dipesan',
+      'cleaning': 'Perlu dibereskan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get tableClear => 'Kosongkan meja';
+
+  @override
+  String tableCleared(String table) {
+    return '$table kosong kembali';
+  }
+
+  @override
+  String get tableFinishCurrent =>
+      'Tahan atau selesaikan bill yang sedang dibuka dulu.';
+
+  @override
+  String tableOccupiedElsewhere(String table) {
+    return '$table punya bill di terminal lain.';
+  }
+
+  @override
+  String get tableGuests => 'Jumlah tamu';
+
+  @override
+  String tableGuestsTitle(String table) {
+    return 'Tamu di $table';
+  }
+
+  @override
+  String get tableSeat => 'Mulai bill';
+
+  @override
+  String get navGatewayPayments => 'Pembayaran QRIS';
+
+  @override
+  String get payQrisCreate => 'Buat QR';
+
+  @override
+  String qrisTitle(String amount) {
+    return 'QRIS $amount';
+  }
+
+  @override
+  String get qrisScan =>
+      'Minta pelanggan memindai dengan aplikasi QRIS apa saja.';
+
+  @override
+  String qrisExpiresIn(String time) {
+    return 'Berlaku $time';
+  }
+
+  @override
+  String qrisPaid(String amount) {
+    return 'Pembayaran QRIS diterima: $amount';
+  }
+
+  @override
+  String get qrisExpired => 'QR kedaluwarsa. Tidak ada yang ditagih.';
+
+  @override
+  String get qrisCancelled => 'QR dibatalkan.';
+
+  @override
+  String get qrisFailed => 'Pembayaran gagal.';
+
+  @override
+  String get qrisNewQr => 'QR baru';
+
+  @override
+  String get qrisCancel => 'Batalkan QR';
+
+  @override
+  String get qrisOffline =>
+      'Tidak ada koneksi. QRIS dinamis butuh internet; pakai tunai atau stiker QRIS.';
+
+  @override
+  String get qrisNotConfigured => 'Payment gateway belum diatur.';
+
+  @override
+  String qrisError(String code) {
+    return 'Gagal membuat QR ($code).';
+  }
+
+  @override
+  String get sellClearPaidQris =>
+      'Pembayaran QRIS untuk bill ini sudah diterima. Selesaikan penjualannya.';
+
+  @override
+  String get gatewayOnlyUnmatched => 'Dibayar tanpa penjualan';
+
+  @override
+  String gatewayPaidTotal(String amount, int count) {
+    return 'Dibayar $amount ($count)';
+  }
+
+  @override
+  String gatewayUnmatchedTotal(String amount, int count) {
+    return 'Tanpa penjualan $amount ($count)';
+  }
+
+  @override
+  String get gatewayUnmatchedHint =>
+      'Pelanggan sudah membayar tetapi tidak ada penjualan (bill tidak diselesaikan). Selesaikan bill di terminal, atau kembalikan dana dari dashboard Midtrans.';
+
+  @override
+  String get gatewayEmpty => 'Tidak ada pembayaran QRIS pada periode ini.';
+
+  @override
+  String get gatewayUnmatched => 'Dibayar, tanpa penjualan';
+
+  @override
+  String gatewayStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'pending': 'Menunggu',
+      'paid': 'Dibayar',
+      'failed': 'Gagal',
+      'expired': 'Kedaluwarsa',
+      'cancelled': 'Dibatalkan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
 }

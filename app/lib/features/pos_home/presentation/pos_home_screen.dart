@@ -61,6 +61,23 @@ class PosHomeScreen extends ConsumerWidget {
         lines: [l10n.posSellHint],
         onTap: () => context.go(AppRoutes.sell),
       ),
+      if (config?.fnbMode ?? false) ...[
+        _InfoCard(
+          key: const Key('pos-tables'),
+          icon: Icons.table_restaurant_outlined,
+          title: l10n.navTables,
+          lines: [l10n.posTablesHint],
+          onTap: () => context.go(AppRoutes.tables),
+        ),
+        if (staff?.can('kitchen.view') ?? false)
+          _InfoCard(
+            key: const Key('pos-kitchen'),
+            icon: Icons.soup_kitchen_outlined,
+            title: l10n.kitchenTitle,
+            lines: [l10n.posKitchenHint],
+            onTap: () => context.go(AppRoutes.kitchen),
+          ),
+      ],
       _InfoCard(
         key: const Key('pos-shift'),
         icon: Icons.lock_clock_outlined,
@@ -77,6 +94,13 @@ class PosHomeScreen extends ConsumerWidget {
             ),
         ],
         onTap: () => context.go(AppRoutes.shift),
+      ),
+      _InfoCard(
+        key: const Key('pos-customers'),
+        icon: Icons.people_outline,
+        title: l10n.posCustomers,
+        lines: [l10n.posCustomersHint],
+        onTap: () => context.go(AppRoutes.customers),
       ),
       _InfoCard(
         key: const Key('pos-printer'),

@@ -39,6 +39,7 @@ ReceiptLabels receiptLabels(AppLocalizations l10n) => ReceiptLabels(
   voided: l10n.receiptVoided,
   copy: l10n.receiptCopy,
   items: l10n.receiptItems,
+  pointsEarned: l10n.receiptPointsEarned,
 );
 
 /// One terminal order, kept fresh while it is voided, printed or refunded.
@@ -126,6 +127,8 @@ class ReceiptView extends StatelessWidget {
           Text(l.items(receipt.itemCount), style: mono),
           for (final (label, value, strong: s) in receiptTotals(receipt, l))
             row(label, value, isStrong: s),
+          if (receipt.pointsEarned > 0)
+            Text(l.pointsEarned(receipt.pointsEarned), style: mono),
           if (receipt.kasbonDueDate != null)
             Text(l.kasbonDue(receipt.kasbonDueDate!), style: mono),
           rule,
@@ -161,13 +164,25 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
     }
   }
 
-  Future<void> _share(ReceiptData receipt) => _run(() async {
+  Future<void> _share(
+    LocalOrderRow order,
+    ReceiptData receipt,
+  ) => _run(() async {
     try {
       final bytes = await buildReceiptPdf(receipt, receiptLabels(context.l10n));
-      await Printing.sharePdf(
+      final shared = await Printing.sharePdf(
         bytes: bytes,
         filename: '${receipt.orderNumber}.pdf',
       );
+      final ctx = ref.read(saleContextProvider);
+      if (shared && ctx != null) {
+        await ReceiptPrinting(
+          printers: ref.read(printerServiceProvider),
+          orders: ref.read(orderServiceProvider),
+          audit: ref.read(auditServiceProvider),
+        ).shared(order: order, staff: ctx.staff, storeId: ctx.config.storeId);
+        ref.read(syncSchedulerProvider.notifier).syncNow().ignore();
+      }
     } on Exception catch (e) {
       if (mounted) AppToast.error(context, context.l10n.commonError('$e'));
     }
@@ -343,7 +358,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
                 children: [
                   OutlinedButton.icon(
                     key: const Key('receipt-share'),
-                    onPressed: _busy ? null : () => _share(receipt),
+                    onPressed: _busy ? null : () => _share(row, receipt),
                     icon: const Icon(Icons.share_outlined),
                     label: Text(l10n.receiptShare),
                   ),

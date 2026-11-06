@@ -614,6 +614,47 @@ final class RefundServiceProvider
 
 String _$refundServiceHash() => r'a4b1e7dba06db749cdfac99dac947e5919602a97';
 
+@ProviderFor(kasbonService)
+final kasbonServiceProvider = KasbonServiceProvider._();
+
+final class KasbonServiceProvider
+    extends $FunctionalProvider<KasbonService, KasbonService, KasbonService>
+    with $Provider<KasbonService> {
+  KasbonServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kasbonServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kasbonServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<KasbonService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  KasbonService create(Ref ref) {
+    return kasbonService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KasbonService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KasbonService>(value),
+    );
+  }
+}
+
+String _$kasbonServiceHash() => r'557ac0df4cb0771901d66d7452fec6186f4a345b';
+
 @ProviderFor(auditService)
 final auditServiceProvider = AuditServiceProvider._();
 
@@ -696,6 +737,145 @@ final class CustomerServiceProvider
 }
 
 String _$customerServiceHash() => r'e0658ad2221adedd14f9020660496f8b7ea8e89b';
+
+/// The gateway for dynamic QRIS, chosen by `PAYMENT_GATEWAY`, or null when
+/// none is set up (the till then hides gateway methods).
+
+@ProviderFor(paymentGateway)
+final paymentGatewayProvider = PaymentGatewayProvider._();
+
+/// The gateway for dynamic QRIS, chosen by `PAYMENT_GATEWAY`, or null when
+/// none is set up (the till then hides gateway methods).
+
+final class PaymentGatewayProvider
+    extends
+        $FunctionalProvider<PaymentGateway?, PaymentGateway?, PaymentGateway?>
+    with $Provider<PaymentGateway?> {
+  /// The gateway for dynamic QRIS, chosen by `PAYMENT_GATEWAY`, or null when
+  /// none is set up (the till then hides gateway methods).
+  PaymentGatewayProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'paymentGatewayProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$paymentGatewayHash();
+
+  @$internal
+  @override
+  $ProviderElement<PaymentGateway?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  PaymentGateway? create(Ref ref) {
+    return paymentGateway(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PaymentGateway? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PaymentGateway?>(value),
+    );
+  }
+}
+
+String _$paymentGatewayHash() => r'cd512621aac12bbb1b4807ce8a87a4587c65189a';
+
+@ProviderFor(fnbService)
+final fnbServiceProvider = FnbServiceProvider._();
+
+final class FnbServiceProvider
+    extends $FunctionalProvider<FnbService, FnbService, FnbService>
+    with $Provider<FnbService> {
+  FnbServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fnbServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fnbServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<FnbService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  FnbService create(Ref ref) {
+    return fnbService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FnbService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FnbService>(value),
+    );
+  }
+}
+
+String _$fnbServiceHash() => r'eb089c76ad3482af70b0aeaa01a38561c994c450';
+
+@ProviderFor(kitchenQueueSource)
+final kitchenQueueSourceProvider = KitchenQueueSourceProvider._();
+
+final class KitchenQueueSourceProvider
+    extends
+        $FunctionalProvider<
+          KitchenQueueSource,
+          KitchenQueueSource,
+          KitchenQueueSource
+        >
+    with $Provider<KitchenQueueSource> {
+  KitchenQueueSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kitchenQueueSourceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kitchenQueueSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<KitchenQueueSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  KitchenQueueSource create(Ref ref) {
+    return kitchenQueueSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KitchenQueueSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KitchenQueueSource>(value),
+    );
+  }
+}
+
+String _$kitchenQueueSourceHash() =>
+    r'56bb95fc4b712d11c5c7140a78452eac43ead005';
 
 @ProviderFor(printerRepository)
 final printerRepositoryProvider = PrinterRepositoryProvider._();
@@ -874,6 +1054,90 @@ final class ReceiptPrinterProvider
 }
 
 String _$receiptPrinterHash() => r'33abd90ae0723ef4e7b866648033057d4d9282e3';
+
+/// The printer set up for [slot] (receipt, kitchen or bar), or null.
+
+@ProviderFor(slotPrinter)
+final slotPrinterProvider = SlotPrinterFamily._();
+
+/// The printer set up for [slot] (receipt, kitchen or bar), or null.
+
+final class SlotPrinterProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<PrinterSetting?>,
+          PrinterSetting?,
+          Stream<PrinterSetting?>
+        >
+    with $FutureModifier<PrinterSetting?>, $StreamProvider<PrinterSetting?> {
+  /// The printer set up for [slot] (receipt, kitchen or bar), or null.
+  SlotPrinterProvider._({
+    required SlotPrinterFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'slotPrinterProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$slotPrinterHash();
+
+  @override
+  String toString() {
+    return r'slotPrinterProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<PrinterSetting?> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<PrinterSetting?> create(Ref ref) {
+    final argument = this.argument as String;
+    return slotPrinter(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SlotPrinterProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$slotPrinterHash() => r'face6784379a1c8565308a1e7a942bb2967d9ff2';
+
+/// The printer set up for [slot] (receipt, kitchen or bar), or null.
+
+final class SlotPrinterFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<PrinterSetting?>, String> {
+  SlotPrinterFamily._()
+    : super(
+        retry: null,
+        name: r'slotPrinterProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The printer set up for [slot] (receipt, kitchen or bar), or null.
+
+  SlotPrinterProvider call(String slot) =>
+      SlotPrinterProvider._(argument: slot, from: this);
+
+  @override
+  String toString() => r'slotPrinterProvider';
+}
 
 @ProviderFor(catalogSource)
 final catalogSourceProvider = CatalogSourceProvider._();

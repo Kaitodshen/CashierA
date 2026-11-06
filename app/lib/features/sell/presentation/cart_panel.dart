@@ -7,6 +7,10 @@ import 'package:cashiera/core/pos/cart.dart';
 import 'package:cashiera/core/pos/pos_services.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
+import 'package:cashiera/features/customers/presentation/customer_providers.dart';
+import 'package:cashiera/features/customers/presentation/points_dialog.dart';
+import 'package:cashiera/features/fnb/kitchen_send.dart';
+import 'package:cashiera/features/printing/print_actions.dart';
 import 'package:cashiera/features/sell/presentation/sell_dialogs.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
 import 'package:cashiera_core/cashiera_core.dart';
@@ -211,12 +215,24 @@ class CartPanel extends ConsumerWidget {
       }
     } on PosPermissionException catch (e) {
       if (context.mounted) AppToast.error(context, l10n.commonError('$e'));
+    } on PosStateException catch (e) {
+      if (context.mounted) AppToast.error(context, posErrorText(l10n, e));
+    }
+  }
+
+  Future<void> _sendToKitchen(BuildContext context, WidgetRef ref) async {
+    if (await sendToKitchen(context, ref) && inSheet && context.mounted) {
+      Navigator.of(context).pop();
     }
   }
 
   Future<void> _clear(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
     final cart = ref.read(cartControllerProvider);
+    if (cart.gatewayTenders.isNotEmpty) {
+      AppToast.error(context, l10n.sellClearPaidQris);
+      return;
+    }
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -249,6 +265,7 @@ class CartPanel extends ConsumerWidget {
     final ctx = ref.watch(saleContextProvider);
     final controller = ref.read(cartControllerProvider.notifier);
     final canDiscount = ctx?.staff.can('pos.discount') ?? false;
+    final fnb = ctx?.config.fnbMode ?? false;
     final needsApproval =
         bill != null &&
         ctx != null &&
@@ -335,6 +352,23 @@ class CartPanel extends ConsumerWidget {
                   : () => controller.setCustomer(null),
             ),
           ),
+          if (cart.tableId != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.xs,
+                AppSpacing.lg,
+                0,
+              ),
+              child: InputChip(
+                key: const Key('sell-table'),
+                avatar: const Icon(Icons.table_restaurant_outlined, size: 18),
+                label: Text(
+                  l10n.ticketTable(cart.tableName ?? '', cart.guestCount ?? 0),
+                ),
+                onDeleted: cart.version > 0 ? null : controller.clearTable,
+              ),
+            ),
           const Divider(),
           Expanded(
             child: cart.isEmpty
@@ -482,6 +516,8 @@ class CartPanel extends ConsumerWidget {
                       ),
                       label: Text(cart.voucherCode ?? l10n.voucherTitle),
                     ),
+                    if (cart.customer != null && bill != null)
+                      _PointsButton(cart: cart, bill: bill),
                     OutlinedButton.icon(
                       key: const Key('sell-hold'),
                       onPressed: cart.isEmpty
@@ -490,6 +526,15 @@ class CartPanel extends ConsumerWidget {
                       icon: const Icon(Icons.pause_circle_outline, size: 18),
                       label: Text(l10n.sellHold),
                     ),
+                    if (fnb && cart.hasKitchenItems)
+                      FilledButton.tonalIcon(
+                        key: const Key('sell-send-kitchen'),
+                        onPressed: pendingKitchenLines(cart).isEmpty
+                            ? null
+                            : () => _sendToKitchen(context, ref),
+                        icon: const Icon(Icons.soup_kitchen_outlined, size: 18),
+                        label: Text(l10n.kitchenSend),
+                      ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -515,6 +560,53 @@ class CartPanel extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Spend the customer's points on this bill.
+class _PointsButton extends ConsumerWidget {
+  const new({required this.cart, required this.bill});
+
+  final Cart cart;
+  final Bill bill;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final rules = ref.watch(posConfigProvider).value?.business.loyalty;
+    final customer = ref.watch(customerRowProvider(cart.customer!.id)).value;
+    if (rules == null || !rules.enabled || customer == null) {
+      return const SizedBox.shrink();
+    }
+    final balance = customer.pointsBalance;
+    final maximum = rules.redeemable(
+      balance: balance,
+      payable: bill.grandTotal + bill.pointsDiscount,
+    );
+    return OutlinedButton.icon(
+      key: const Key('sell-points'),
+      onPressed: cart.isEmpty || (maximum == 0 && bill.pointsRedeemed == 0)
+          ? null
+          : () async {
+              final points = await showPointsDialog(
+                context,
+                balance: balance,
+                maximum: maximum,
+                current: bill.pointsRedeemed,
+                rules: rules,
+              );
+              if (points == null) return;
+              ref
+                  .read(cartControllerProvider.notifier)
+                  .setPointsToRedeem(points);
+            },
+      icon: const Icon(Icons.stars_outlined, size: 18),
+      label: Text(
+        bill.pointsRedeemed > 0
+            ? l10n.pointsUsed(bill.pointsRedeemed)
+            : l10n.pointsButton(balance),
       ),
     );
   }

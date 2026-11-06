@@ -3,7 +3,10 @@ import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_models.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_repository.dart';
+import 'package:cashiera/features/back_office/data/customers_admin_repository.dart';
+import 'package:cashiera/features/back_office/data/payments_admin_repository.dart';
 import 'package:cashiera/features/back_office/data/pos_admin_repository.dart';
+import 'package:cashiera/features/back_office/data/purchasing_repository.dart';
 import 'package:cashiera/features/back_office/data/shift_audit_repository.dart';
 import 'package:cashiera_core/cashiera_core.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -99,3 +102,79 @@ Future<List<ShiftOverviewRow>> adminShifts(
 @riverpod
 Future<ShiftReport> adminShiftReport(Ref ref, String shiftId) =>
     ref.watch(shiftAuditProvider).shiftSummary(shiftId);
+
+@Riverpod(keepAlive: true)
+CustomersAdminRepository customersAdmin(Ref ref) =>
+    CustomersAdminRepository(ref.watch(supabaseClientProvider));
+
+@riverpod
+Future<List<AdminCustomer>> adminCustomers(Ref ref, String query) =>
+    ref.watch(customersAdminProvider).customers(query);
+
+@riverpod
+Future<CustomerStatement> adminCustomerStatement(Ref ref, String customerId) =>
+    ref.watch(customersAdminProvider).statement(customerId);
+
+@riverpod
+Future<List<KasbonOverviewRow>> adminKasbon(Ref ref, {String? storeId}) =>
+    ref.watch(customersAdminProvider).kasbonOverview(storeId: storeId);
+
+@riverpod
+Future<LoyaltySettings> adminLoyaltySettings(Ref ref) =>
+    ref.watch(customersAdminProvider).loyaltySettings();
+
+@Riverpod(keepAlive: true)
+PurchasingRepository purchasing(Ref ref) =>
+    PurchasingRepository(ref.watch(supabaseClientProvider));
+
+@riverpod
+Future<List<StockVariant>> stockVariants(Ref ref) =>
+    ref.watch(purchasingProvider).stockVariants();
+
+@riverpod
+Future<List<PoListRow>> purchaseOrders(
+  Ref ref, {
+  String? storeId,
+  String? status,
+}) => ref
+    .watch(purchasingProvider)
+    .purchaseOrders(storeId: storeId, status: status);
+
+@riverpod
+Future<PoDetail> purchaseOrder(Ref ref, String id) =>
+    ref.watch(purchasingProvider).purchaseOrder(id);
+
+@riverpod
+Future<List<TransferListRow>> transfers(
+  Ref ref, {
+  String? storeId,
+  String? direction,
+}) => ref
+    .watch(purchasingProvider)
+    .transfers(storeId: storeId, direction: direction);
+
+@riverpod
+Future<TransferDetail> transfer(Ref ref, String id) =>
+    ref.watch(purchasingProvider).transfer(id);
+
+@riverpod
+Future<List<Map<String, dynamic>>> diningTables(Ref ref, String storeId) =>
+    ref.watch(purchasingProvider).diningTables(storeId);
+
+@riverpod
+Future<bool> storeFnbMode(Ref ref, String storeId) =>
+    ref.watch(purchasingProvider).fnbMode(storeId);
+
+@Riverpod(keepAlive: true)
+PaymentsAdminRepository paymentsAdmin(Ref ref) =>
+    PaymentsAdminRepository(ref.watch(supabaseClientProvider));
+
+@riverpod
+Future<List<GatewayChargeRow>> gatewayCharges(
+  Ref ref, {
+  required DateTime from,
+  required DateTime to,
+  String? storeId,
+}) => ref
+    .watch(paymentsAdminProvider)
+    .gatewayCharges(from: from, to: to, storeId: storeId);

@@ -8,6 +8,7 @@ import 'package:cashiera/core/pos/pos_services.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/features/printing/print_actions.dart';
 import 'package:cashiera/features/sell/presentation/cart_panel.dart';
+import 'package:cashiera/features/sell/presentation/qris_dialog.dart';
 import 'package:cashiera/features/sell/presentation/sell_dialogs.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
 import 'package:cashiera_core/cashiera_core.dart';
@@ -98,6 +99,48 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     });
   }
 
+  /// Dynamic QRIS: show the QR, and keep the payment on the bill once the
+  /// gateway confirms it.
+  Future<void> _gateway(PaymentOption method, int amount) async {
+    final l10n = context.l10n;
+    final gateway = ref.read(paymentGatewayProvider);
+    final ctx = ref.read(saleContextProvider);
+    if (gateway == null || ctx == null) return;
+    if (amount <= 0) {
+      AppToast.error(context, l10n.payInvalidAmount);
+      return;
+    }
+    final cart = ref.read(cartControllerProvider);
+    final paid = await showQrisDialog(
+      context,
+      gateway: gateway,
+      storeId: ctx.config.storeId,
+      paymentMethodId: method.id,
+      orderId: cart.orderId,
+      orderNumber: cart.orderNumber,
+      amount: Money(amount),
+    );
+    if (paid == null || !mounted) return;
+    ref
+        .read(cartControllerProvider.notifier)
+        .addGatewayTender(
+          Tender(
+            id: paid.id,
+            methodId: method.id,
+            kind: method.kind,
+            amount: paid.amount,
+            reference: paid.providerRef,
+            provider: method.gateway,
+            providerRef: paid.providerRef,
+          ),
+        );
+    setState(() {
+      _amount.clear();
+      _method = null;
+    });
+    AppToast.success(context, l10n.qrisPaid(paid.amount.format()));
+  }
+
   Future<void> _finish(Bill bill, Settlement settlement) async {
     final l10n = context.l10n;
     final ctx = ref.read(saleContextProvider);
@@ -141,17 +184,20 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       );
     }
 
-    final settlement = settle(bill.grandTotal, _tenders);
+    final tenders = [...cart.gatewayTenders, ..._tenders];
+    final settlement = settle(bill.grandTotal, tenders);
     final remaining = settlement.problem == null
         ? settlement.remaining.rupiah
         : bill.grandTotal.rupiah -
-              _tenders.fold<int>(0, (a, t) => a + t.amount.rupiah);
+              tenders.fold<int>(0, (a, t) => a + t.amount.rupiah);
+    final hasGateway = ref.watch(paymentGatewayProvider) != null;
     final options = ctx.config.paymentOptions
         .where(
           (o) =>
               o.kind != TenderKind.kasbon ||
               (ctx.config.kasbonEnabled && ctx.staff.can('kasbon.manage')),
         )
+        .where((o) => o.gateway == null || hasGateway)
         .toList();
     final method = _method;
 
@@ -172,7 +218,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             if (cart.customer != null)
               Text(l10n.payCustomer(cart.customer!.name)),
             const Divider(height: AppSpacing.xl),
-            for (final (i, t) in _tenders.indexed)
+            for (final (i, t) in tenders.indexed)
               ListTile(
                 key: Key('tender-$i'),
                 contentPadding: EdgeInsets.zero,
@@ -185,11 +231,17 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(t.amount.format()),
-                    IconButton(
-                      tooltip: l10n.sellRemove,
-                      onPressed: () => setState(() => _tenders.removeAt(i)),
-                      icon: const Icon(Icons.close),
-                    ),
+                    if (t.isGateway)
+                      const Padding(
+                        padding: EdgeInsets.all(AppSpacing.sm),
+                        child: Icon(Icons.verified, color: AppColors.success),
+                      )
+                    else
+                      IconButton(
+                        tooltip: l10n.sellRemove,
+                        onPressed: () => setState(() => _tenders.remove(t)),
+                        icon: const Icon(Icons.close),
+                      ),
                   ],
                 ),
               ),
@@ -297,7 +349,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 ),
                 onSubmitted: (v) => _addTender(method, parseRupiah(v) ?? 0),
               ),
-              if (method.kind != TenderKind.cash &&
+              if (method.gateway == null &&
+                  method.kind != TenderKind.cash &&
                   method.kind != TenderKind.kasbon) ...[
                 const SizedBox(height: AppSpacing.md),
                 TextField(
@@ -311,12 +364,21 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 ),
               ],
               const SizedBox(height: AppSpacing.md),
-              FilledButton.tonal(
-                key: const Key('pay-add'),
-                onPressed: () =>
-                    _addTender(method, parseRupiah(_amount.text) ?? 0),
-                child: Text(l10n.payAdd(method.name)),
-              ),
+              if (method.gateway != null)
+                FilledButton.icon(
+                  key: const Key('pay-qris-create'),
+                  onPressed: () =>
+                      _gateway(method, parseRupiah(_amount.text) ?? 0),
+                  icon: const Icon(Icons.qr_code_2),
+                  label: Text(l10n.payQrisCreate),
+                )
+              else
+                FilledButton.tonal(
+                  key: const Key('pay-add'),
+                  onPressed: () =>
+                      _addTender(method, parseRupiah(_amount.text) ?? 0),
+                  child: Text(l10n.payAdd(method.name)),
+                ),
             ],
           ],
         ),

@@ -85,7 +85,9 @@ class ShiftService {
           .watch();
 
   /// Kas masuk ([isIn]) or kas keluar. A cash out can't take more than the
-  /// drawer should hold.
+  /// drawer should hold. It opens the drawer, so someone without
+  /// `pos.open_drawer` needs an [approver] who holds it (and
+  /// `shift.cash_movement`, which the server checks).
   Future<CashMovementRow> cashMovement({
     required ShiftRow shift,
     required StaffMember staff,
@@ -93,10 +95,19 @@ class ShiftService {
     required Money amount,
     required String reason,
     required PosConfig config,
+    StaffMember? approver,
   }) async {
     if (!staff.can('shift.cash_movement')) {
       throw const PosPermissionException('shift.cash_movement');
     }
+    if (!staff.can('pos.open_drawer')) {
+      if (approver == null) throw const PosStateException('approval_required');
+      if (!approver.can('pos.open_drawer') ||
+          !approver.can('shift.cash_movement')) {
+        throw const PosPermissionException('pos.open_drawer');
+      }
+    }
+    final approvedBy = staff.can('pos.open_drawer') ? null : approver;
     if (amount.rupiah <= 0) throw ArgumentError.value(amount, 'amount');
     final why = reason.trim();
     if (why.length < 3) throw const PosStateException('reason_required');
@@ -133,6 +144,7 @@ class ShiftService {
           'amount': amount.rupiah,
           'reason': why,
           'employee_id': staff.employeeId,
+          'approved_by': approvedBy?.employeeId,
           'occurred_at': now.toUtc().toIso8601String(),
         },
       );
@@ -219,6 +231,9 @@ class ShiftService {
     final moves = await (_db.select(
       _db.localCashMovements,
     )..where((c) => c.shiftId.equals(shift.id))).get();
+    final repayments = await (_db.select(
+      _db.localReceivablePayments,
+    )..where((p) => p.shiftId.equals(shift.id))).get();
 
     final refundedByOrder = <String, Map<String, Qty>>{};
     for (final r in refunds) {
@@ -276,6 +291,12 @@ class ShiftService {
         for (final (i, o) in config.paymentOptions.indexed)
           o.id: PaymentMethodInfo(name: o.name, sortOrder: i),
       },
+      kasbonRepaid: Money(repayments.fold(0, (a, p) => a + p.amount)),
+      kasbonCash: Money(
+        repayments
+            .where((p) => p.methodType == 'cash')
+            .fold(0, (a, p) => a + p.amount),
+      ),
     );
   }
 
@@ -298,6 +319,7 @@ class ShiftService {
         _db.localRefunds,
         _db.localCashMovements,
         _db.localShifts,
+        _db.localReceivablePayments,
       ]),
     )) {
       yield await build();

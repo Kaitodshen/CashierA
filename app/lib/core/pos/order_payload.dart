@@ -61,7 +61,9 @@ Map<String, dynamic> buildOrderPayload({
     'shift_id': shiftId,
     'cashier_id': cashierId,
     'order_number': orderNumber,
-    'order_type': 'takeaway',
+    'order_type': cart.orderType,
+    'table_id': cart.tableId,
+    'guest_count': cart.guestCount,
     'status': status.code,
     'version': version,
     'customer_id': cart.customer?.id,
@@ -84,7 +86,9 @@ Map<String, dynamic> buildOrderPayload({
     'grand_total': bill.grandTotal.rupiah,
     'paid_total': settlement?.paidTotal.rupiah ?? 0,
     'change_total': settlement?.changeTotal.rupiah ?? 0,
-    'points_earned': 0,
+    'points_earned': cart.customer == null
+        ? 0
+        : config.business.loyalty.pointsEarned(bill.net),
     'kasbon_due_date': dueDate?.toIso8601String().substring(0, 10),
     'items': [
       for (final (i, b) in bill.lines.indexed)
@@ -116,6 +120,8 @@ Map<String, dynamic> buildOrderPayload({
           'tendered_amount': p.tendered?.rupiah,
           'change_amount': p.change.rupiah,
           'reference': p.tender.reference,
+          'provider': p.tender.provider,
+          'provider_ref': p.tender.providerRef,
           'status': 'paid',
           'paid_at': completedAt == null ? null : iso(completedAt),
         },
@@ -149,6 +155,7 @@ Map<String, dynamic> _item(CartLine line, BillLine b, int index, Uuid uuid) => {
   'unit_cost': line.unitCost.rupiah,
   'cost_amount': line.quantity.times(line.unitCost).rupiah,
   'note': line.note,
+  'kitchen_station': line.kitchenStation,
   'sort_order': index,
   'modifiers': [
     for (final m in line.modifiers)

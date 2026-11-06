@@ -2187,4 +2187,1071 @@ class AppLocalizationsEn extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get pointsTitle => 'Redeem points';
+
+  @override
+  String pointsBalance(int points) {
+    return 'Balance $points points';
+  }
+
+  @override
+  String pointsMax(int points, String amount) {
+    return 'At most $points points ($amount)';
+  }
+
+  @override
+  String pointsMin(int points) {
+    return 'At least $points points';
+  }
+
+  @override
+  String get pointsField => 'Points';
+
+  @override
+  String get pointsAll => 'Max';
+
+  @override
+  String get pointsRemove => 'Remove';
+
+  @override
+  String get pointsUse => 'Use';
+
+  @override
+  String pointsTooMany(int points) {
+    return 'At most $points points.';
+  }
+
+  @override
+  String pointsBelowMin(int points) {
+    return 'At least $points points.';
+  }
+
+  @override
+  String pointsUsed(int points) {
+    return '−$points points';
+  }
+
+  @override
+  String pointsButton(int points) {
+    return '$points points';
+  }
+
+  @override
+  String get posErrPoints => 'Not enough points, or below the minimum.';
+
+  @override
+  String get posErrVoidKasbonPaid =>
+      'This kasbon has installments; refund instead of voiding.';
+
+  @override
+  String receiptPointsEarned(int points) {
+    return 'Points earned: $points';
+  }
+
+  @override
+  String get posCustomers => 'Customers';
+
+  @override
+  String get posCustomersHint => 'Points, kasbon and installments';
+
+  @override
+  String get customersTitle => 'Customers';
+
+  @override
+  String get customersSearch => 'Search name, phone or code';
+
+  @override
+  String get customersEmpty => 'No customers.';
+
+  @override
+  String customersPoints(int points) {
+    return '$points points';
+  }
+
+  @override
+  String customersOwes(String amount) {
+    return 'Owes $amount';
+  }
+
+  @override
+  String get customerEdit => 'Edit customer';
+
+  @override
+  String get customerSaved => 'Customer saved.';
+
+  @override
+  String customerTotalOwed(String amount) {
+    return 'Kasbon $amount';
+  }
+
+  @override
+  String get customerPay => 'Pay kasbon';
+
+  @override
+  String get customerKasbon => 'Kasbon';
+
+  @override
+  String get customerNoKasbon => 'No kasbon.';
+
+  @override
+  String customerKasbonLine(String left, String amount) {
+    return '$left left of $amount';
+  }
+
+  @override
+  String customerDue(String date) {
+    return 'Due $date';
+  }
+
+  @override
+  String customerOverdue(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days late',
+      one: '1 day late',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get customerInstallments => 'Installments on this terminal';
+
+  @override
+  String repayTitle(String name) {
+    return 'Kasbon payment from $name';
+  }
+
+  @override
+  String repayOwed(String amount) {
+    return 'Owes $amount';
+  }
+
+  @override
+  String get repayAmount => 'Amount';
+
+  @override
+  String get repayAll => 'Pay all';
+
+  @override
+  String get repayMethod => 'Method';
+
+  @override
+  String get repayReference => 'Reference';
+
+  @override
+  String get repayInvalid => 'Enter an amount.';
+
+  @override
+  String get repayNothing => 'Nothing is owed.';
+
+  @override
+  String get repayExceeds => 'More than is owed.';
+
+  @override
+  String repayDone(String amount, String left) {
+    return 'Received $amount. $left is still owed.';
+  }
+
+  @override
+  String get kasbonSlipTitle => 'KASBON PAYMENT';
+
+  @override
+  String kasbonSlipCustomer(String name) {
+    return 'Customer: $name';
+  }
+
+  @override
+  String kasbonSlipCashier(String name) {
+    return 'Cashier: $name';
+  }
+
+  @override
+  String get kasbonSlipBefore => 'Owed before';
+
+  @override
+  String get kasbonSlipPaid => 'Paid';
+
+  @override
+  String get kasbonSlipAfter => 'Still owed';
+
+  @override
+  String kasbonSlipMethod(String method) {
+    return 'Method: $method';
+  }
+
+  @override
+  String get kasbonSlipSettled => 'PAID IN FULL';
+
+  @override
+  String get navCustomers => 'Customers';
+
+  @override
+  String get navKasbon => 'Kasbon';
+
+  @override
+  String get navLoyalty => 'Loyalty & kasbon';
+
+  @override
+  String ledgerEntryType(String type) {
+    String _temp0 = intl.Intl.selectLogic(type, {
+      'earn': 'Earned',
+      'redeem': 'Redeemed',
+      'reverse_earn': 'Earning reversed',
+      'reverse_redeem': 'Redemption reversed',
+      'adjust': 'Adjustment',
+      'other': '$type',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String kasbonStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'open': 'Unpaid',
+      'partial': 'Part paid',
+      'paid': 'Paid',
+      'void': 'Void',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get adminCustomerEmail => 'E-mail';
+
+  @override
+  String get adminCustomerLimit => 'Kasbon limit';
+
+  @override
+  String get adminCustomerLimitHint => 'Leave empty for no limit';
+
+  @override
+  String adminCustomerLimitShort(String amount) {
+    return 'Limit $amount';
+  }
+
+  @override
+  String get adminAdjustPoints => 'Adjust points';
+
+  @override
+  String get adminAdjustPointsField => 'Points (+ or −)';
+
+  @override
+  String get adminAdjustNote => 'Reason';
+
+  @override
+  String adminAdjustDone(int points) {
+    return 'The balance is now $points points.';
+  }
+
+  @override
+  String get adminPointsHistory => 'Points history';
+
+  @override
+  String adminKasbonPaidLine(String paid, String amount) {
+    return 'Paid $paid of $amount';
+  }
+
+  @override
+  String adminKasbonTotal(String total, String overdue) {
+    return 'Total $total · overdue $overdue';
+  }
+
+  @override
+  String get adminKasbonEmpty => 'No open kasbon.';
+
+  @override
+  String adminKasbonOldest(String date) {
+    return 'Oldest $date';
+  }
+
+  @override
+  String adminKasbonOverdue(String amount) {
+    return 'Overdue $amount';
+  }
+
+  @override
+  String get loyaltyEnabled => 'Points programme on';
+
+  @override
+  String get loyaltyEarn => 'Spend for 1 point';
+
+  @override
+  String get loyaltyValue => 'Value of 1 point when redeemed';
+
+  @override
+  String get loyaltyMin => 'Minimum points per redemption';
+
+  @override
+  String get loyaltyDueDays => 'Kasbon due after (days)';
+
+  @override
+  String loyaltyRange(int min, int max) {
+    return 'Enter a number from $min to $max.';
+  }
+
+  @override
+  String get loyaltyOwnerOnly => 'Only the owner can change these settings.';
+
+  @override
+  String get loyaltyHint =>
+      'Applies to every store. Terminals use new settings after their next refresh.';
+
+  @override
+  String cashMovementApproval(String kind, String amount, String reason) {
+    return '$kind of $amount opens the drawer: $reason';
+  }
+
+  @override
+  String get navReports => 'Reports';
+
+  @override
+  String get reportTabSales => 'Sales';
+
+  @override
+  String get reportTabPayments => 'Payments';
+
+  @override
+  String get reportTabProducts => 'Products';
+
+  @override
+  String get reportTabStaff => 'Staff';
+
+  @override
+  String get reportTabTax => 'Tax';
+
+  @override
+  String get reportTabStock => 'Stock value';
+
+  @override
+  String get periodToday => 'Today';
+
+  @override
+  String get periodYesterday => 'Yesterday';
+
+  @override
+  String get periodLast7 => '7 days';
+
+  @override
+  String get periodThisMonth => 'This month';
+
+  @override
+  String get periodLastMonth => 'Last month';
+
+  @override
+  String get periodCustom => 'Pick dates';
+
+  @override
+  String get exportPdf => 'PDF';
+
+  @override
+  String get exportExcel => 'Excel';
+
+  @override
+  String get exportSaved => 'File saved.';
+
+  @override
+  String get reportEmpty => 'No data in this period.';
+
+  @override
+  String reportStockSubtitle(String store, String time) {
+    return '$store · as of $time';
+  }
+
+  @override
+  String get reportSummary => 'Summary';
+
+  @override
+  String get reportItem => 'Item';
+
+  @override
+  String get summaryGross => 'Gross sales';
+
+  @override
+  String get summaryDiscounts => 'Discounts';
+
+  @override
+  String get summaryNet => 'Sales after discounts';
+
+  @override
+  String get summaryService => 'Service charge';
+
+  @override
+  String get summaryTax => 'Tax added or included';
+
+  @override
+  String get summaryRounding => 'Rounding';
+
+  @override
+  String get reportByHour => 'Sales by hour';
+
+  @override
+  String get reportSalesNote =>
+      'Sales are completed sales. Voids are not sales. Refunds count on the day of the refund.';
+
+  @override
+  String get reportProductsNote =>
+      'Net before refunds; refunds show as refunded quantity.';
+
+  @override
+  String reportProductsMore(int shown, int total) {
+    return 'Showing $shown of $total products. The export holds the same list.';
+  }
+
+  @override
+  String get reportTaxNote =>
+      'Tax-inclusive prices: DPP = taxable base − tax. Exempt goods (sembako) are outside the taxable base.';
+
+  @override
+  String get reportStockNote =>
+      'Value = stock × current cost. Negative stock adds no value.';
+
+  @override
+  String get reportNegativeNote => 'Check them with a stock count.';
+
+  @override
+  String get colDate => 'Date';
+
+  @override
+  String get colOrders => 'Sales';
+
+  @override
+  String get colSales => 'Sales amount';
+
+  @override
+  String get colRefunds => 'Refunds';
+
+  @override
+  String get colNetSales => 'Net sales';
+
+  @override
+  String get colStore => 'Store';
+
+  @override
+  String get colMethod => 'Method';
+
+  @override
+  String get colCount => 'Count';
+
+  @override
+  String get colAmount => 'Amount';
+
+  @override
+  String get colShare => 'Share';
+
+  @override
+  String get colProduct => 'Product';
+
+  @override
+  String get colSku => 'SKU';
+
+  @override
+  String get colCategory => 'Category';
+
+  @override
+  String get colQty => 'Qty';
+
+  @override
+  String get colRefundedQty => 'Refunded qty';
+
+  @override
+  String get colNet => 'Net';
+
+  @override
+  String get colCost => 'Cost';
+
+  @override
+  String get colMargin => 'Margin';
+
+  @override
+  String get colStaff => 'Staff';
+
+  @override
+  String get colAverage => 'Average';
+
+  @override
+  String get colDiscounts => 'Discounts';
+
+  @override
+  String get colVoids => 'Voids';
+
+  @override
+  String get colBase => 'Taxable base';
+
+  @override
+  String get colDpp => 'DPP';
+
+  @override
+  String get colTax => 'Tax';
+
+  @override
+  String get colExempt => 'Exempt';
+
+  @override
+  String get colStock => 'Stock';
+
+  @override
+  String get colValue => 'Value';
+
+  @override
+  String get totalRow => 'Total';
+
+  @override
+  String get sumItems => 'Items sold';
+
+  @override
+  String get sumKasbonIssued => 'Kasbon issued';
+
+  @override
+  String get sumKasbonRepaid => 'Kasbon repaid';
+
+  @override
+  String get sumMargin => 'Gross margin';
+
+  @override
+  String get sumStockValue => 'Stock value';
+
+  @override
+  String get sumNegative => 'Negative stock';
+
+  @override
+  String get sumLow => 'Low stock';
+
+  @override
+  String get dashTitle => 'Today';
+
+  @override
+  String dashVsYesterday(String value) {
+    return 'Yesterday $value';
+  }
+
+  @override
+  String get dashLast7 => 'Sales, last 7 days';
+
+  @override
+  String get dashTop => 'Top products today';
+
+  @override
+  String get dashPayments => 'Payments today';
+
+  @override
+  String dashOpenShifts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count open shifts',
+      one: '1 open shift',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashLowStock(int count) {
+    return '$count low stock';
+  }
+
+  @override
+  String dashAlerts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count alerts',
+      one: '1 alert',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashOverdue(String amount) {
+    return 'Overdue kasbon $amount';
+  }
+
+  @override
+  String get dashNothing => 'No sales yet today.';
+
+  @override
+  String get dashAllReports => 'All reports';
+
+  @override
+  String get navPurchasing => 'Purchasing';
+
+  @override
+  String get navTransfers => 'Transfers';
+
+  @override
+  String get navTables => 'Tables';
+
+  @override
+  String poStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'draft': 'Draft',
+      'ordered': 'Ordered',
+      'partially_received': 'Partly received',
+      'received': 'Received',
+      'cancelled': 'Cancelled',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get purchaseNew => 'New purchase order';
+
+  @override
+  String get purchaseEmpty => 'No purchase orders yet.';
+
+  @override
+  String purchaseLines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lines',
+      one: '1 line',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get purchaseExpected => 'Expected date';
+
+  @override
+  String purchaseExpectedShort(String date) {
+    return 'Expected $date';
+  }
+
+  @override
+  String get purchaseSupplier => 'Supplier';
+
+  @override
+  String get purchaseAddItem => 'Add item';
+
+  @override
+  String get purchaseSearchItem => 'Search name or SKU';
+
+  @override
+  String get purchaseIncomplete =>
+      'Choose a store, a supplier and at least one item.';
+
+  @override
+  String purchaseQtyInvalid(String name) {
+    return 'Check the numbers for $name.';
+  }
+
+  @override
+  String purchaseQtyTooMuch(String name, String max) {
+    return '$name: at most $max.';
+  }
+
+  @override
+  String get purchaseQtyNone => 'Enter at least one quantity.';
+
+  @override
+  String purchaseMax(String max) {
+    return 'max $max';
+  }
+
+  @override
+  String get purchaseOrder => 'Place order';
+
+  @override
+  String get purchaseOrdered => 'Order placed';
+
+  @override
+  String get purchaseCancel => 'Cancel order';
+
+  @override
+  String get purchaseCancelled => 'Order cancelled';
+
+  @override
+  String get purchaseReceive => 'Receive goods';
+
+  @override
+  String purchaseReceiveTitle(String number) {
+    return 'Receive goods · $number';
+  }
+
+  @override
+  String purchaseReceived(String number) {
+    return 'Received as $number';
+  }
+
+  @override
+  String get purchaseReceipts => 'Goods receipts';
+
+  @override
+  String get purchaseOrderedCol => 'Ordered';
+
+  @override
+  String get purchaseReceivedCol => 'Received';
+
+  @override
+  String get purchaseCost => 'Unit cost';
+
+  @override
+  String get purchaseUnit => 'Unit';
+
+  @override
+  String purchasePdfTitle(String number) {
+    return 'Purchase order $number';
+  }
+
+  @override
+  String get transferNew => 'Request transfer';
+
+  @override
+  String get transferEmpty => 'No transfers yet.';
+
+  @override
+  String get transferIncoming => 'Incoming';
+
+  @override
+  String get transferOutgoing => 'Outgoing';
+
+  @override
+  String transferStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'requested': 'Requested',
+      'approved': 'Approved',
+      'in_transit': 'In transit',
+      'received': 'Received',
+      'rejected': 'Rejected',
+      'cancelled': 'Cancelled',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String transferEvent(String event) {
+    String _temp0 = intl.Intl.selectLogic(event, {
+      'requested': 'Requested',
+      'approved': 'Approved',
+      'shipped': 'Shipped',
+      'received': 'Received',
+      'rejected': 'Rejected',
+      'cancelled': 'Cancelled',
+      'other': '$event',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get transferFrom => 'From store (sender)';
+
+  @override
+  String get transferTo => 'To store (receiver)';
+
+  @override
+  String get transferIncomplete =>
+      'Choose two different stores and at least one item.';
+
+  @override
+  String get transferSubmit => 'Send request';
+
+  @override
+  String get transferApprove => 'Approve';
+
+  @override
+  String get transferReject => 'Reject';
+
+  @override
+  String get transferRejectReason => 'Reason';
+
+  @override
+  String transferRejectedBecause(String reason) {
+    return 'Rejected: $reason';
+  }
+
+  @override
+  String get transferShip => 'Ship';
+
+  @override
+  String transferShipTitle(String number) {
+    return 'Ship · $number';
+  }
+
+  @override
+  String transferReceiveTitle(String number) {
+    return 'Receive · $number';
+  }
+
+  @override
+  String get transferCancel => 'Cancel transfer';
+
+  @override
+  String get transferRequested => 'Requested';
+
+  @override
+  String get transferShipped => 'Shipped';
+
+  @override
+  String get transferSenderStock => 'Sender stock';
+
+  @override
+  String get transferHistory => 'History';
+
+  @override
+  String get fnbMode => 'Food & beverage mode';
+
+  @override
+  String get fnbModeHint =>
+      'Turns on tables, kitchen tickets and the kitchen display on this store\'s terminals.';
+
+  @override
+  String get fnbModeOwnerOnly => 'Only the owner can change this.';
+
+  @override
+  String get tablesEmpty => 'No tables yet.';
+
+  @override
+  String get tableNew => 'New table';
+
+  @override
+  String get tableEdit => 'Edit table';
+
+  @override
+  String get tableName => 'Name';
+
+  @override
+  String get tableArea => 'Area (optional)';
+
+  @override
+  String get tableCapacity => 'Seats';
+
+  @override
+  String tableSeats(int count) {
+    return '$count seats';
+  }
+
+  @override
+  String get tableInvalid => 'Enter a name and at least 1 seat.';
+
+  @override
+  String get kitchenTitle => 'Kitchen display';
+
+  @override
+  String get kitchenRefresh => 'Refresh';
+
+  @override
+  String get kitchenEmpty => 'No open tickets.';
+
+  @override
+  String get kitchenOffline =>
+      'Cannot reach the server. Showing the last list.';
+
+  @override
+  String kitchenAge(int minutes) {
+    return '$minutes\'';
+  }
+
+  @override
+  String kitchenStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'new': 'New',
+      'preparing': 'Preparing',
+      'ready': 'Ready',
+      'served': 'Served',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get kitchenStart => 'Start';
+
+  @override
+  String get kitchenReady => 'Ready';
+
+  @override
+  String get kitchenServed => 'Served';
+
+  @override
+  String get kitchenSend => 'Send to kitchen';
+
+  @override
+  String kitchenSent(String number) {
+    return 'Sent to the kitchen: $number';
+  }
+
+  @override
+  String kitchenNoPrinter(String stations) {
+    return 'No printer for $stations: the ticket is on the kitchen display.';
+  }
+
+  @override
+  String get stationKitchen => 'Kitchen';
+
+  @override
+  String get stationBar => 'Bar';
+
+  @override
+  String get orderTakeaway => 'Takeaway';
+
+  @override
+  String ticketTable(String table, int guests) {
+    return '$table · $guests guests';
+  }
+
+  @override
+  String get ticketAddition => '-- ADDITION --';
+
+  @override
+  String get posErrTableOccupied =>
+      'This table already has an open bill. Resume that bill instead.';
+
+  @override
+  String get posErrTableHasBill =>
+      'Finish or cancel the bill on this table first.';
+
+  @override
+  String get posTablesHint => 'Dine-in bills by table';
+
+  @override
+  String get posKitchenHint => 'Open orders for the kitchen and bar';
+
+  @override
+  String get printerSlotReceipt => 'Receipt';
+
+  @override
+  String get printerSlotKitchen => 'Kitchen';
+
+  @override
+  String get printerSlotBar => 'Bar';
+
+  @override
+  String get tablesEmptyTerminal =>
+      'No tables yet. Add them in the back office (Tables).';
+
+  @override
+  String tableStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'available': 'Free',
+      'occupied': 'Occupied',
+      'reserved': 'Reserved',
+      'cleaning': 'Needs clearing',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get tableClear => 'Clear table';
+
+  @override
+  String tableCleared(String table) {
+    return '$table is free again';
+  }
+
+  @override
+  String get tableFinishCurrent => 'Hold or finish the current bill first.';
+
+  @override
+  String tableOccupiedElsewhere(String table) {
+    return '$table has a bill on another terminal.';
+  }
+
+  @override
+  String get tableGuests => 'Guests';
+
+  @override
+  String tableGuestsTitle(String table) {
+    return 'Seat guests at $table';
+  }
+
+  @override
+  String get tableSeat => 'Start bill';
+
+  @override
+  String get navGatewayPayments => 'QRIS payments';
+
+  @override
+  String get payQrisCreate => 'Show QR';
+
+  @override
+  String qrisTitle(String amount) {
+    return 'QRIS $amount';
+  }
+
+  @override
+  String get qrisScan => 'Ask the customer to scan with any QRIS app.';
+
+  @override
+  String qrisExpiresIn(String time) {
+    return 'Valid for $time';
+  }
+
+  @override
+  String qrisPaid(String amount) {
+    return 'QRIS payment received: $amount';
+  }
+
+  @override
+  String get qrisExpired => 'The QR expired. Nothing was charged.';
+
+  @override
+  String get qrisCancelled => 'The QR was cancelled.';
+
+  @override
+  String get qrisFailed => 'The payment failed.';
+
+  @override
+  String get qrisNewQr => 'New QR';
+
+  @override
+  String get qrisCancel => 'Cancel QR';
+
+  @override
+  String get qrisOffline =>
+      'No connection. Dynamic QRIS needs the internet; use cash or the QRIS sticker.';
+
+  @override
+  String get qrisNotConfigured => 'The payment gateway is not set up yet.';
+
+  @override
+  String qrisError(String code) {
+    return 'Could not create the QR ($code).';
+  }
+
+  @override
+  String get sellClearPaidQris =>
+      'A QRIS payment was received for this bill. Finish the sale.';
+
+  @override
+  String get gatewayOnlyUnmatched => 'Paid without a sale';
+
+  @override
+  String gatewayPaidTotal(String amount, int count) {
+    return 'Paid $amount ($count)';
+  }
+
+  @override
+  String gatewayUnmatchedTotal(String amount, int count) {
+    return 'Without a sale $amount ($count)';
+  }
+
+  @override
+  String get gatewayUnmatchedHint =>
+      'The customer paid but no sale booked it (the bill was left unfinished). Finish the bill on the terminal, or refund it from the Midtrans dashboard.';
+
+  @override
+  String get gatewayEmpty => 'No QRIS payments in this period.';
+
+  @override
+  String get gatewayUnmatched => 'Paid, no sale';
+
+  @override
+  String gatewayStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'pending': 'Waiting',
+      'paid': 'Paid',
+      'failed': 'Failed',
+      'expired': 'Expired',
+      'cancelled': 'Cancelled',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
 }

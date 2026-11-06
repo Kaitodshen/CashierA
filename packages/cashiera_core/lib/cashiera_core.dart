@@ -3,6 +3,8 @@
 library;
 
 export 'src/catalog_csv.dart';
+export 'src/loyalty/kasbon.dart';
+export 'src/loyalty/loyalty.dart';
 export 'src/money.dart';
 export 'src/pricing/allocation.dart';
 export 'src/pricing/bill.dart';

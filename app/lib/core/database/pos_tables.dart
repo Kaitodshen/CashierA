@@ -178,3 +178,49 @@ class LocalPrinters extends Table {
   @override
   Set<Column<Object>> get primaryKey => {id};
 }
+
+// Phase 6 (schema v5): kasbon.
+
+/// This store's kasbon, one per sale (the server's receivables plus kasbon
+/// sales made here that have not come back from the server yet).
+@DataClassName('ReceivableRow')
+class LocalReceivables extends Table {
+  TextColumn get orderId => text()();
+
+  /// The server's receivable id, once pulled.
+  TextColumn get receivableId => text().nullable()();
+  TextColumn get customerId => text()();
+  IntColumn get amount => integer()();
+  IntColumn get paidAmount => integer()();
+
+  /// Store-local due date (midnight UTC of that day).
+  DateTimeColumn get dueDate => dateTime()();
+
+  /// `open`, `partial`, `paid` or `void`.
+  TextColumn get status => text()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {orderId};
+}
+
+/// Kasbon installments taken on this terminal.
+@DataClassName('ReceivablePaymentRow')
+class LocalReceivablePayments extends Table {
+  TextColumn get id => text()();
+  TextColumn get orderId => text()();
+  TextColumn get customerId => text()();
+
+  /// The open shift (required for cash).
+  TextColumn get shiftId => text().nullable()();
+  IntColumn get amount => integer()();
+
+  /// `cash`, `qris`, `card`, `transfer` or `ewallet`.
+  TextColumn get methodType => text()();
+  TextColumn get reference => text().nullable()();
+  TextColumn get employeeName => text()();
+  DateTimeColumn get paidAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}

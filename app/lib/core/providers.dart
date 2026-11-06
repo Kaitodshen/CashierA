@@ -10,6 +10,7 @@ import 'package:cashiera/core/catalog/terminal_catalog_repository.dart';
 import 'package:cashiera/core/config/env.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/database/connection.dart';
+import 'package:cashiera/core/payments/payment_gateway.dart';
 import 'package:cashiera/core/pos/pos_config.dart';
 import 'package:cashiera/core/pos/pos_services.dart';
 import 'package:cashiera/core/printing/printer_service.dart';
@@ -92,12 +93,33 @@ RefundService refundService(Ref ref) =>
     RefundService(ref.watch(appDatabaseProvider));
 
 @Riverpod(keepAlive: true)
+KasbonService kasbonService(Ref ref) =>
+    KasbonService(ref.watch(appDatabaseProvider));
+
+@Riverpod(keepAlive: true)
 AuditService auditService(Ref ref) =>
     AuditService(ref.watch(appDatabaseProvider));
 
 @Riverpod(keepAlive: true)
 CustomerService customerService(Ref ref) =>
     CustomerService(ref.watch(appDatabaseProvider));
+
+/// The gateway for dynamic QRIS, chosen by `PAYMENT_GATEWAY`, or null when
+/// none is set up (the till then hides gateway methods).
+@Riverpod(keepAlive: true)
+PaymentGateway? paymentGateway(Ref ref) =>
+    switch (ref.watch(appEnvProvider).paymentGateway) {
+      'midtrans' => SupabaseGateway(ref.watch(supabaseClientProvider)),
+      'mock' => MockGateway(autoPayAfter: const Duration(seconds: 8)),
+      _ => null,
+    };
+
+@Riverpod(keepAlive: true)
+FnbService fnbService(Ref ref) => FnbService(ref.watch(appDatabaseProvider));
+
+@Riverpod(keepAlive: true)
+KitchenQueueSource kitchenQueueSource(Ref ref) =>
+    SupabaseKitchenQueueSource(ref.watch(supabaseClientProvider));
 
 @Riverpod(keepAlive: true)
 PrinterRepository printerRepository(Ref ref) =>
@@ -116,6 +138,11 @@ PrinterService printerService(Ref ref) => PrinterService(
 @riverpod
 Stream<PrinterSetting?> receiptPrinter(Ref ref) =>
     ref.watch(printerRepositoryProvider).watch();
+
+/// The printer set up for [slot] (receipt, kitchen or bar), or null.
+@riverpod
+Stream<PrinterSetting?> slotPrinter(Ref ref, String slot) =>
+    ref.watch(printerRepositoryProvider).watch(slot: slot);
 
 @Riverpod(keepAlive: true)
 CatalogSource catalogSource(Ref ref) =>

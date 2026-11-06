@@ -26,3 +26,11 @@ build/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Build-time app config (Phase 9): only the example is committed.
+app/config/*.json
+!app/config/*.example.json
+
+# Backups (Phase 9) are never committed.
+backups/
+*.dump

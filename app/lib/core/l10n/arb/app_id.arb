@@ -1560,5 +1560,799 @@
         "type": "String"
       }
     }
+  },
+  "pointsTitle": "Tukar poin",
+  "pointsBalance": "Saldo {points} poin",
+  "@pointsBalance": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsMax": "Maksimal {points} poin ({amount})",
+  "@pointsMax": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsMin": "Minimal {points} poin",
+  "@pointsMin": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsField": "Jumlah poin",
+  "pointsAll": "Maks",
+  "pointsRemove": "Hapus",
+  "pointsUse": "Pakai",
+  "pointsTooMany": "Paling banyak {points} poin.",
+  "@pointsTooMany": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsBelowMin": "Paling sedikit {points} poin.",
+  "@pointsBelowMin": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsUsed": "−{points} poin",
+  "@pointsUsed": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsButton": "{points} poin",
+  "@pointsButton": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "posErrPoints": "Poin tidak cukup atau di bawah minimum.",
+  "posErrVoidKasbonPaid": "Kasbon ini sudah dicicil; lakukan refund, bukan void.",
+  "receiptPointsEarned": "Poin didapat: {points}",
+  "@receiptPointsEarned": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "posCustomers": "Pelanggan",
+  "posCustomersHint": "Poin, kasbon dan cicilan",
+  "customersTitle": "Pelanggan",
+  "customersSearch": "Cari nama, nomor HP atau kode",
+  "customersEmpty": "Tidak ada pelanggan.",
+  "customersPoints": "{points} poin",
+  "@customersPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "customersOwes": "Kasbon {amount}",
+  "@customersOwes": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerEdit": "Ubah pelanggan",
+  "customerSaved": "Pelanggan disimpan.",
+  "customerTotalOwed": "Kasbon {amount}",
+  "@customerTotalOwed": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerPay": "Bayar kasbon",
+  "customerKasbon": "Kasbon",
+  "customerNoKasbon": "Tidak ada kasbon.",
+  "customerKasbonLine": "Sisa {left} dari {amount}",
+  "@customerKasbonLine": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "customerDue": "Jatuh tempo {date}",
+  "@customerDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "customerOverdue": "Terlambat {days} hari",
+  "@customerOverdue": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "customerInstallments": "Cicilan di terminal ini",
+  "repayTitle": "Bayar kasbon {name}",
+  "@repayTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "repayOwed": "Kasbon {amount}",
+  "@repayOwed": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "repayAmount": "Jumlah",
+  "repayAll": "Lunasi",
+  "repayMethod": "Metode",
+  "repayReference": "Referensi",
+  "repayInvalid": "Isi jumlah.",
+  "repayNothing": "Tidak ada kasbon.",
+  "repayExceeds": "Melebihi sisa kasbon.",
+  "repayDone": "Cicilan {amount} diterima. Sisa kasbon {left}.",
+  "@repayDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonSlipTitle": "PEMBAYARAN KASBON",
+  "kasbonSlipCustomer": "Pelanggan: {name}",
+  "@kasbonSlipCustomer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonSlipCashier": "Kasir: {name}",
+  "@kasbonSlipCashier": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonSlipBefore": "Kasbon sebelumnya",
+  "kasbonSlipPaid": "Dibayar",
+  "kasbonSlipAfter": "Sisa kasbon",
+  "kasbonSlipMethod": "Metode: {method}",
+  "@kasbonSlipMethod": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonSlipSettled": "LUNAS",
+  "navCustomers": "Pelanggan",
+  "navKasbon": "Kasbon",
+  "navLoyalty": "Loyalti & kasbon",
+  "ledgerEntryType": "{type, select, earn{Poin didapat} redeem{Poin ditukar} reverse_earn{Poin dibatalkan} reverse_redeem{Poin dikembalikan} adjust{Penyesuaian} other{{type}}}",
+  "@ledgerEntryType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "kasbonStatus": "{status, select, open{Belum dibayar} partial{Dicicil} paid{Lunas} void{Batal} other{{status}}}",
+  "@kasbonStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "adminCustomerEmail": "E-mail",
+  "adminCustomerLimit": "Batas kasbon",
+  "adminCustomerLimitHint": "Kosongkan untuk tanpa batas",
+  "adminCustomerLimitShort": "Batas {amount}",
+  "@adminCustomerLimitShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAdjustPoints": "Sesuaikan poin",
+  "adminAdjustPointsField": "Poin (+ atau −)",
+  "adminAdjustNote": "Alasan",
+  "adminAdjustDone": "Saldo poin sekarang {points}.",
+  "@adminAdjustDone": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "adminPointsHistory": "Riwayat poin",
+  "adminKasbonPaidLine": "Dibayar {paid} dari {amount}",
+  "@adminKasbonPaidLine": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adminKasbonTotal": "Total {total} · terlambat {overdue}",
+  "@adminKasbonTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "overdue": {
+        "type": "String"
+      }
+    }
+  },
+  "adminKasbonEmpty": "Tidak ada kasbon terbuka.",
+  "adminKasbonOldest": "Tertua {date}",
+  "@adminKasbonOldest": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adminKasbonOverdue": "Terlambat {amount}",
+  "@adminKasbonOverdue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "loyaltyEnabled": "Program poin aktif",
+  "loyaltyEarn": "Belanja untuk 1 poin",
+  "loyaltyValue": "Nilai 1 poin saat ditukar",
+  "loyaltyMin": "Minimal poin sekali tukar",
+  "loyaltyDueDays": "Jatuh tempo kasbon (hari)",
+  "loyaltyRange": "Isi angka {min}–{max}.",
+  "@loyaltyRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "loyaltyOwnerOnly": "Hanya pemilik yang bisa mengubah pengaturan ini.",
+  "loyaltyHint": "Berlaku untuk semua toko. Terminal memakai pengaturan baru setelah sinkron berikutnya.",
+  "cashMovementApproval": "{kind} {amount} membuka laci: {reason}",
+  "@cashMovementApproval": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "navReports": "Laporan",
+  "reportTabSales": "Penjualan",
+  "reportTabPayments": "Pembayaran",
+  "reportTabProducts": "Produk",
+  "reportTabStaff": "Staf",
+  "reportTabTax": "Pajak",
+  "reportTabStock": "Nilai stok",
+  "periodToday": "Hari ini",
+  "periodYesterday": "Kemarin",
+  "periodLast7": "7 hari",
+  "periodThisMonth": "Bulan ini",
+  "periodLastMonth": "Bulan lalu",
+  "periodCustom": "Pilih tanggal",
+  "exportPdf": "PDF",
+  "exportExcel": "Excel",
+  "exportSaved": "File disimpan.",
+  "reportEmpty": "Tidak ada data di periode ini.",
+  "reportStockSubtitle": "{store} · per {time}",
+  "@reportStockSubtitle": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reportSummary": "Ringkasan",
+  "reportItem": "Rincian",
+  "summaryGross": "Penjualan kotor",
+  "summaryDiscounts": "Diskon",
+  "summaryNet": "Penjualan setelah diskon",
+  "summaryService": "Biaya layanan",
+  "summaryTax": "Pajak ditambahkan atau termasuk",
+  "summaryRounding": "Pembulatan",
+  "reportByHour": "Penjualan per jam",
+  "reportSalesNote": "Penjualan = transaksi selesai. Void tidak termasuk penjualan. Refund dihitung pada tanggal refund.",
+  "reportProductsNote": "Bersih sebelum refund; refund ditampilkan sebagai qty refund.",
+  "reportProductsMore": "Menampilkan {shown} dari {total} produk. Ekspor berisi daftar yang sama.",
+  "@reportProductsMore": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reportTaxNote": "Harga termasuk pajak: DPP = dasar pajak − PPN. Barang bebas pajak (sembako) tidak masuk dasar pajak.",
+  "reportStockNote": "Nilai = stok × HPP saat ini. Stok minus tidak menambah nilai.",
+  "reportNegativeNote": "Periksa dengan stok opname.",
+  "colDate": "Tanggal",
+  "colOrders": "Transaksi",
+  "colSales": "Penjualan",
+  "colRefunds": "Refund",
+  "colNetSales": "Penjualan bersih",
+  "colStore": "Toko",
+  "colMethod": "Metode",
+  "colCount": "Jumlah",
+  "colAmount": "Nilai",
+  "colShare": "Porsi",
+  "colProduct": "Produk",
+  "colSku": "SKU",
+  "colCategory": "Kategori",
+  "colQty": "Qty",
+  "colRefundedQty": "Qty refund",
+  "colNet": "Bersih",
+  "colCost": "HPP",
+  "colMargin": "Margin",
+  "colStaff": "Staf",
+  "colAverage": "Rata-rata",
+  "colDiscounts": "Diskon",
+  "colVoids": "Void",
+  "colBase": "Dasar pajak",
+  "colDpp": "DPP",
+  "colTax": "PPN",
+  "colExempt": "Bebas pajak",
+  "colStock": "Stok",
+  "colValue": "Nilai",
+  "totalRow": "Total",
+  "sumItems": "Barang terjual",
+  "sumKasbonIssued": "Kasbon baru",
+  "sumKasbonRepaid": "Kasbon dibayar",
+  "sumMargin": "Margin kotor",
+  "sumStockValue": "Nilai stok",
+  "sumNegative": "Stok minus",
+  "sumLow": "Stok menipis",
+  "dashTitle": "Hari ini",
+  "dashVsYesterday": "Kemarin {value}",
+  "@dashVsYesterday": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "dashLast7": "Penjualan 7 hari terakhir",
+  "dashTop": "Produk terlaris hari ini",
+  "dashPayments": "Pembayaran hari ini",
+  "dashOpenShifts": "{count} shift terbuka",
+  "@dashOpenShifts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashLowStock": "{count} stok menipis",
+  "@dashLowStock": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashAlerts": "{count} peringatan",
+  "@dashAlerts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashOverdue": "Kasbon terlambat {amount}",
+  "@dashOverdue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "dashNothing": "Belum ada penjualan hari ini.",
+  "dashAllReports": "Semua laporan",
+  "navPurchasing": "Pembelian",
+  "navTransfers": "Transfer",
+  "navTables": "Meja",
+  "poStatus": "{status, select, draft{Draf} ordered{Dipesan} partially_received{Diterima sebagian} received{Diterima} cancelled{Dibatalkan} other{{status}}}",
+  "@poStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseNew": "PO baru",
+  "purchaseEmpty": "Belum ada purchase order.",
+  "purchaseLines": "{count} baris",
+  "@purchaseLines": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "purchaseExpected": "Tanggal diharapkan",
+  "purchaseExpectedShort": "Diharapkan {date}",
+  "@purchaseExpectedShort": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseSupplier": "Pemasok",
+  "purchaseAddItem": "Tambah barang",
+  "purchaseSearchItem": "Cari nama atau SKU",
+  "purchaseIncomplete": "Pilih toko, pemasok dan minimal satu barang.",
+  "purchaseQtyInvalid": "Periksa angka untuk {name}.",
+  "@purchaseQtyInvalid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseQtyTooMuch": "{name}: maksimal {max}.",
+  "@purchaseQtyTooMuch": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseQtyNone": "Isi minimal satu jumlah.",
+  "purchaseMax": "maks {max}",
+  "@purchaseMax": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseOrder": "Pesan",
+  "purchaseOrdered": "Pesanan dikirim",
+  "purchaseCancel": "Batalkan",
+  "purchaseCancelled": "PO dibatalkan",
+  "purchaseReceive": "Terima barang",
+  "purchaseReceiveTitle": "Terima barang · {number}",
+  "@purchaseReceiveTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseReceived": "Diterima dengan nomor {number}",
+  "@purchaseReceived": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "purchaseReceipts": "Penerimaan barang",
+  "purchaseOrderedCol": "Dipesan",
+  "purchaseReceivedCol": "Diterima",
+  "purchaseCost": "Harga beli",
+  "purchaseUnit": "Satuan",
+  "purchasePdfTitle": "Purchase order {number}",
+  "@purchasePdfTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "transferNew": "Minta transfer",
+  "transferEmpty": "Belum ada transfer.",
+  "transferIncoming": "Masuk",
+  "transferOutgoing": "Keluar",
+  "transferStatus": "{status, select, requested{Diminta} approved{Disetujui} in_transit{Dikirim} received{Diterima} rejected{Ditolak} cancelled{Dibatalkan} other{{status}}}",
+  "@transferStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "transferEvent": "{event, select, requested{Diminta} approved{Disetujui} shipped{Dikirim} received{Diterima} rejected{Ditolak} cancelled{Dibatalkan} other{{event}}}",
+  "@transferEvent": {
+    "placeholders": {
+      "event": {
+        "type": "String"
+      }
+    }
+  },
+  "transferFrom": "Dari toko (pengirim)",
+  "transferTo": "Ke toko (penerima)",
+  "transferIncomplete": "Pilih dua toko yang berbeda dan minimal satu barang.",
+  "transferSubmit": "Kirim permintaan",
+  "transferApprove": "Setujui",
+  "transferReject": "Tolak",
+  "transferRejectReason": "Alasan",
+  "transferRejectedBecause": "Ditolak: {reason}",
+  "@transferRejectedBecause": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "transferShip": "Kirim barang",
+  "transferShipTitle": "Kirim barang · {number}",
+  "@transferShipTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "transferReceiveTitle": "Terima · {number}",
+  "@transferReceiveTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "transferCancel": "Batalkan transfer",
+  "transferRequested": "Diminta",
+  "transferShipped": "Dikirim",
+  "transferSenderStock": "Stok pengirim",
+  "transferHistory": "Riwayat",
+  "fnbMode": "Mode F&B (resto/kafe)",
+  "fnbModeHint": "Mengaktifkan meja, tiket dapur dan layar dapur di terminal toko ini.",
+  "fnbModeOwnerOnly": "Hanya pemilik yang dapat mengubah ini.",
+  "tablesEmpty": "Belum ada meja.",
+  "tableNew": "Meja baru",
+  "tableEdit": "Ubah meja",
+  "tableName": "Nama",
+  "tableArea": "Area (opsional)",
+  "tableCapacity": "Jumlah kursi",
+  "tableSeats": "{count} kursi",
+  "@tableSeats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tableInvalid": "Isi nama dan minimal 1 kursi.",
+  "kitchenTitle": "Dapur",
+  "kitchenRefresh": "Muat ulang",
+  "kitchenEmpty": "Tidak ada pesanan.",
+  "kitchenOffline": "Tidak terhubung ke server. Menampilkan daftar terakhir.",
+  "kitchenAge": "{minutes}'",
+  "@kitchenAge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "kitchenStatus": "{status, select, new{Baru} preparing{Dimasak} ready{Siap} served{Disajikan} other{{status}}}",
+  "@kitchenStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenStart": "Mulai",
+  "kitchenReady": "Siap",
+  "kitchenServed": "Disajikan",
+  "kitchenSend": "Kirim ke dapur",
+  "kitchenSent": "Terkirim ke dapur: {number}",
+  "@kitchenSent": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenNoPrinter": "Tidak ada printer untuk {stations}: pesanan tampil di layar dapur.",
+  "@kitchenNoPrinter": {
+    "placeholders": {
+      "stations": {
+        "type": "String"
+      }
+    }
+  },
+  "stationKitchen": "Dapur",
+  "stationBar": "Bar",
+  "orderTakeaway": "Bawa pulang",
+  "ticketTable": "{table} · {guests} tamu",
+  "@ticketTable": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      },
+      "guests": {
+        "type": "int"
+      }
+    }
+  },
+  "ticketAddition": "-- TAMBAHAN --",
+  "posErrTableOccupied": "Meja ini sudah punya bill terbuka. Lanjutkan bill tersebut.",
+  "posErrTableHasBill": "Selesaikan atau batalkan bill di meja ini dulu.",
+  "posTablesHint": "Bill makan di tempat per meja",
+  "posKitchenHint": "Pesanan untuk dapur dan bar",
+  "printerSlotReceipt": "Struk",
+  "printerSlotKitchen": "Dapur",
+  "printerSlotBar": "Bar",
+  "tablesEmptyTerminal": "Belum ada meja. Tambahkan di back office (Meja).",
+  "tableStatus": "{status, select, available{Kosong} occupied{Terisi} reserved{Dipesan} cleaning{Perlu dibereskan} other{{status}}}",
+  "@tableStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "tableClear": "Kosongkan meja",
+  "tableCleared": "{table} kosong kembali",
+  "@tableCleared": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableFinishCurrent": "Tahan atau selesaikan bill yang sedang dibuka dulu.",
+  "tableOccupiedElsewhere": "{table} punya bill di terminal lain.",
+  "@tableOccupiedElsewhere": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableGuests": "Jumlah tamu",
+  "tableGuestsTitle": "Tamu di {table}",
+  "@tableGuestsTitle": {
+    "placeholders": {
+      "table": {
+        "type": "String"
+      }
+    }
+  },
+  "tableSeat": "Mulai bill",
+  "navGatewayPayments": "Pembayaran QRIS",
+  "payQrisCreate": "Buat QR",
+  "qrisTitle": "QRIS {amount}",
+  "@qrisTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrisScan": "Minta pelanggan memindai dengan aplikasi QRIS apa saja.",
+  "qrisExpiresIn": "Berlaku {time}",
+  "@qrisExpiresIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "qrisPaid": "Pembayaran QRIS diterima: {amount}",
+  "@qrisPaid": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrisExpired": "QR kedaluwarsa. Tidak ada yang ditagih.",
+  "qrisCancelled": "QR dibatalkan.",
+  "qrisFailed": "Pembayaran gagal.",
+  "qrisNewQr": "QR baru",
+  "qrisCancel": "Batalkan QR",
+  "qrisOffline": "Tidak ada koneksi. QRIS dinamis butuh internet; pakai tunai atau stiker QRIS.",
+  "qrisNotConfigured": "Payment gateway belum diatur.",
+  "qrisError": "Gagal membuat QR ({code}).",
+  "@qrisError": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "sellClearPaidQris": "Pembayaran QRIS untuk bill ini sudah diterima. Selesaikan penjualannya.",
+  "gatewayOnlyUnmatched": "Dibayar tanpa penjualan",
+  "gatewayPaidTotal": "Dibayar {amount} ({count})",
+  "@gatewayPaidTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gatewayUnmatchedTotal": "Tanpa penjualan {amount} ({count})",
+  "@gatewayUnmatchedTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gatewayUnmatchedHint": "Pelanggan sudah membayar tetapi tidak ada penjualan (bill tidak diselesaikan). Selesaikan bill di terminal, atau kembalikan dana dari dashboard Midtrans.",
+  "gatewayEmpty": "Tidak ada pembayaran QRIS pada periode ini.",
+  "gatewayUnmatched": "Dibayar, tanpa penjualan",
+  "gatewayStatus": "{status, select, pending{Menunggu} paid{Dibayar} failed{Gagal} expired{Kedaluwarsa} cancelled{Dibatalkan} other{{status}}}",
+  "@gatewayStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
   }
 }

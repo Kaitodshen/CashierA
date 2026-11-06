@@ -233,6 +233,7 @@ void main() {
           amount: const Money(57001),
           reason: 'Setor ke bank',
           config: config,
+          approver: manager,
         ),
         throwsA(
           isA<DrawerShortException>().having(
@@ -250,14 +251,65 @@ void main() {
           amount: const Money(57000),
           reason: 'Setor ke bank',
           config: config,
+          approver: manager,
         ),
       );
       expect(row.movementType, 'out');
       final (kind, payload) = (await queue()).last;
       expect(kind, 'cash_movement.create');
       expect(payload['amount'], 57000);
+      expect(payload['approved_by'], 'e-budi');
       expect(payload['reason'], 'Setor ke bank');
     });
+
+    test(
+      'it opens the drawer: without pos.open_drawer it needs an approver',
+      () async {
+        final (shift, _) = await openShift();
+        await expectLater(
+          shifts.cashMovement(
+            shift: shift,
+            staff: cashier,
+            isIn: true,
+            amount: const Money(1),
+            reason: 'Buka laci',
+            config: config,
+          ),
+          throwsA(
+            isA<PosStateException>().having(
+              (e) => e.code,
+              'code',
+              'approval_required',
+            ),
+          ),
+        );
+        await expectLater(
+          shifts.cashMovement(
+            shift: shift,
+            staff: cashier,
+            isIn: true,
+            amount: const Money(1),
+            reason: 'Buka laci',
+            config: config,
+            approver: trainee,
+          ),
+          throwsA(isA<PosPermissionException>()),
+        );
+        // A manager records it alone, without an approver.
+        await at(
+          () => shifts.cashMovement(
+            shift: shift,
+            staff: manager,
+            isIn: true,
+            amount: const Money(1000),
+            reason: 'Uang kecil',
+            config: config,
+          ),
+        );
+        final (_, payload) = (await queue()).last;
+        expect(payload['approved_by'], isNull);
+      },
+    );
 
     test('needs a reason and the permission', () async {
       final (shift, _) = await openShift();
@@ -269,6 +321,7 @@ void main() {
           amount: const Money(1000),
           reason: ' x ',
           config: config,
+          approver: manager,
         ),
         throwsA(isA<PosStateException>()),
       );
@@ -299,6 +352,7 @@ void main() {
           amount: const Money(25000),
           reason: 'Tambah kembalian',
           config: config,
+          approver: manager,
         ),
       );
       // A held bill stays held.
@@ -372,6 +426,7 @@ void main() {
           amount: const Money(1),
           reason: 'Terlambat',
           config: config,
+          approver: manager,
         ),
         throwsA(isA<PosStateException>()),
       );

@@ -74,31 +74,35 @@ class PrinterSetting {
   );
 }
 
-/// Stores the receipt printer in `local_printers` (row `receipt`).
+/// Stores the terminal's printers in `local_printers`, one row per slot:
+/// `receipt`, and for F&B stores `kitchen` and `bar`.
 class PrinterRepository {
   new(this._db);
 
   static const receiptId = 'receipt';
+  static const kitchenId = 'kitchen';
+  static const barId = 'bar';
+  static const List<String> slots = [receiptId, kitchenId, barId];
 
   final AppDatabase _db;
 
-  Stream<PrinterSetting?> watch() =>
-      (_db.select(_db.localPrinters)..where((p) => p.id.equals(receiptId)))
+  Stream<PrinterSetting?> watch({String slot = receiptId}) =>
+      (_db.select(_db.localPrinters)..where((p) => p.id.equals(slot)))
           .watchSingleOrNull()
           .map((row) => row == null ? null : PrinterSetting.fromRow(row));
 
-  Future<PrinterSetting?> current() async {
+  Future<PrinterSetting?> current({String slot = receiptId}) async {
     final row = await (_db.select(
       _db.localPrinters,
-    )..where((p) => p.id.equals(receiptId))).getSingleOrNull();
+    )..where((p) => p.id.equals(slot))).getSingleOrNull();
     return row == null ? null : PrinterSetting.fromRow(row);
   }
 
-  Future<void> save(PrinterSetting setting) => _db
+  Future<void> save(PrinterSetting setting, {String slot = receiptId}) => _db
       .into(_db.localPrinters)
       .insertOnConflictUpdate(
         PrinterRow(
-          id: receiptId,
+          id: slot,
           name: setting.name.trim(),
           connection: setting.connection.code,
           address: setting.address.trim(),
@@ -108,7 +112,6 @@ class PrinterRepository {
         ),
       );
 
-  Future<void> remove() => (_db.delete(
-    _db.localPrinters,
-  )..where((p) => p.id.equals(receiptId))).go();
+  Future<void> remove({String slot = receiptId}) =>
+      (_db.delete(_db.localPrinters)..where((p) => p.id.equals(slot))).go();
 }

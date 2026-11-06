@@ -1,0 +1,10 @@
+# Copy to android/key.properties (git-ignored) and fill in. Keep the keystore
+# and these passwords in the company password manager: losing them means the
+# Play Store app can never be updated.
+#
+# Create the keystore once:
+#   keytool -genkey -v -keystore C:\keys\cashiera-upload.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+storePassword=<keystore password>
+keyPassword=<key password>
+keyAlias=upload
+storeFile=C:\keys\cashiera-upload.jks

@@ -113,6 +113,7 @@ class CartController extends _$CartController {
       trackStock: item.trackStock,
       quantity: quantity ?? Qty.one,
       modifiers: modifiers,
+      kitchenStation: item.kitchenStation,
     );
     final lines = [...state.lines];
     final same = item.allowDecimal
@@ -174,11 +175,39 @@ class CartController extends _$CartController {
       ? state.copyWith(clearVoucher: true)
       : state.copyWith(voucherCode: code.trim().toUpperCase());
 
+  /// Points to spend on this bill (0 removes them).
+  void setPointsToRedeem(int points) =>
+      state = state.copyWith(pointsToRedeem: points < 0 ? 0 : points);
+
   void resume(LocalOrderRow order) => state = Cart.fromJson(
     (jsonDecode(order.cartJson) as Map).cast<String, dynamic>(),
   );
 
   void clear() => state = _fresh();
+
+  /// Starts a dine-in bill on [tableId] (F&B), or moves the current one there.
+  void seatAt({
+    required String tableId,
+    required String tableName,
+    required int guests,
+  }) => state = state.copyWith(
+    orderType: 'dine_in',
+    tableId: tableId,
+    tableName: tableName,
+    guestCount: guests,
+  );
+
+  /// A payment the gateway confirmed (kept with the bill).
+  void addGatewayTender(Tender tender) => state = state.copyWith(
+    gatewayTenders: [
+      for (final t in state.gatewayTenders)
+        if (t.id != tender.id) t,
+      tender,
+    ],
+  );
+
+  /// Back to a takeaway bill.
+  void clearTable() => state = state.copyWith(clearTable: true);
 
   void _update(String lineId, CartLine Function(CartLine) change) =>
       state = state.copyWith(
@@ -220,6 +249,12 @@ Bill? currentBill(Ref ref, DiscountLabels labels) {
     promotions: promotions,
     billDiscount: cart.billDiscount,
     voucher: ref.watch(cartVoucherProvider).value,
+    points: cart.customer == null || cart.pointsToRedeem <= 0
+        ? null
+        : PointsRedemption(
+            points: cart.pointsToRedeem,
+            pointValue: config.business.loyalty.pointValue,
+          ),
     now: now.toUtc(),
     labels: labels,
   );

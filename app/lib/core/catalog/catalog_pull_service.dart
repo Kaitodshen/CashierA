@@ -29,6 +29,9 @@ const stockChangingEntities = {
   'refund',
 };
 
+/// Outbox entities that change points or kasbon balances on the server.
+const balanceChangingEntities = {'order', 'refund', 'receivable_payment'};
+
 /// Brings the local catalog mirror up to date: per table, rows changed since
 /// the cursor (minus [overlap], so rows committed late are not missed), then
 /// server-side deletes from tombstones. Upserts are idempotent.
@@ -51,6 +54,7 @@ class CatalogPullService {
   Future<PullSummary> pull({bool includeStock = true}) async {
     var rows = 0;
     var stockSkipped = false;
+    _keepLocalBalances = await _pending(balanceChangingEntities);
     for (final spec in mirrorSpecs) {
       if (spec.isStock) {
         if (!includeStock || await _stockChangesPending()) {
@@ -177,17 +181,27 @@ class CatalogPullService {
       'customers' => (db.delete(
         db.localCustomers,
       )..where((r) => r.id.equals(key('id')))).go(),
+      'receivables' => (db.delete(
+        db.localReceivables,
+      )..where((r) => r.receivableId.equals(key('id')))).go(),
       _ => Future.value(0),
     };
   }
 
-  Future<bool> _stockChangesPending() async {
+  Future<bool> _stockChangesPending() => _pending(stockChangingEntities);
+
+  /// While sales, refunds or kasbon installments wait in the outbox, the
+  /// server's points and kasbon balances are older than this terminal's:
+  /// pulled rows keep the local balance (like stock).
+  bool _keepLocalBalances = false;
+
+  Future<bool> _pending(Set<String> entities) async {
     final count = db.syncQueue.id.count();
     final query = db.selectOnly(db.syncQueue)
       ..addColumns([count])
       ..where(
         db.syncQueue.status.equalsValue(SyncStatus.done).not() &
-            db.syncQueue.entity.isIn(stockChangingEntities),
+            db.syncQueue.entity.isIn(entities),
       );
     return ((await query.getSingle()).read(count) ?? 0) > 0;
   }
@@ -379,19 +393,47 @@ class CatalogPullService {
           mode: InsertMode.insertOrReplace,
         );
       case 'customers':
+        final customer = LocalCustomersCompanion.insert(
+          id: s('id'),
+          code: Value(os('code')),
+          name: s('name'),
+          phone: Value(os('phone')),
+          pointsBalance: Value(i('points_balance')),
+          kasbonLimit: Value(oi('kasbon_limit')),
+          isActive: f('is_active'),
+          updatedAt: at(),
+        );
         b.insert(
           db.localCustomers,
-          LocalCustomersCompanion.insert(
-            id: s('id'),
-            code: Value(os('code')),
-            name: s('name'),
-            phone: Value(os('phone')),
-            pointsBalance: Value(i('points_balance')),
-            kasbonLimit: Value(oi('kasbon_limit')),
-            isActive: f('is_active'),
-            updatedAt: at(),
+          customer,
+          onConflict: DoUpdate(
+            (_) => _keepLocalBalances
+                ? customer.copyWith(pointsBalance: const Value.absent())
+                : customer,
           ),
-          mode: InsertMode.insertOrReplace,
+        );
+      case 'receivables':
+        final receivable = LocalReceivablesCompanion.insert(
+          orderId: s('order_id'),
+          receivableId: Value(s('id')),
+          customerId: s('customer_id'),
+          amount: i('amount'),
+          paidAmount: i('paid_amount'),
+          dueDate: DateTime.parse('${s('due_date')}T00:00:00Z'),
+          status: s('status'),
+          updatedAt: at(),
+        );
+        b.insert(
+          db.localReceivables,
+          receivable,
+          onConflict: DoUpdate(
+            (_) => _keepLocalBalances
+                ? receivable.copyWith(
+                    paidAmount: const Value.absent(),
+                    status: const Value.absent(),
+                  )
+                : receivable,
+          ),
         );
       case 'stock_levels':
         b.insert(

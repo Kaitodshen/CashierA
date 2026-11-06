@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:cashiera/core/database/app_database.dart';
+import 'package:cashiera/core/pos/pos_services.dart';
 import 'package:cashiera/core/pos/shift_report_text.dart';
 import 'package:cashiera/core/printing/printer_service.dart';
 import 'package:cashiera/core/printing/printer_setting.dart';
 import 'package:cashiera/core/printing/printer_transport.dart';
+import 'package:cashiera/core/printing/receipt_printing.dart';
 import 'package:cashiera_core/cashiera_core.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -176,4 +180,59 @@ void main() {
     expect(signedMoney(const Money(-2000)), '-Rp 2.000');
     expect(signedMoney(Money.zero), 'Rp 0');
   });
+
+  test(
+    'sharing a receipt counts as printing it; later shares are copies',
+    () async {
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final at = DateTime.utc(2026, 11, 7);
+      await db
+          .into(db.localOrders)
+          .insert(
+            LocalOrderRow(
+              id: 'o-1',
+              orderNumber: 'PST-T1-261107-0001',
+              status: 'completed',
+              version: 1,
+              cartJson: '{}',
+              payloadJson: '{}',
+              grandTotal: 7000,
+              itemCount: 2,
+              cashierName: 'Eko',
+              createdAt: at,
+              updatedAt: at,
+            ),
+          );
+      final printing = ReceiptPrinting(
+        printers: PrinterService(PrinterRepository(db), FakePrinterTransport()),
+        orders: OrderService(db),
+        audit: AuditService(db),
+      );
+      Future<LocalOrderRow> order() => db.select(db.localOrders).getSingle();
+      Future<List<String>> kinds() async => [
+        for (final q in await db.select(db.syncQueue).get())
+          '${q.entity}.${q.action}',
+      ];
+
+      await printing.shared(
+        order: await order(),
+        staff: cashier,
+        storeId: store,
+      );
+      expect((await order()).printedAt, isNotNull);
+      expect(await kinds(), ['order.mark_printed']);
+
+      await printing.shared(
+        order: await order(),
+        staff: cashier,
+        storeId: store,
+      );
+      expect(await kinds(), ['order.mark_printed', 'audit.log']);
+      final audit =
+          jsonDecode((await db.select(db.syncQueue).get()).last.payload) as Map;
+      expect(audit['action'], 'receipt.reprinted');
+      expect((audit['details'] as Map)['channel'], 'pdf');
+    },
+  );
 }
