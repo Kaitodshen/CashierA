@@ -1,0 +1,67 @@
+# The release checklist's "green" gate (docs/release/checklist.md): every
+# push and pull request runs the same checks as a local release build.
+name: CI
+
+on:
+  push:
+    branches: [main, 'phase-*']
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  database:
+    name: Database (pgTAP on PGlite)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tools/db-test/package-lock.json
+      - run: npm ci
+        working-directory: tools/db-test
+      - run: npm test
+        working-directory: tools/db-test
+
+  functions:
+    name: Edge Function logic
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm test
+        working-directory: supabase/functions
+
+  flutter:
+    name: Core, app, web build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.8
+          channel: stable
+          cache: true
+      - name: Core package
+        working-directory: packages/cashiera_core
+        run: |
+          dart pub get
+          dart format --output=none --set-exit-if-changed lib test
+          dart analyze --fatal-infos
+          dart test
+      - name: App
+        working-directory: app
+        run: |
+          flutter pub get
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze --fatal-infos
+          flutter test
+      - name: Web build
+        working-directory: app
+        run: flutter build web --release

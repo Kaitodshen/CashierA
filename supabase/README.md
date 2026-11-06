@@ -27,8 +27,10 @@ This folder is the complete server side so far: the Phase 1 schema, row level se
 | `migrations/…1800_review_fixes.sql` | Review fixes: an approval naming another employee only from a paired terminal; payments only on completed orders; expected cash from completed and voided sales only |
 | `migrations/…1700_loyalty_kasbon.sql` | Phase 6: points checked against `business_profile`, the `loyalty.adjust` permission, `adjust_points`, `kasbon_overview`, `customer_statement` |
 | `migrations/…2000_purchasing_fnb.sql` | Phase 8: `save_purchase_order`, `set_purchase_order_status`, `receive_purchase_order` (goods receipts `GR-<store>-yyMMdd-NNN`), `purchase_order_list`, `purchase_order_detail`, `transfer_list`, `transfer_detail`, `kitchen_queue` |
+| `migrations/…2100_payment_gateway.sql` | Phase 9: `payment_methods.gateway`, the `QRIS Dinamis` method, `gateway_charges` (Realtime), `gateway_charge_open` / `_attach` / `_settle` / `_status` / `_list`, and the trigger that refuses a gateway payment without a paid charge (`gateway_unconfirmed`) |
+| `functions/qris-create`, `functions/qris-cancel`, `functions/midtrans-webhook` | Phase 9 Edge Functions. The logic is in `functions/_shared/handlers.ts` and `midtrans.ts` (tested under Node 24: `npm test` in `functions/`); setup is in [docs/release/deploy.md](../docs/release/deploy.md) |
 | `seed.sql` | Demo data. The demo sign-ins and PINs are listed in its header |
-| `tests/database/*.test.sql` | 21 pgTAP files, 412 assertions |
+| `tests/database/*.test.sql` | 22 pgTAP files, 434 assertions |
 
 ## 1. Test it on this PC (no Docker)
 
@@ -40,7 +42,7 @@ npm install
 npm test
 ```
 
-Expected output ends with `All 21 test files passed (412 assertions)`. To run a single file, use `node run.mjs --only 030`.
+Expected output ends with `All 22 test files passed (434 assertions)`. To run a single file, use `node run.mjs --only 030`.
 
 ## 2. Use a hosted Supabase project
 
@@ -171,6 +173,10 @@ Rejection codes the app should translate for cashiers include `tax_mismatch`, `p
 | `receive_purchase_order(p)` | `inventory.receive` at the store | One goods receipt for an ordered or partly received PO. Refuses more than is still open (`receipt_exceeds_order`) and an empty receipt. Stock in and weighted-average cost per delivery; status becomes `partially_received` or `received`; audited |
 | `purchase_order_list(store_id, status)` and `purchase_order_detail(id)` | `purchase.manage`, `inventory.receive` or `reports.view` | POs with supplier, totals and the received share; the detail has the lines and every receipt |
 | `kitchen_queue(station, store_id)` | Terminal of the store, or `kitchen.view` | Active tickets (new, preparing, ready) oldest first, each with only its station's items, modifiers and notes, the table and the guests. `kitchen.status` and `dining_table.status` (through `sync_push`) move them on |
+| `gateway_charge_open(p)` | Paired terminal, write scope of the store | Opens a pending dynamic QRIS charge (id = the payment id) for an active gateway method; the same id again returns the same charge |
+| `gateway_charge_attach(id, provider_ref, qr_string, expires_at, raw)` and `gateway_charge_settle(id, status, gross_amount, transaction_id, raw)` | `service_role` only (Edge Functions) | Store Midtrans's answer; settle refuses another amount (`amount_mismatch`, audited), keeps `paid` final, accepts a late payment after expiry; every change is audited as `payment.gateway_<status>` |
+| `gateway_charge_status(id)` | `pos.sell` / `reports.view` in the store, or the service role | The charge as the terminal watches it |
+| `gateway_charge_list(store_id, from, to)` | `reports.view` | Charges by store-local date with `matched` (a sale booked it); paid and unmatched = money without a sale |
 | `complete_stock_opname(opname_id, employee_id)` | `inventory.opname` | Completes a draft opname |
 | `shift_summary(shift_id)` | Terminal, `shift.manage` or `reports.view` | X-report (open shift) or Z-report (closed) data, with the terminal code and the opener and closer names |
 | `shift_overview(store_id, from, to)` | `shift.manage` or `reports.view` | Shifts by business date (newest first, at most 500) with expected and counted cash, selisih, order count and sales |
@@ -193,7 +199,7 @@ Terminals pass `employee_id` (the PIN-verified user). Back-office callers always
 
 - **Free plan: no automatic backups**, and projects pause when idle. Do not run real stores on it.
 - **Pro plan:** daily backups kept for 7 days (Dashboard → Database → Backups). Add **Point-in-Time Recovery** if losing up to a day of sales is unacceptable.
-- **Your own copy as well:** a nightly logical dump to private storage. Phase 9 sets this up as a scheduled job:
+- **Your own copy as well:** a nightly logical dump to private storage. `tools/backup/backup.sh` (scheduled, with a checksum, a content check and 30-day retention) and `tools/backup/restore-drill.sh` are described in [docs/release/backups.md](../docs/release/backups.md). For a one-off copy:
 
   ```bash
   npx supabase@3.0.0 db dump --remote -f backup.sql
@@ -223,6 +229,6 @@ Terminals pass `employee_id` (the PIN-verified user). Back-office callers always
 
 ## 9. What has and hasn't been verified
 
-- ✅ All migrations, the seed and the 412 assertions pass on PGlite 0.5.15 (PostgreSQL 18.6), checked on 2026-11-07 after Phase 8. `140_shift_audit.test.sql` closes a shift built the same way as `cashiera_core/test/shift/server_fixture_test.dart`, so the terminal's X/Z report and the server's agree on one shared example. `130_pos.test.sql` books a sale priced by the Dart engine (`cashiera_core/test/pricing/server_fixture_test.dart` builds the same numbers), so the server and the terminal are checked against one shared example.
+- ✅ All migrations, the seed and the 434 assertions pass on PGlite 0.5.15 (PostgreSQL 18.6), checked on 2026-11-07 after Phase 9. The Edge Function logic (`functions/_shared`) passes 15 Node tests (`cd supabase/functions && npm test`); the Deno entry points have not been type-checked here (no Deno on this PC). `140_shift_audit.test.sql` closes a shift built the same way as `cashiera_core/test/shift/server_fixture_test.dart`, so the terminal's X/Z report and the server's agree on one shared example. `130_pos.test.sql` books a sale priced by the Dart engine (`cashiera_core/test/pricing/server_fixture_test.dart` builds the same numbers), so the server and the terminal are checked against one shared example.
 - ⚠️ Hosted Supabase runs PostgreSQL 17. The SQL avoids PostgreSQL 18-only features, but it has **not yet been run on a real Supabase stack** (this PC has no Docker). Run `supabase db push --remote` plus `supabase test db --remote` on a staging project, or the local Docker stack, before going live.
 - ⚠️ The Supabase stand-ins in `tools/db-test/supabase-shim.sql` cover only what these migrations touch (auth users, JWT claims, storage tables, the realtime publication). They are not a full Supabase emulation.

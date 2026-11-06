@@ -1,0 +1,9 @@
+{
+  "name": "cashiera-functions-tests",
+  "private": true,
+  "type": "module",
+  "description": "Node 24 runs the gateway logic tests directly (TypeScript type stripping). Deno runs the functions.",
+  "scripts": {
+    "test": "node --test \"tests/*.test.ts\""
+  }
+}

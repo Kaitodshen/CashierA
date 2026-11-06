@@ -37,8 +37,8 @@ select is(
   (select array_agg(tablename::text order by tablename)
    from pg_publication_tables
    where pubname = 'supabase_realtime' and schemaname = 'public'),
-  array['dining_tables', 'order_status', 'orders', 'shifts', 'stock_levels'],
-  'Realtime publishes only the five live tables');
+  array['dining_tables', 'gateway_charges', 'order_status', 'orders', 'shifts', 'stock_levels'],
+  'Realtime publishes only the six live tables (gateway charges since Phase 9)');
 
 select is(
   (select count(*)::int from information_schema.role_table_grants
@@ -48,8 +48,8 @@ select is(
 
 select is(
   (select count(*)::int from public.store_payment_methods),
-  (select (count(*) * 7)::int from public.stores),
-  'every store accepts the seven default payment methods');
+  (select (count(*) * 8)::int from public.stores),
+  'every store accepts the eight default payment methods (QRIS Dinamis since Phase 9)');
 
 select ok(
   exists (select 1 from pg_indexes where schemaname = 'public' and indexname = 'orders_store_created_idx')

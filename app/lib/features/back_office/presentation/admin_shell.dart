@@ -48,6 +48,11 @@ final _destinations = <_Destination>[
     (l) => l.navTransfers,
   ),
   _Destination(
+    AppRoutes.adminGatewayPayments,
+    Icons.qr_code_2,
+    (l) => l.navGatewayPayments,
+  ),
+  _Destination(
     AppRoutes.adminTables,
     Icons.table_restaurant_outlined,
     (l) => l.navTables,

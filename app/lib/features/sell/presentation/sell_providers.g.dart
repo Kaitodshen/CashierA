@@ -164,7 +164,7 @@ final class CartControllerProvider
   }
 }
 
-String _$cartControllerHash() => r'7cd34ce2823f8c169032fe72d770d2e9efbc6e92';
+String _$cartControllerHash() => r'68d5c85c64795ab3ffa93ec7be37e8bc5dcec8d0';
 
 /// The bill being rung up. Lives across screens (sell → pay → back) and
 /// across staff switches, until it is finished, held or cleared.

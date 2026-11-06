@@ -1998,3 +1998,143 @@ final class StoreFnbModeFamily extends $Family
   @override
   String toString() => r'storeFnbModeProvider';
 }
+
+@ProviderFor(paymentsAdmin)
+final paymentsAdminProvider = PaymentsAdminProvider._();
+
+final class PaymentsAdminProvider
+    extends
+        $FunctionalProvider<
+          PaymentsAdminRepository,
+          PaymentsAdminRepository,
+          PaymentsAdminRepository
+        >
+    with $Provider<PaymentsAdminRepository> {
+  PaymentsAdminProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'paymentsAdminProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$paymentsAdminHash();
+
+  @$internal
+  @override
+  $ProviderElement<PaymentsAdminRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  PaymentsAdminRepository create(Ref ref) {
+    return paymentsAdmin(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PaymentsAdminRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PaymentsAdminRepository>(value),
+    );
+  }
+}
+
+String _$paymentsAdminHash() => r'24624b3a3cf474e99a6b97623807ea8723099809';
+
+@ProviderFor(gatewayCharges)
+final gatewayChargesProvider = GatewayChargesFamily._();
+
+final class GatewayChargesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<GatewayChargeRow>>,
+          List<GatewayChargeRow>,
+          FutureOr<List<GatewayChargeRow>>
+        >
+    with
+        $FutureModifier<List<GatewayChargeRow>>,
+        $FutureProvider<List<GatewayChargeRow>> {
+  GatewayChargesProvider._({
+    required GatewayChargesFamily super.from,
+    required ({DateTime from, DateTime to, String? storeId}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'gatewayChargesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$gatewayChargesHash();
+
+  @override
+  String toString() {
+    return r'gatewayChargesProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<GatewayChargeRow>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<GatewayChargeRow>> create(Ref ref) {
+    final argument =
+        this.argument as ({DateTime from, DateTime to, String? storeId});
+    return gatewayCharges(
+      ref,
+      from: argument.from,
+      to: argument.to,
+      storeId: argument.storeId,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GatewayChargesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$gatewayChargesHash() => r'062fac30db2dc6d72ae341e814cd7195888bb844';
+
+final class GatewayChargesFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<GatewayChargeRow>>,
+          ({DateTime from, DateTime to, String? storeId})
+        > {
+  GatewayChargesFamily._()
+    : super(
+        retry: null,
+        name: r'gatewayChargesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  GatewayChargesProvider call({
+    required DateTime from,
+    required DateTime to,
+    String? storeId,
+  }) => GatewayChargesProvider._(
+    argument: (from: from, to: to, storeId: storeId),
+    from: this,
+  );
+
+  @override
+  String toString() => r'gatewayChargesProvider';
+}

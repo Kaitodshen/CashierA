@@ -229,6 +229,10 @@ class CartPanel extends ConsumerWidget {
   Future<void> _clear(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
     final cart = ref.read(cartControllerProvider);
+    if (cart.gatewayTenders.isNotEmpty) {
+      AppToast.error(context, l10n.sellClearPaidQris);
+      return;
+    }
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(

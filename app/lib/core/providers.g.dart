@@ -738,6 +738,56 @@ final class CustomerServiceProvider
 
 String _$customerServiceHash() => r'e0658ad2221adedd14f9020660496f8b7ea8e89b';
 
+/// The gateway for dynamic QRIS, chosen by `PAYMENT_GATEWAY`, or null when
+/// none is set up (the till then hides gateway methods).
+
+@ProviderFor(paymentGateway)
+final paymentGatewayProvider = PaymentGatewayProvider._();
+
+/// The gateway for dynamic QRIS, chosen by `PAYMENT_GATEWAY`, or null when
+/// none is set up (the till then hides gateway methods).
+
+final class PaymentGatewayProvider
+    extends
+        $FunctionalProvider<PaymentGateway?, PaymentGateway?, PaymentGateway?>
+    with $Provider<PaymentGateway?> {
+  /// The gateway for dynamic QRIS, chosen by `PAYMENT_GATEWAY`, or null when
+  /// none is set up (the till then hides gateway methods).
+  PaymentGatewayProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'paymentGatewayProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$paymentGatewayHash();
+
+  @$internal
+  @override
+  $ProviderElement<PaymentGateway?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  PaymentGateway? create(Ref ref) {
+    return paymentGateway(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PaymentGateway? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PaymentGateway?>(value),
+    );
+  }
+}
+
+String _$paymentGatewayHash() => r'cd512621aac12bbb1b4807ce8a87a4587c65189a';
+
 @ProviderFor(fnbService)
 final fnbServiceProvider = FnbServiceProvider._();
 

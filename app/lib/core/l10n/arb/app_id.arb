@@ -2277,5 +2277,82 @@
       }
     }
   },
-  "tableSeat": "Mulai bill"
+  "tableSeat": "Mulai bill",
+  "navGatewayPayments": "Pembayaran QRIS",
+  "payQrisCreate": "Buat QR",
+  "qrisTitle": "QRIS {amount}",
+  "@qrisTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrisScan": "Minta pelanggan memindai dengan aplikasi QRIS apa saja.",
+  "qrisExpiresIn": "Berlaku {time}",
+  "@qrisExpiresIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "qrisPaid": "Pembayaran QRIS diterima: {amount}",
+  "@qrisPaid": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrisExpired": "QR kedaluwarsa. Tidak ada yang ditagih.",
+  "qrisCancelled": "QR dibatalkan.",
+  "qrisFailed": "Pembayaran gagal.",
+  "qrisNewQr": "QR baru",
+  "qrisCancel": "Batalkan QR",
+  "qrisOffline": "Tidak ada koneksi. QRIS dinamis butuh internet; pakai tunai atau stiker QRIS.",
+  "qrisNotConfigured": "Payment gateway belum diatur.",
+  "qrisError": "Gagal membuat QR ({code}).",
+  "@qrisError": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "sellClearPaidQris": "Pembayaran QRIS untuk bill ini sudah diterima. Selesaikan penjualannya.",
+  "gatewayOnlyUnmatched": "Dibayar tanpa penjualan",
+  "gatewayPaidTotal": "Dibayar {amount} ({count})",
+  "@gatewayPaidTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gatewayUnmatchedTotal": "Tanpa penjualan {amount} ({count})",
+  "@gatewayUnmatchedTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gatewayUnmatchedHint": "Pelanggan sudah membayar tetapi tidak ada penjualan (bill tidak diselesaikan). Selesaikan bill di terminal, atau kembalikan dana dari dashboard Midtrans.",
+  "gatewayEmpty": "Tidak ada pembayaran QRIS pada periode ini.",
+  "gatewayUnmatched": "Dibayar, tanpa penjualan",
+  "gatewayStatus": "{status, select, pending{Menunggu} paid{Dibayar} failed{Gagal} expired{Kedaluwarsa} cancelled{Dibatalkan} other{{status}}}",
+  "@gatewayStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  }
 }

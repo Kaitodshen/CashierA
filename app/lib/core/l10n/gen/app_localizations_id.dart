@@ -3117,4 +3117,96 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get tableSeat => 'Mulai bill';
+
+  @override
+  String get navGatewayPayments => 'Pembayaran QRIS';
+
+  @override
+  String get payQrisCreate => 'Buat QR';
+
+  @override
+  String qrisTitle(String amount) {
+    return 'QRIS $amount';
+  }
+
+  @override
+  String get qrisScan =>
+      'Minta pelanggan memindai dengan aplikasi QRIS apa saja.';
+
+  @override
+  String qrisExpiresIn(String time) {
+    return 'Berlaku $time';
+  }
+
+  @override
+  String qrisPaid(String amount) {
+    return 'Pembayaran QRIS diterima: $amount';
+  }
+
+  @override
+  String get qrisExpired => 'QR kedaluwarsa. Tidak ada yang ditagih.';
+
+  @override
+  String get qrisCancelled => 'QR dibatalkan.';
+
+  @override
+  String get qrisFailed => 'Pembayaran gagal.';
+
+  @override
+  String get qrisNewQr => 'QR baru';
+
+  @override
+  String get qrisCancel => 'Batalkan QR';
+
+  @override
+  String get qrisOffline =>
+      'Tidak ada koneksi. QRIS dinamis butuh internet; pakai tunai atau stiker QRIS.';
+
+  @override
+  String get qrisNotConfigured => 'Payment gateway belum diatur.';
+
+  @override
+  String qrisError(String code) {
+    return 'Gagal membuat QR ($code).';
+  }
+
+  @override
+  String get sellClearPaidQris =>
+      'Pembayaran QRIS untuk bill ini sudah diterima. Selesaikan penjualannya.';
+
+  @override
+  String get gatewayOnlyUnmatched => 'Dibayar tanpa penjualan';
+
+  @override
+  String gatewayPaidTotal(String amount, int count) {
+    return 'Dibayar $amount ($count)';
+  }
+
+  @override
+  String gatewayUnmatchedTotal(String amount, int count) {
+    return 'Tanpa penjualan $amount ($count)';
+  }
+
+  @override
+  String get gatewayUnmatchedHint =>
+      'Pelanggan sudah membayar tetapi tidak ada penjualan (bill tidak diselesaikan). Selesaikan bill di terminal, atau kembalikan dana dari dashboard Midtrans.';
+
+  @override
+  String get gatewayEmpty => 'Tidak ada pembayaran QRIS pada periode ini.';
+
+  @override
+  String get gatewayUnmatched => 'Dibayar, tanpa penjualan';
+
+  @override
+  String gatewayStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'pending': 'Menunggu',
+      'paid': 'Dibayar',
+      'failed': 'Gagal',
+      'expired': 'Kedaluwarsa',
+      'cancelled': 'Dibatalkan',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
 }

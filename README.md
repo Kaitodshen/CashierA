@@ -41,14 +41,15 @@ cd packages/cashiera_core && dart test
 cd app && flutter run -d chrome --dart-define=SUPABASE_URL=https://<ref>.supabase.co --dart-define=SUPABASE_ANON_KEY=<publishable key>
 ```
 
-See [app/README.md](app/README.md) for terminals (Android and Windows need Android Studio or Visual Studio installed).
+See [app/README.md](app/README.md) for terminals (Android and Windows need Android Studio or Visual Studio installed). Going to production: [docs/release/deploy.md](docs/release/deploy.md), [backups.md](docs/release/backups.md) and the [release checklist](docs/release/checklist.md).
 
 ## Layout
 
 ```text
 app/         Flutter app: POS shell (terminals) + back-office shell (web/phone)
 packages/    cashiera_core: pure-Dart money, quantity, rounding, catalog CSV, pricing, promotions, payments, shift reports, refunds and ESC/POS printing
-supabase/    config, migrations, demo seed, pgTAP tests
-tools/       db-test: runs migrations + tests on embedded Postgres
-docs/        architecture, phase plans, catalog import template
+supabase/    config, migrations, demo seed, pgTAP tests, Edge Functions (Midtrans QRIS)
+tools/       db-test: runs migrations + tests on embedded Postgres; backup: nightly pg_dump and restore drill
+docs/        architecture, phase plans, catalog import template, release (deploy, backups, checklist)
+.github/     CI: format, analyze, all tests, web build
 ```

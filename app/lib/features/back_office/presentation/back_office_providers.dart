@@ -4,6 +4,7 @@ import 'package:cashiera/features/back_office/data/back_office_backend.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_models.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_repository.dart';
 import 'package:cashiera/features/back_office/data/customers_admin_repository.dart';
+import 'package:cashiera/features/back_office/data/payments_admin_repository.dart';
 import 'package:cashiera/features/back_office/data/pos_admin_repository.dart';
 import 'package:cashiera/features/back_office/data/purchasing_repository.dart';
 import 'package:cashiera/features/back_office/data/shift_audit_repository.dart';
@@ -163,3 +164,17 @@ Future<List<Map<String, dynamic>>> diningTables(Ref ref, String storeId) =>
 @riverpod
 Future<bool> storeFnbMode(Ref ref, String storeId) =>
     ref.watch(purchasingProvider).fnbMode(storeId);
+
+@Riverpod(keepAlive: true)
+PaymentsAdminRepository paymentsAdmin(Ref ref) =>
+    PaymentsAdminRepository(ref.watch(supabaseClientProvider));
+
+@riverpod
+Future<List<GatewayChargeRow>> gatewayCharges(
+  Ref ref, {
+  required DateTime from,
+  required DateTime to,
+  String? storeId,
+}) => ref
+    .watch(paymentsAdminProvider)
+    .gatewayCharges(from: from, to: to, storeId: storeId);

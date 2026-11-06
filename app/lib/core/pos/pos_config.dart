@@ -21,6 +21,7 @@ class PaymentOption {
     required this.name,
     required this.kind,
     required this.requiresReference,
+    this.gateway,
   });
 
   final String id;
@@ -28,6 +29,9 @@ class PaymentOption {
   final String name;
   final TenderKind kind;
   final bool requiresReference;
+
+  /// `midtrans` for dynamic QRIS paid through the gateway, else null.
+  final String? gateway;
 }
 
 /// Company profile fields the till uses.
@@ -204,6 +208,7 @@ class PosConfigRepository {
             name: m['name'] as String,
             kind: TenderKind.fromCode(m['method_type'] as String),
             requiresReference: m['requires_reference'] as bool? ?? false,
+            gateway: m['gateway'] as String?,
           ),
       ],
     );

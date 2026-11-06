@@ -24,6 +24,8 @@ class Tender {
     required this.kind,
     required this.amount,
     this.reference,
+    this.provider,
+    this.providerRef,
   });
 
   final String id;
@@ -32,12 +34,21 @@ class Tender {
   final Money amount;
   final String? reference;
 
+  /// Set when a payment gateway confirmed it (`midtrans`); [id] is then the
+  /// gateway charge id and [amount] can't change.
+  final String? provider;
+  final String? providerRef;
+
+  bool get isGateway => provider != null;
+
   Tender copyWith({Money? amount, String? reference}) => Tender(
     id: id,
     methodId: methodId,
     kind: kind,
     amount: amount ?? this.amount,
     reference: reference ?? this.reference,
+    provider: provider,
+    providerRef: providerRef,
   );
 }
 

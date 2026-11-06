@@ -4,8 +4,8 @@ One codebase, two shells:
 
 | Device | Starts in | What it does |
 |---|---|---|
-| Paired terminal (Android tablet, Windows PC) | PIN lock → POS | Offline-first: local SQLite (Drift) + outbox synced to `sync_push`. Cashier screen (scan, promos, discounts, vouchers, hold/resume, split payment, kasbon, receipts on thermal printers or PDF), shifts with X/Z reports, cash in/out, voids and refunds with manager PIN, product browser, stock in and out, stock count (opname). F&B stores: tables, kitchen and bar tickets, kitchen display |
-| Browser, phone, desktop signed in by email | Back office | Online: stores and pairing codes, products and variants, categories, suppliers, stock per store with history and low-stock alerts, CSV/XLSX import and export, promotions, vouchers, store settings (tax, rounding, receipt) and payment methods, shifts with their X/Z reports, the audit log, purchase orders and receiving, stock transfers, dining tables |
+| Paired terminal (Android tablet, Windows PC) | PIN lock → POS | Offline-first: local SQLite (Drift) + outbox synced to `sync_push`. Cashier screen (scan, promos, discounts, vouchers, hold/resume, split payment, kasbon, receipts on thermal printers or PDF), shifts with X/Z reports, cash in/out, voids and refunds with manager PIN, product browser, stock in and out, stock count (opname). F&B stores: tables, kitchen and bar tickets, kitchen display. Dynamic QRIS through Midtrans |
+| Browser, phone, desktop signed in by email | Back office | Online: stores and pairing codes, products and variants, categories, suppliers, stock per store with history and low-stock alerts, CSV/XLSX import and export, promotions, vouchers, store settings (tax, rounding, receipt) and payment methods, shifts with their X/Z reports, the audit log, purchase orders and receiving, stock transfers, dining tables, QRIS payments |
 
 ## Run
 
@@ -87,6 +87,17 @@ Works offline. The terminal keeps its own copy of each customer's points and of 
   - The receiver enters what arrived. A difference is shown in red and raises a discrepancy alert.
   - The history shows who did what and when.
 
+### Dynamic QRIS (Phase 9)
+
+- Build with `--dart-define=PAYMENT_GATEWAY=midtrans` (production), or `mock` for demos (pays itself after 8 seconds). Without it, **QRIS Dinamis** is not offered; the static QRIS sticker method always works, offline too.
+- **Payment screen → QRIS Dinamis → Buat QR.** The QR for the amount (all or part of the bill) shows with a countdown.
+  - When the customer pays, the payment is added with a check mark, and can't be removed.
+  - **Batalkan QR** cancels it. If the customer paid a second before, it counts as paid.
+  - An expired QR books nothing; **QR baru** makes a new one.
+- A paid QRIS stays with the bill until the sale is finished: the bill can't be cleared, and it survives leaving the payment screen or holding the bill.
+- The server key is never on the device. The terminal talks to the `qris-create` / `qris-cancel` Edge Functions and watches the charge, through Realtime plus a poll every 3 seconds.
+- **Back office → Pembayaran QRIS:** every charge per store and period, with the totals. Charges paid without a sale are flagged red, to finish on the terminal or refund at Midtrans.
+
 ### Catalog and stock
 
 - **Back office → Import / Export.** Download the template, fill it in Excel or Google Sheets, and upload the `.csv` or `.xlsx`. The preview lists every problem with its row number. Nothing is saved until the whole file is clean, and then it is saved in one transaction, so a failed import changes nothing. Importing the same file again updates the same products (matched by SKU). Stock columns set the counted stock per store and show up in the stock history as an opname. Export gives the same columns back, so export → edit → import works.
@@ -135,6 +146,7 @@ lib/
     catalog/      catalog mirror pull, local catalog queries, offline stock changes, refresh scheduling
     pos/          cart, till configuration, order payload, order/shift/refund/kasbon/audit services, receipt,
                   X/Z report layout, PDFs
+    payments/     PaymentGateway: Midtrans through the Edge Functions, or the mock
     printing/     printer setting, ESC/POS transport (plugin + TCP 9100, web stub), slips, printer service
     database/     Drift tables (local mirror + sync_queue)
     design_system/ tokens, themes (dark POS / light back office), shared widgets

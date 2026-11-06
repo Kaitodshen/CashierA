@@ -1,0 +1,5 @@
+{
+  "SUPABASE_URL": "https://<project-ref>.supabase.co",
+  "SUPABASE_ANON_KEY": "<publishable anon key>",
+  "PAYMENT_GATEWAY": "midtrans"
+}

@@ -15,7 +15,7 @@ Read-only audit of the repository at commit `a7ab472` (the only commit). Uncommi
 | 6 · Customers, loyalty, kasbon ledger | Done (local only) | `…1700_loyalty_kasbon.sql` (pgTAP `160`), `core/pos/kasbon_service.dart`, `features/customers`, back office customers / kasbon / loyalty; plan `2026-11-07-phase-6-customers-loyalty-kasbon.md`. Not run on devices or live Supabase |
 | 7 · Dashboard and reports | Done (local only) | `…1900_reports.sql` (pgTAP `180` reconciles every report), `features/reports` (dashboard, six report tabs, PDF/Excel); plan `2026-11-07-phase-7-reports.md`. Not run on live Supabase |
 | 8 · F&B, KDS, transfers, purchase orders | Done (local only) | `…2000_purchasing_fnb.sql` (pgTAP `190`: a PO received in two parts, a transfer 10 → 9, the kitchen queue), `features/fnb` (Meja, Kirim ke dapur, Dapur), `core/pos/fnb_service.dart`, back office Pembelian / Transfer / Meja; plan `2026-11-07-phase-8-fnb-purchasing.md`. Not run on a kitchen printer or live Supabase |
-| 9 · Payment gateway, deploy, backups | Not started | No `supabase/functions`, no `PaymentGateway` in the app, no release setup |
+| 9 · Payment gateway, deploy, backups | Done (local only) | `…2100_payment_gateway.sql` (pgTAP `200`), Edge Functions `qris-create` / `qris-cancel` / `midtrans-webhook` (15 Node tests), `core/payments/payment_gateway.dart`, QRIS dialog, back office Pembayaran QRIS, Android signing, Windows installer script, `tools/backup`, CI, `docs/release`. Release checklist: code items green; production, device and Midtrans items open |
 
 ## 2. Done
 
@@ -48,7 +48,7 @@ Read-only audit of the repository at commit `a7ab472` (the only commit). Uncommi
   - Shift list with X/Z report and PDF, and an audit log with filters and paging.
 - **Checks today:**
   - `flutter analyze`: no issues.
-  - `flutter test`: 156 passed, 0 failed (2026-11-07, after Phase 8).
+  - `flutter test`: 160 passed, 0 failed (2026-11-07, after Phase 9).
   - `flutter build web` succeeded on 2026-11-07 after Phase 8.
   - `flutter build web --release` succeeded earlier on 2026-11-06.
 
@@ -65,7 +65,7 @@ No `TODO`, `FIXME` or `UnimplementedError` found in `app/lib`, `packages/cashier
 
 ## 4. Known problems
 
-- Analyzer errors: none. Failing tests: none (app 156, core 122, database 21 files / 412 assertions, 2026-11-07).
+- Analyzer errors: none. Failing tests: none (app 160, core 122, database 22 files / 434 assertions, functions 15, 2026-11-07).
 - TODO/FIXME comments: none found.
 - Stray `GeneratedPluginRegistrant - Copy.java` in `app/android/app/src/main/java/io/flutter/plugins/`. A second public class with the same name would likely break the Android build. It is not committed.
 - Never run against a live Supabase project. Local tests run on PostgreSQL 18 (PGlite); hosted Supabase runs 17.
@@ -109,7 +109,7 @@ No `TODO`, `FIXME` or `UnimplementedError` found in `app/lib`, `packages/cashier
 
 1. Outbox behaviour on `not_a_member` (`sync_engine.dart`).
 2. PIN policy: length and hash cost (`set_employee_pin`, `PinVerifier`).
-3. Phase 9 payments (gateway, webhooks).
+3. The Midtrans account, the production keys and the sandbox run (docs/release/checklist.md §2).
 4. Running the migrations and pgTAP on a real Supabase stack (PostgreSQL 17).
 
 ## 7. Safe for Antigravity (UI only)
@@ -122,12 +122,12 @@ No `TODO`, `FIXME` or `UnimplementedError` found in `app/lib`, `packages/cashier
 
 ## 8. Next steps
 
-1. Delete the stray `GeneratedPluginRegistrant - Copy.java`; merge the Phase 6 and 7 branches and commit Phase 8.
+1. Delete the stray `GeneratedPluginRegistrant - Copy.java`; merge the Phase 6 to 9 branches into main.
 2. Run the migrations and pgTAP on a staging Supabase project (PostgreSQL 17).
 3. Test printing, the drawer, points and kasbon on the real printers and terminals.
 4. Pause the outbox on `not_a_member` instead of failing each item, and require 6-digit PINs for approvers.
-5. Test Phase 8 on a kitchen printer and a second terminal (tables in use elsewhere), then start Phase 9 (payment gateway, deploy, backups).
+5. Test Phase 8 on a kitchen printer and a second terminal, then work through docs/release/checklist.md (Midtrans sandbox, signed builds, backups, devices).
 
 ## 9. Last updated
 
-2026-11-06 · Claude Code audit; updated 2026-11-07 after Phase 8
+2026-11-06 · Claude Code audit; updated 2026-11-07 after Phase 9

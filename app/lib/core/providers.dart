@@ -10,6 +10,7 @@ import 'package:cashiera/core/catalog/terminal_catalog_repository.dart';
 import 'package:cashiera/core/config/env.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/database/connection.dart';
+import 'package:cashiera/core/payments/payment_gateway.dart';
 import 'package:cashiera/core/pos/pos_config.dart';
 import 'package:cashiera/core/pos/pos_services.dart';
 import 'package:cashiera/core/printing/printer_service.dart';
@@ -102,6 +103,16 @@ AuditService auditService(Ref ref) =>
 @Riverpod(keepAlive: true)
 CustomerService customerService(Ref ref) =>
     CustomerService(ref.watch(appDatabaseProvider));
+
+/// The gateway for dynamic QRIS, chosen by `PAYMENT_GATEWAY`, or null when
+/// none is set up (the till then hides gateway methods).
+@Riverpod(keepAlive: true)
+PaymentGateway? paymentGateway(Ref ref) =>
+    switch (ref.watch(appEnvProvider).paymentGateway) {
+      'midtrans' => SupabaseGateway(ref.watch(supabaseClientProvider)),
+      'mock' => MockGateway(autoPayAfter: const Duration(seconds: 8)),
+      _ => null,
+    };
 
 @Riverpod(keepAlive: true)
 FnbService fnbService(Ref ref) => FnbService(ref.watch(appDatabaseProvider));

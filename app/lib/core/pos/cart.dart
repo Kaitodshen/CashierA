@@ -185,6 +185,26 @@ class CartLine {
   };
 }
 
+Map<String, dynamic> tenderToJson(Tender t) => {
+  'id': t.id,
+  'method_id': t.methodId,
+  'kind': t.kind.code,
+  'amount': t.amount.rupiah,
+  'reference': t.reference,
+  'provider': t.provider,
+  'provider_ref': t.providerRef,
+};
+
+Tender tenderFromJson(Map<String, dynamic> j) => Tender(
+  id: j['id'] as String,
+  methodId: j['method_id'] as String,
+  kind: TenderKind.fromCode(j['kind'] as String),
+  amount: Money((j['amount'] as num).toInt()),
+  reference: j['reference'] as String?,
+  provider: j['provider'] as String?,
+  providerRef: j['provider_ref'] as String?,
+);
+
 @immutable
 class CartCustomer {
   const new({required this.id, required this.name, this.phone});
@@ -223,6 +243,7 @@ class Cart {
     this.tableName,
     this.guestCount,
     this.kitchenSent = const {},
+    this.gatewayTenders = const [],
   });
 
   factory fromJson(Map<String, dynamic> j) => Cart(
@@ -255,6 +276,10 @@ class Cart {
           in ((j['kitchen_sent'] as Map?) ?? const {}).entries)
         key as String: (value as num).toInt(),
     },
+    gatewayTenders: [
+      for (final t in j['gateway_tenders'] as List? ?? const [])
+        tenderFromJson((t as Map).cast<String, dynamic>()),
+    ],
   );
 
   final String orderId;
@@ -287,6 +312,10 @@ class Cart {
   /// ticket carries only what was added since.
   final Map<String, int> kitchenSent;
 
+  /// Payments a gateway already confirmed (dynamic QRIS). They stay with the
+  /// bill until it is finished: the customer's money has arrived.
+  final List<Tender> gatewayTenders;
+
   bool get isEmpty => lines.isEmpty;
 
   /// Lines that go to a kitchen or bar station.
@@ -318,6 +347,7 @@ class Cart {
     int? guestCount,
     bool clearTable = false,
     Map<String, int>? kitchenSent,
+    List<Tender>? gatewayTenders,
   }) => Cart(
     orderId: orderId,
     startedAt: startedAt,
@@ -335,6 +365,7 @@ class Cart {
     tableName: clearTable ? null : tableName ?? this.tableName,
     guestCount: clearTable ? null : guestCount ?? this.guestCount,
     kitchenSent: kitchenSent ?? this.kitchenSent,
+    gatewayTenders: gatewayTenders ?? this.gatewayTenders,
   );
 
   Map<String, dynamic> toJson() => {
@@ -354,5 +385,6 @@ class Cart {
     'table_name': tableName,
     'guest_count': guestCount,
     'kitchen_sent': kitchenSent,
+    'gateway_tenders': [for (final t in gatewayTenders) tenderToJson(t)],
   };
 }

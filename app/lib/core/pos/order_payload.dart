@@ -120,6 +120,8 @@ Map<String, dynamic> buildOrderPayload({
           'tendered_amount': p.tendered?.rupiah,
           'change_amount': p.change.rupiah,
           'reference': p.tender.reference,
+          'provider': p.tender.provider,
+          'provider_ref': p.tender.providerRef,
           'status': 'paid',
           'paid_at': completedAt == null ? null : iso(completedAt),
         },

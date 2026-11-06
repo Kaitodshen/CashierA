@@ -197,6 +197,15 @@ class CartController extends _$CartController {
     guestCount: guests,
   );
 
+  /// A payment the gateway confirmed (kept with the bill).
+  void addGatewayTender(Tender tender) => state = state.copyWith(
+    gatewayTenders: [
+      for (final t in state.gatewayTenders)
+        if (t.id != tender.id) t,
+      tender,
+    ],
+  );
+
   /// Back to a takeaway bill.
   void clearTable() => state = state.copyWith(clearTable: true);
 

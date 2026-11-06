@@ -5335,6 +5335,138 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Mulai bill'**
   String get tableSeat;
+
+  /// No description provided for @navGatewayPayments.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembayaran QRIS'**
+  String get navGatewayPayments;
+
+  /// No description provided for @payQrisCreate.
+  ///
+  /// In id, this message translates to:
+  /// **'Buat QR'**
+  String get payQrisCreate;
+
+  /// No description provided for @qrisTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'QRIS {amount}'**
+  String qrisTitle(String amount);
+
+  /// No description provided for @qrisScan.
+  ///
+  /// In id, this message translates to:
+  /// **'Minta pelanggan memindai dengan aplikasi QRIS apa saja.'**
+  String get qrisScan;
+
+  /// No description provided for @qrisExpiresIn.
+  ///
+  /// In id, this message translates to:
+  /// **'Berlaku {time}'**
+  String qrisExpiresIn(String time);
+
+  /// No description provided for @qrisPaid.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembayaran QRIS diterima: {amount}'**
+  String qrisPaid(String amount);
+
+  /// No description provided for @qrisExpired.
+  ///
+  /// In id, this message translates to:
+  /// **'QR kedaluwarsa. Tidak ada yang ditagih.'**
+  String get qrisExpired;
+
+  /// No description provided for @qrisCancelled.
+  ///
+  /// In id, this message translates to:
+  /// **'QR dibatalkan.'**
+  String get qrisCancelled;
+
+  /// No description provided for @qrisFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembayaran gagal.'**
+  String get qrisFailed;
+
+  /// No description provided for @qrisNewQr.
+  ///
+  /// In id, this message translates to:
+  /// **'QR baru'**
+  String get qrisNewQr;
+
+  /// No description provided for @qrisCancel.
+  ///
+  /// In id, this message translates to:
+  /// **'Batalkan QR'**
+  String get qrisCancel;
+
+  /// No description provided for @qrisOffline.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada koneksi. QRIS dinamis butuh internet; pakai tunai atau stiker QRIS.'**
+  String get qrisOffline;
+
+  /// No description provided for @qrisNotConfigured.
+  ///
+  /// In id, this message translates to:
+  /// **'Payment gateway belum diatur.'**
+  String get qrisNotConfigured;
+
+  /// No description provided for @qrisError.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal membuat QR ({code}).'**
+  String qrisError(String code);
+
+  /// No description provided for @sellClearPaidQris.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembayaran QRIS untuk bill ini sudah diterima. Selesaikan penjualannya.'**
+  String get sellClearPaidQris;
+
+  /// No description provided for @gatewayOnlyUnmatched.
+  ///
+  /// In id, this message translates to:
+  /// **'Dibayar tanpa penjualan'**
+  String get gatewayOnlyUnmatched;
+
+  /// No description provided for @gatewayPaidTotal.
+  ///
+  /// In id, this message translates to:
+  /// **'Dibayar {amount} ({count})'**
+  String gatewayPaidTotal(String amount, int count);
+
+  /// No description provided for @gatewayUnmatchedTotal.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanpa penjualan {amount} ({count})'**
+  String gatewayUnmatchedTotal(String amount, int count);
+
+  /// No description provided for @gatewayUnmatchedHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelanggan sudah membayar tetapi tidak ada penjualan (bill tidak diselesaikan). Selesaikan bill di terminal, atau kembalikan dana dari dashboard Midtrans.'**
+  String get gatewayUnmatchedHint;
+
+  /// No description provided for @gatewayEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada pembayaran QRIS pada periode ini.'**
+  String get gatewayEmpty;
+
+  /// No description provided for @gatewayUnmatched.
+  ///
+  /// In id, this message translates to:
+  /// **'Dibayar, tanpa penjualan'**
+  String get gatewayUnmatched;
+
+  /// No description provided for @gatewayStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'{status, select, pending{Menunggu} paid{Dibayar} failed{Gagal} expired{Kedaluwarsa} cancelled{Dibatalkan} other{{status}}}'**
+  String gatewayStatus(String status);
 }
 
 class _AppLocalizationsDelegate

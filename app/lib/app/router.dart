@@ -8,6 +8,7 @@ import 'package:cashiera/features/back_office/presentation/audit_screen.dart';
 import 'package:cashiera/features/back_office/presentation/back_office_home_screen.dart';
 import 'package:cashiera/features/back_office/presentation/categories_screen.dart';
 import 'package:cashiera/features/back_office/presentation/dining_tables_screen.dart';
+import 'package:cashiera/features/back_office/presentation/gateway_payments_screen.dart';
 import 'package:cashiera/features/back_office/presentation/import_screen.dart';
 import 'package:cashiera/features/back_office/presentation/loyalty_settings_screen.dart';
 import 'package:cashiera/features/back_office/presentation/product_editor_screen.dart';
@@ -243,6 +244,10 @@ GoRouter router(Ref ref) {
               key: ValueKey(state.pathParameters['id']),
               transferId: state.pathParameters['id']!,
             ),
+          ),
+          GoRoute(
+            path: AppRoutes.adminGatewayPayments,
+            builder: (_, _) => const GatewayPaymentsScreen(),
           ),
           GoRoute(
             path: AppRoutes.adminTables,

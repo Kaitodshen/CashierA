@@ -3163,4 +3163,95 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tableSeat => 'Start bill';
+
+  @override
+  String get navGatewayPayments => 'QRIS payments';
+
+  @override
+  String get payQrisCreate => 'Show QR';
+
+  @override
+  String qrisTitle(String amount) {
+    return 'QRIS $amount';
+  }
+
+  @override
+  String get qrisScan => 'Ask the customer to scan with any QRIS app.';
+
+  @override
+  String qrisExpiresIn(String time) {
+    return 'Valid for $time';
+  }
+
+  @override
+  String qrisPaid(String amount) {
+    return 'QRIS payment received: $amount';
+  }
+
+  @override
+  String get qrisExpired => 'The QR expired. Nothing was charged.';
+
+  @override
+  String get qrisCancelled => 'The QR was cancelled.';
+
+  @override
+  String get qrisFailed => 'The payment failed.';
+
+  @override
+  String get qrisNewQr => 'New QR';
+
+  @override
+  String get qrisCancel => 'Cancel QR';
+
+  @override
+  String get qrisOffline =>
+      'No connection. Dynamic QRIS needs the internet; use cash or the QRIS sticker.';
+
+  @override
+  String get qrisNotConfigured => 'The payment gateway is not set up yet.';
+
+  @override
+  String qrisError(String code) {
+    return 'Could not create the QR ($code).';
+  }
+
+  @override
+  String get sellClearPaidQris =>
+      'A QRIS payment was received for this bill. Finish the sale.';
+
+  @override
+  String get gatewayOnlyUnmatched => 'Paid without a sale';
+
+  @override
+  String gatewayPaidTotal(String amount, int count) {
+    return 'Paid $amount ($count)';
+  }
+
+  @override
+  String gatewayUnmatchedTotal(String amount, int count) {
+    return 'Without a sale $amount ($count)';
+  }
+
+  @override
+  String get gatewayUnmatchedHint =>
+      'The customer paid but no sale booked it (the bill was left unfinished). Finish the bill on the terminal, or refund it from the Midtrans dashboard.';
+
+  @override
+  String get gatewayEmpty => 'No QRIS payments in this period.';
+
+  @override
+  String get gatewayUnmatched => 'Paid, no sale';
+
+  @override
+  String gatewayStatus(String status) {
+    String _temp0 = intl.Intl.selectLogic(status, {
+      'pending': 'Waiting',
+      'paid': 'Paid',
+      'failed': 'Failed',
+      'expired': 'Expired',
+      'cancelled': 'Cancelled',
+      'other': '$status',
+    });
+    return '$_temp0';
+  }
 }
