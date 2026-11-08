@@ -329,3 +329,12 @@ Future<Map<String, dynamic>> lastQueued(AppDatabase db, String kind) async {
   final row = rows.firstWhere((q) => '${q.entity}.${q.action}' == kind);
   return (jsonDecode(row.payload) as Map).cast<String, dynamic>();
 }
+
+/// Today's store-local date as it appears in document numbers (`yyMMdd`,
+/// WIB). Widget tests run on the real clock, so numbers made by the till
+/// carry today's date.
+String todayStamp() {
+  final wib = DateTime.now().toUtc().add(const Duration(hours: 7));
+  String two(int n) => n.toString().padLeft(2, '0');
+  return '${two(wib.year % 100)}${two(wib.month)}${two(wib.day)}';
+}

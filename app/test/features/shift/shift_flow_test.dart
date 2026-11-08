@@ -322,7 +322,7 @@ void main() {
     await approveAs(tester, manager);
 
     expect(
-      find.byKey(const Key('refund-R-PST-T1-261106-0001')),
+      find.byKey(Key('refund-R-PST-T1-${todayStamp()}-0001')),
       findsOneWidget,
     );
     expect(printer.text, contains('REFUND'));

@@ -163,17 +163,31 @@ class AdminShell extends ConsumerWidget {
       body: wide
           ? Row(
               children: [
-                NavigationRail(
-                  selectedIndex: selected,
-                  onDestinationSelected: go,
-                  labelType: NavigationRailLabelType.all,
-                  destinations: [
-                    for (final d in _destinations)
-                      NavigationRailDestination(
-                        icon: Icon(d.icon),
-                        label: Text(d.label(l10n)),
+                // 18 destinations no longer fit a laptop screen: the rail
+                // scrolls instead of overflowing.
+                LayoutBuilder(
+                  builder: (context, constraints) => SingleChildScrollView(
+                    key: const Key('admin-rail-scroll'),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
                       ),
-                  ],
+                      child: IntrinsicHeight(
+                        child: NavigationRail(
+                          selectedIndex: selected,
+                          onDestinationSelected: go,
+                          labelType: NavigationRailLabelType.all,
+                          destinations: [
+                            for (final d in _destinations)
+                              NavigationRailDestination(
+                                icon: Icon(d.icon),
+                                label: Text(d.label(l10n)),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 const VerticalDivider(width: 1),
                 Expanded(child: child),

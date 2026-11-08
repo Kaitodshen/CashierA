@@ -212,7 +212,7 @@ void main() {
       reason: 'cannot clear a table with an open bill',
     );
     await tapKey(tester, 'pos-table-Meja 7');
-    expect(find.text('PST-T1-261106-0001'), findsWidgets);
+    expect(find.text('PST-T1-${todayStamp()}-0001'), findsWidgets);
 
     // A second Nasi: only the kitchen gets a ticket, marked as an addition.
     await tapKey(tester, 'sell-item-NSI-GRG');
