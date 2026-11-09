@@ -44,9 +44,9 @@ class SyncStatusChip extends StatelessWidget {
           // A white glass pill with a coloured status dot, as in Stitch's
           // "● Terminal #01 · Online".
           decoration: BoxDecoration(
-            color: AppColors.white.withValues(alpha: 0.8),
+            color: AppColors.white.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(AppRadius.pill),
-            border: Border.all(color: AppColors.white.withValues(alpha: 0.7)),
+            border: Border.all(color: AppColors.white.withValues(alpha: 0.8)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

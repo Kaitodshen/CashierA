@@ -77,8 +77,10 @@ class _BackgroundPainter extends CustomPainter {
         Paint()
           ..shader = RadialGradient(
             colors: [
-              glow.colors[0].withValues(alpha: glow.opacity),
-              glow.colors[1].withValues(alpha: glow.opacity * 0.6),
+              glow.colors[0].withValues(
+                alpha: (glow.opacity * 1.5).clamp(0, 1),
+              ),
+              glow.colors[1].withValues(alpha: glow.opacity),
               glow.colors[1].withValues(alpha: 0),
             ],
             stops: const [0, 0.5, 1],

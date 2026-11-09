@@ -54,12 +54,32 @@ void main() {
     );
   });
 
-  test('glass shadows stay outside the translucent fill', () {
-    // An inner shadow would show through the white and grey the card.
+  test('glass fills let the background through, like Stitch', () {
+    expect(GlassLevel.subtle.alpha, lessThanOrEqualTo(0.15));
+    expect(GlassLevel.regular.alpha, lessThanOrEqualTo(0.3));
+    // Text-heavy surfaces stay readable but are still glass.
+    expect(GlassLevel.solid.alpha, inInclusiveRange(0.45, 0.65));
+  });
+
+  test('the decoration itself draws no shadow under the translucent fill', () {
+    // GlassCard paints its shadow with the card cut out (as CSS does); a
+    // BoxShadow would show through the glass and grey it.
     for (final level in GlassLevel.values) {
-      final shadows = glassDecoration(level: level).boxShadow!;
-      expect(shadows.map((s) => s.blurStyle), everyElement(BlurStyle.outer));
+      expect(glassDecoration(level: level).boxShadow, isNull);
     }
+  });
+
+  testWidgets('GlassCard paints a cut-out shadow behind itself', (t) async {
+    await t.pumpWidget(const MaterialApp(home: GlassCard(child: Text('card'))));
+    expect(
+      find.descendant(
+        of: find.byType(GlassCard),
+        matching: find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is GlassShadowPainter,
+        ),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('GlassCard is tappable only with onTap', (t) async {

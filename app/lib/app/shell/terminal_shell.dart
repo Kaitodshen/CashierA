@@ -219,7 +219,7 @@ class _TopBar extends ConsumerWidget {
       borderRadius: BorderRadius.zero,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.white.withValues(alpha: 0.45),
+          color: AppColors.white.withValues(alpha: 0.18),
           border: Border(
             bottom: BorderSide(color: AppColors.white.withValues(alpha: 0.7)),
           ),

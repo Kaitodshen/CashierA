@@ -194,7 +194,7 @@ class AppSidebar extends StatelessWidget {
       duration: AppMotion.normal,
       width: collapsed ? SidebarWidth.collapsed : SidebarWidth.expanded,
       decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.35),
+        color: AppColors.white.withValues(alpha: 0.16),
         border: Border(
           right: BorderSide(color: AppColors.white.withValues(alpha: 0.7)),
         ),

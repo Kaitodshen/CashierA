@@ -68,7 +68,7 @@ abstract final class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        color: AppColors.white.withValues(alpha: 0.72),
+        color: AppColors.white.withValues(alpha: 0.22),
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: EdgeInsets.zero,
@@ -96,8 +96,8 @@ abstract final class AppTheme {
         style: OutlinedButton.styleFrom(
           minimumSize: minSize,
           shape: controlShape,
-          backgroundColor: AppColors.white.withValues(alpha: 0.8),
-          side: const BorderSide(color: AppColors.hairline),
+          backgroundColor: AppColors.white.withValues(alpha: 0.3),
+          side: BorderSide(color: AppColors.white.withValues(alpha: 0.8)),
           foregroundColor: AppColors.textSecondary,
           textStyle: labelStyle,
         ),
@@ -114,17 +114,17 @@ abstract final class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.white,
+        fillColor: AppColors.white.withValues(alpha: 0.5),
         hintStyle: const TextStyle(color: AppColors.textMuted),
-        border: inputBorder(AppColors.hairline),
-        enabledBorder: inputBorder(AppColors.hairline),
+        border: inputBorder(AppColors.white.withValues(alpha: 0.85)),
+        enabledBorder: inputBorder(AppColors.white.withValues(alpha: 0.85)),
         focusedBorder: inputBorder(AppColors.primary, 2),
         errorBorder: inputBorder(AppColors.error),
         focusedErrorBorder: inputBorder(AppColors.error, 2),
       ),
       dividerTheme: const DividerThemeData(color: AppColors.hairline, space: 1),
       chipTheme: ChipThemeData(
-        backgroundColor: AppColors.white.withValues(alpha: 0.8),
+        backgroundColor: AppColors.white.withValues(alpha: 0.3),
         selectedColor: AppColors.primary,
         secondarySelectedColor: AppColors.primary,
         labelStyle: const TextStyle(
@@ -137,20 +137,20 @@ abstract final class AppTheme {
           fontWeight: FontWeight.w600,
           color: AppColors.white,
         ),
-        side: const BorderSide(color: AppColors.hairline),
+        side: BorderSide(color: AppColors.white.withValues(alpha: 0.8)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.pill),
         ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.white.withValues(alpha: 0.92),
+        backgroundColor: AppColors.white.withValues(alpha: 0.78),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.card),
         ),
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: AppColors.white.withValues(alpha: 0.92),
+        backgroundColor: AppColors.white.withValues(alpha: 0.78),
         surfaceTintColor: Colors.transparent,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -177,7 +177,7 @@ abstract final class AppTheme {
         textColor: AppColors.text,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.white.withValues(alpha: 0.92),
+        backgroundColor: AppColors.white.withValues(alpha: 0.45),
         indicatorColor: AppColors.primarySoft,
         surfaceTintColor: Colors.transparent,
         labelTextStyle: const WidgetStatePropertyAll(

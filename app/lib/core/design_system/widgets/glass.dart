@@ -5,19 +5,22 @@ import 'package:cashiera/core/design_system/visual_effects.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// How opaque a glass surface is. Text-heavy surfaces use [solid].
+/// How much white a glass surface adds over the background. Stitch uses
+/// 9–18 %; text-heavy surfaces (cart, tables, forms) use [solid] so they stay
+/// readable under bright store lighting.
 enum GlassLevel {
-  subtle(0.45),
-  regular(0.72),
-  solid(0.92);
+  subtle(0.12),
+  regular(0.22),
+  solid(0.55);
 
   new(this.alpha);
   final double alpha;
 }
 
-/// A translucent white card with a bright edge, a top highlight and a soft
-/// shadow. No blur: over the soft background it looks the same and costs
-/// nothing per frame.
+/// Frosted glass: a translucent white gradient (brighter at the top left),
+/// a bright edge, a 1 px top highlight and a rose-tinted shadow painted only
+/// outside the card. No blur filter: over the soft background it looks the
+/// same and costs nothing per frame.
 class GlassCard extends StatelessWidget {
   const new({
     required this.child,
@@ -44,46 +47,89 @@ class GlassCard extends StatelessWidget {
         child: InkWell(borderRadius: shape, onTap: onTap, child: content),
       );
     }
-    return DecoratedBox(
-      decoration: glassDecoration(level: level, radius: radius),
-      child: ClipRRect(
-        borderRadius: shape,
-        child: Stack(
-          children: [
-            content,
-            // The 1 px highlight along the top edge.
-            Positioned(
-              left: radius / 2,
-              right: radius / 2,
-              top: 0,
-              height: 1,
-              child: ColoredBox(color: AppColors.white.withValues(alpha: 0.9)),
-            ),
-          ],
+    return CustomPaint(
+      painter: GlassShadowPainter(radius: radius),
+      child: DecoratedBox(
+        decoration: glassDecoration(level: level, radius: radius),
+        child: ClipRRect(
+          borderRadius: shape,
+          child: Stack(
+            children: [
+              content,
+              // The 1 px highlight along the top edge (CSS: inset 0 1px 1px).
+              Positioned(
+                left: radius / 2,
+                right: radius / 2,
+                top: 0,
+                height: 1,
+                child: ColoredBox(
+                  color: AppColors.white.withValues(alpha: 0.9),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-/// The glass look as a decoration, for widgets that draw their own box.
+/// The frosted fill and bright edge of glass, for widgets that draw their own
+/// box. Carries no shadow: a BoxShadow would show through the glass.
 BoxDecoration glassDecoration({
   GlassLevel level = GlassLevel.regular,
   double radius = AppRadius.card,
 }) => BoxDecoration(
-  color: AppColors.white.withValues(alpha: level.alpha),
+  gradient: LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      AppColors.white.withValues(alpha: (level.alpha * 1.8).clamp(0, 0.85)),
+      AppColors.white.withValues(alpha: level.alpha * 0.6),
+    ],
+  ),
   borderRadius: BorderRadius.circular(radius),
-  border: Border.all(color: AppColors.white.withValues(alpha: 0.6)),
-  boxShadow: [
-    BoxShadow(
-      color: AppColors.text.withValues(alpha: 0.08),
-      blurRadius: 30,
-      offset: const Offset(0, 10),
-      // Outside only: an inner shadow would grey the translucent fill.
-      blurStyle: BlurStyle.outer,
-    ),
-  ],
+  border: Border.all(color: AppColors.white.withValues(alpha: 0.55)),
 );
+
+/// A soft rose shadow around a rounded rectangle, with the rectangle itself
+/// cut out, as a CSS box-shadow behaves. Nothing is drawn under the glass.
+class GlassShadowPainter extends CustomPainter {
+  const new({required this.radius, this.blur = 28, this.dy = 10});
+
+  final double radius;
+  final double blur;
+  final double dy;
+
+  /// Stitch's `shadow-rose-950`, faint.
+  static const color = Color(0x14881337);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final box = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      Radius.circular(radius),
+    );
+    final outside = Path()
+      ..fillType = PathFillType.evenOdd
+      ..addRect(box.outerRect.inflate(blur * 3))
+      ..addRRect(box);
+    canvas
+      ..save()
+      ..clipPath(outside)
+      ..drawRRect(
+        box.shift(Offset(0, dy)),
+        Paint()
+          ..color = color
+          ..maskFilter = MaskFilter.blur(BlurStyle.normal, blur / 2),
+      )
+      ..restore();
+  }
+
+  @override
+  bool shouldRepaint(GlassShadowPainter old) =>
+      old.radius != radius || old.blur != blur || old.dy != dy;
+}
 
 /// A small glass pill for status and quick actions (Held Orders, Lock, …).
 class GlassPill extends StatelessWidget {
@@ -99,34 +145,25 @@ class GlassPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final shape = BorderRadius.circular(AppRadius.pill);
     final color = tint ?? AppColors.text;
-    final pill = DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.8),
-        borderRadius: shape,
-        border: Border.all(color: AppColors.white.withValues(alpha: 0.7)),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.text.withValues(alpha: 0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-            blurStyle: BlurStyle.outer,
-          ),
-        ],
-      ),
-      child: SizedBox(
-        height: 40,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: IconTheme.merge(
-            data: IconThemeData(color: color, size: 18),
-            child: DefaultTextStyle.merge(
-              style: TextStyle(
-                fontFamily: AppFonts.label,
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-                color: color,
+    final pill = CustomPaint(
+      painter: const GlassShadowPainter(radius: 20, blur: 14, dy: 4),
+      child: DecoratedBox(
+        decoration: glassDecoration(level: GlassLevel.regular, radius: 20),
+        child: SizedBox(
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+            child: IconTheme.merge(
+              data: IconThemeData(color: color, size: 18),
+              child: DefaultTextStyle.merge(
+                style: TextStyle(
+                  fontFamily: AppFonts.label,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: color,
+                ),
+                child: Center(widthFactor: 1, child: child),
               ),
-              child: Center(widthFactor: 1, child: child),
             ),
           ),
         ),
