@@ -894,5 +894,21 @@
   "gatewayUnmatchedHint": "The customer paid but no sale booked it (the bill was left unfinished). Finish the bill on the terminal, or refund it from the Midtrans dashboard.",
   "gatewayEmpty": "No QRIS payments in this period.",
   "gatewayUnmatched": "Paid, no sale",
-  "gatewayStatus": "{status, select, pending{Waiting} paid{Paid} failed{Failed} expired{Expired} cancelled{Cancelled} other{{status}}}"
+  "gatewayStatus": "{status, select, pending{Waiting} paid{Paid} failed{Failed} expired{Expired} cancelled{Cancelled} other{{status}}}",
+  "navRegister": "Register & Checkout",
+  "navRegisterShort": "Register",
+  "sectionOverview": "Overview",
+  "sectionCatalog": "Catalog",
+  "sectionSales": "Sales",
+  "sectionMembers": "Members",
+  "sectionSettings": "Settings",
+  "shellRetailPos": "Retail POS",
+  "shellTagline": "Retail Point of Sale",
+  "shellHeldOrders": "Held orders",
+  "shellKitchen": "Kitchen",
+  "shellLock": "Lock",
+  "shellCollapse": "Collapse menu",
+  "shellExpand": "Expand menu",
+  "shellMore": "More",
+  "shellSearchHint": "Scan barcode or search SKU / item"
 }

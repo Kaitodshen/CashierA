@@ -5467,6 +5467,102 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'{status, select, pending{Menunggu} paid{Dibayar} failed{Gagal} expired{Kedaluwarsa} cancelled{Dibatalkan} other{{status}}}'**
   String gatewayStatus(String status);
+
+  /// No description provided for @navRegister.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasir & Pembayaran'**
+  String get navRegister;
+
+  /// No description provided for @navRegisterShort.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasir'**
+  String get navRegisterShort;
+
+  /// No description provided for @sectionOverview.
+  ///
+  /// In id, this message translates to:
+  /// **'Ringkasan'**
+  String get sectionOverview;
+
+  /// No description provided for @sectionCatalog.
+  ///
+  /// In id, this message translates to:
+  /// **'Katalog'**
+  String get sectionCatalog;
+
+  /// No description provided for @sectionSales.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan'**
+  String get sectionSales;
+
+  /// No description provided for @sectionMembers.
+  ///
+  /// In id, this message translates to:
+  /// **'Member'**
+  String get sectionMembers;
+
+  /// No description provided for @sectionSettings.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengaturan'**
+  String get sectionSettings;
+
+  /// No description provided for @shellRetailPos.
+  ///
+  /// In id, this message translates to:
+  /// **'POS Ritel'**
+  String get shellRetailPos;
+
+  /// No description provided for @shellTagline.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasir Ritel'**
+  String get shellTagline;
+
+  /// No description provided for @shellHeldOrders.
+  ///
+  /// In id, this message translates to:
+  /// **'Pesanan ditahan'**
+  String get shellHeldOrders;
+
+  /// No description provided for @shellKitchen.
+  ///
+  /// In id, this message translates to:
+  /// **'Dapur'**
+  String get shellKitchen;
+
+  /// No description provided for @shellLock.
+  ///
+  /// In id, this message translates to:
+  /// **'Kunci'**
+  String get shellLock;
+
+  /// No description provided for @shellCollapse.
+  ///
+  /// In id, this message translates to:
+  /// **'Ciutkan menu'**
+  String get shellCollapse;
+
+  /// No description provided for @shellExpand.
+  ///
+  /// In id, this message translates to:
+  /// **'Lebarkan menu'**
+  String get shellExpand;
+
+  /// No description provided for @shellMore.
+  ///
+  /// In id, this message translates to:
+  /// **'Lainnya'**
+  String get shellMore;
+
+  /// No description provided for @shellSearchHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Pindai barcode atau cari SKU / barang'**
+  String get shellSearchHint;
 }
 
 class _AppLocalizationsDelegate

@@ -3209,4 +3209,52 @@ class AppLocalizationsId extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get navRegister => 'Kasir & Pembayaran';
+
+  @override
+  String get navRegisterShort => 'Kasir';
+
+  @override
+  String get sectionOverview => 'Ringkasan';
+
+  @override
+  String get sectionCatalog => 'Katalog';
+
+  @override
+  String get sectionSales => 'Penjualan';
+
+  @override
+  String get sectionMembers => 'Member';
+
+  @override
+  String get sectionSettings => 'Pengaturan';
+
+  @override
+  String get shellRetailPos => 'POS Ritel';
+
+  @override
+  String get shellTagline => 'Kasir Ritel';
+
+  @override
+  String get shellHeldOrders => 'Pesanan ditahan';
+
+  @override
+  String get shellKitchen => 'Dapur';
+
+  @override
+  String get shellLock => 'Kunci';
+
+  @override
+  String get shellCollapse => 'Ciutkan menu';
+
+  @override
+  String get shellExpand => 'Lebarkan menu';
+
+  @override
+  String get shellMore => 'Lainnya';
+
+  @override
+  String get shellSearchHint => 'Pindai barcode atau cari SKU / barang';
 }

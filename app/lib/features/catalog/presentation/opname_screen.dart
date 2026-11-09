@@ -8,7 +8,6 @@ import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
 import 'package:cashiera/features/catalog/presentation/catalog_providers.dart';
-import 'package:cashiera/features/pos_home/presentation/widgets/terminal_status_chip.dart';
 import 'package:cashiera_core/cashiera_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -109,12 +108,7 @@ class _OpnameScreenState extends ConsumerState<OpnameScreen> {
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.go(AppRoutes.catalog)),
         title: Text(l10n.opnameTitle),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            child: TerminalStatusChip(),
-          ),
-        ],
+        actions: const [],
       ),
       body: Column(
         children: [

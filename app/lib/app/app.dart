@@ -1,5 +1,6 @@
 import 'package:cashiera/app/router.dart';
 import 'package:cashiera/core/design_system/theme.dart';
+import 'package:cashiera/core/design_system/widgets/app_background.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,7 @@ class CashierApp extends ConsumerWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(),
         routerConfig: ref.watch(routerProvider),
+        builder: (context, child) => AppBackground(child: child!),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         // Bahasa Indonesia unless the device is set to English.

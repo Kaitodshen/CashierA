@@ -9,7 +9,6 @@ import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
 import 'package:cashiera/features/catalog/presentation/catalog_providers.dart';
 import 'package:cashiera/features/catalog/presentation/stock_adjust_dialog.dart';
-import 'package:cashiera/features/pos_home/presentation/widgets/terminal_status_chip.dart';
 import 'package:cashiera_core/cashiera_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,10 +85,6 @@ class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
         leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
         title: Text(l10n.catalogTitle),
         actions: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            child: TerminalStatusChip(),
-          ),
           if (staff?.can('inventory.opname') ?? false)
             TextButton.icon(
               onPressed: () => context.go(AppRoutes.opname),

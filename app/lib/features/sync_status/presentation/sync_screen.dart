@@ -6,7 +6,6 @@ import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/sync/sync_item.dart';
-import 'package:cashiera/features/pos_home/presentation/widgets/terminal_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -42,10 +41,6 @@ class SyncScreen extends ConsumerWidget {
         leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
         title: Text(l10n.syncTitle),
         actions: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            child: TerminalStatusChip(),
-          ),
           IconButton(
             key: const Key('sync-now'),
             tooltip: l10n.syncNow,

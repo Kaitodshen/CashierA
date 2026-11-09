@@ -7,7 +7,6 @@ import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
 import 'package:cashiera/core/providers.dart';
-import 'package:cashiera/features/pos_home/presentation/widgets/terminal_status_chip.dart';
 import 'package:cashiera/features/printing/print_actions.dart';
 import 'package:cashiera/features/sell/presentation/sell_dialogs.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
@@ -191,12 +190,7 @@ class ShiftScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
         title: Text(l10n.shiftTitle),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            child: TerminalStatusChip(),
-          ),
-        ],
+        actions: const [],
       ),
       body: Center(
         child: ConstrainedBox(

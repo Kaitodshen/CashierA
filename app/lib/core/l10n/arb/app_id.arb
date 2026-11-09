@@ -2354,5 +2354,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "navRegister": "Kasir & Pembayaran",
+  "navRegisterShort": "Kasir",
+  "sectionOverview": "Ringkasan",
+  "sectionCatalog": "Katalog",
+  "sectionSales": "Penjualan",
+  "sectionMembers": "Member",
+  "sectionSettings": "Pengaturan",
+  "shellRetailPos": "POS Ritel",
+  "shellTagline": "Kasir Ritel",
+  "shellHeldOrders": "Pesanan ditahan",
+  "shellKitchen": "Dapur",
+  "shellLock": "Kunci",
+  "shellCollapse": "Ciutkan menu",
+  "shellExpand": "Lebarkan menu",
+  "shellMore": "Lainnya",
+  "shellSearchHint": "Pindai barcode atau cari SKU / barang"
 }

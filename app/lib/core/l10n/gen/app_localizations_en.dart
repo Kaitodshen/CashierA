@@ -3254,4 +3254,52 @@ class AppLocalizationsEn extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get navRegister => 'Register & Checkout';
+
+  @override
+  String get navRegisterShort => 'Register';
+
+  @override
+  String get sectionOverview => 'Overview';
+
+  @override
+  String get sectionCatalog => 'Catalog';
+
+  @override
+  String get sectionSales => 'Sales';
+
+  @override
+  String get sectionMembers => 'Members';
+
+  @override
+  String get sectionSettings => 'Settings';
+
+  @override
+  String get shellRetailPos => 'Retail POS';
+
+  @override
+  String get shellTagline => 'Retail Point of Sale';
+
+  @override
+  String get shellHeldOrders => 'Held orders';
+
+  @override
+  String get shellKitchen => 'Kitchen';
+
+  @override
+  String get shellLock => 'Lock';
+
+  @override
+  String get shellCollapse => 'Collapse menu';
+
+  @override
+  String get shellExpand => 'Expand menu';
+
+  @override
+  String get shellMore => 'More';
+
+  @override
+  String get shellSearchHint => 'Scan barcode or search SKU / item';
 }

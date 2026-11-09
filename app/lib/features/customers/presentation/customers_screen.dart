@@ -10,7 +10,6 @@ import 'package:cashiera/core/pos/pos_services.dart';
 import 'package:cashiera/core/printing/slips.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/features/customers/presentation/customer_providers.dart';
-import 'package:cashiera/features/pos_home/presentation/widgets/terminal_status_chip.dart';
 import 'package:cashiera/features/printing/print_actions.dart';
 import 'package:cashiera/features/sell/presentation/refund_screen.dart';
 import 'package:cashiera/features/sell/presentation/sell_dialogs.dart';
@@ -144,12 +143,7 @@ class _CustomersScreenState extends ConsumerState<CustomersScreen> {
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
         title: Text(l10n.customersTitle),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            child: TerminalStatusChip(),
-          ),
-        ],
+        actions: const [],
       ),
       floatingActionButton: canAdd ?? false
           ? FloatingActionButton.extended(

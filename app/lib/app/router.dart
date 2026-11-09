@@ -1,4 +1,5 @@
 import 'package:cashiera/app/app_mode.dart';
+import 'package:cashiera/app/shell/terminal_shell.dart';
 import 'package:cashiera/core/session/session_controller.dart';
 import 'package:cashiera/features/back_office/presentation/admin_customers_screen.dart';
 import 'package:cashiera/features/back_office/presentation/admin_kasbon_screen.dart';
@@ -29,7 +30,6 @@ import 'package:cashiera/features/fnb/kitchen_screen.dart';
 import 'package:cashiera/features/fnb/tables_screen.dart';
 import 'package:cashiera/features/pairing/presentation/pairing_screen.dart';
 import 'package:cashiera/features/pin_login/presentation/pin_lock_screen.dart';
-import 'package:cashiera/features/pos_home/presentation/pos_home_screen.dart';
 import 'package:cashiera/features/printing/printer_screen.dart';
 import 'package:cashiera/features/reports/presentation/reports_screen.dart';
 import 'package:cashiera/features/sell/presentation/orders_screen.dart';
@@ -77,59 +77,80 @@ GoRouter router(Ref ref) {
       ),
       GoRoute(path: AppRoutes.pair, builder: (_, _) => const PairingScreen()),
       GoRoute(path: AppRoutes.lock, builder: (_, _) => const PinLockScreen()),
-      GoRoute(path: AppRoutes.pos, builder: (_, _) => const PosHomeScreen()),
-      GoRoute(
-        path: AppRoutes.catalog,
-        builder: (_, _) => const CatalogBrowserScreen(),
+      // The old home cards are gone: the terminal lands on Register.
+      GoRoute(path: AppRoutes.pos, redirect: (_, _) => AppRoutes.sell),
+      ShellRoute(
+        builder: (_, _, child) => TerminalShell(child: child),
+        routes: [
+          GoRoute(
+            path: AppRoutes.catalog,
+            builder: (_, _) => const CatalogBrowserScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.opname,
+            builder: (_, _) => const OpnameScreen(),
+          ),
+          GoRoute(path: AppRoutes.sell, builder: (_, _) => const SellScreen()),
+          GoRoute(
+            path: AppRoutes.pay,
+            builder: (_, _) => const PaymentScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.orders,
+            builder: (_, _) => const OrdersScreen(),
+          ),
+          GoRoute(
+            path: '/pos/receipt/:id',
+            builder: (_, state) => ReceiptScreen(
+              key: ValueKey(state.uri.toString()),
+              orderId: state.pathParameters['id']!,
+              justSold: state.uri.queryParameters['sale'] == '1',
+            ),
+          ),
+          GoRoute(
+            path: '/pos/refund/:id',
+            builder: (_, state) =>
+                RefundScreen(orderId: state.pathParameters['id']!),
+          ),
+          GoRoute(
+            path: AppRoutes.shift,
+            builder: (_, _) => const ShiftScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.shiftClose,
+            builder: (_, _) => const CloseShiftScreen(),
+          ),
+          GoRoute(
+            path: '/pos/shift/report/:id',
+            builder: (_, state) =>
+                ShiftReportScreen(shiftId: state.pathParameters['id']!),
+          ),
+          GoRoute(
+            path: AppRoutes.printer,
+            builder: (_, _) => const PrinterScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.tables,
+            builder: (_, _) => const TablesScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.kitchen,
+            builder: (_, _) => const KitchenScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.customers,
+            builder: (_, _) => const CustomersScreen(),
+          ),
+          GoRoute(
+            path: '${AppRoutes.customers}/:id',
+            builder: (_, state) => CustomerDetailScreen(
+              key: ValueKey(state.pathParameters['id']),
+              customerId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(path: AppRoutes.sync, builder: (_, _) => const SyncScreen()),
+        ],
       ),
-      GoRoute(path: AppRoutes.opname, builder: (_, _) => const OpnameScreen()),
-      GoRoute(path: AppRoutes.sell, builder: (_, _) => const SellScreen()),
-      GoRoute(path: AppRoutes.pay, builder: (_, _) => const PaymentScreen()),
-      GoRoute(path: AppRoutes.orders, builder: (_, _) => const OrdersScreen()),
-      GoRoute(
-        path: '/pos/receipt/:id',
-        builder: (_, state) => ReceiptScreen(
-          key: ValueKey(state.uri.toString()),
-          orderId: state.pathParameters['id']!,
-          justSold: state.uri.queryParameters['sale'] == '1',
-        ),
-      ),
-      GoRoute(
-        path: '/pos/refund/:id',
-        builder: (_, state) =>
-            RefundScreen(orderId: state.pathParameters['id']!),
-      ),
-      GoRoute(path: AppRoutes.shift, builder: (_, _) => const ShiftScreen()),
-      GoRoute(
-        path: AppRoutes.shiftClose,
-        builder: (_, _) => const CloseShiftScreen(),
-      ),
-      GoRoute(
-        path: '/pos/shift/report/:id',
-        builder: (_, state) =>
-            ShiftReportScreen(shiftId: state.pathParameters['id']!),
-      ),
-      GoRoute(
-        path: AppRoutes.printer,
-        builder: (_, _) => const PrinterScreen(),
-      ),
-      GoRoute(path: AppRoutes.tables, builder: (_, _) => const TablesScreen()),
-      GoRoute(
-        path: AppRoutes.kitchen,
-        builder: (_, _) => const KitchenScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.customers,
-        builder: (_, _) => const CustomersScreen(),
-      ),
-      GoRoute(
-        path: '${AppRoutes.customers}/:id',
-        builder: (_, state) => CustomerDetailScreen(
-          key: ValueKey(state.pathParameters['id']),
-          customerId: state.pathParameters['id']!,
-        ),
-      ),
-      GoRoute(path: AppRoutes.sync, builder: (_, _) => const SyncScreen()),
       GoRoute(
         path: AppRoutes.adminSignIn,
         builder: (_, _) => const SignInScreen(),

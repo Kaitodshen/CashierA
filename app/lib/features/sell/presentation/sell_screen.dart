@@ -9,7 +9,6 @@ import 'package:cashiera/core/pos/money_input.dart';
 import 'package:cashiera/core/pos/pos_services.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
-import 'package:cashiera/features/pos_home/presentation/widgets/terminal_status_chip.dart';
 import 'package:cashiera/features/sell/presentation/cart_panel.dart';
 import 'package:cashiera/features/sell/presentation/sell_dialogs.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
@@ -18,8 +17,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Below this width the bill moves into a sheet behind a bottom bar.
-const _twoPaneWidth = 900.0;
+/// Below this content width the bill moves into a sheet behind a bottom bar.
+/// Measured inside the terminal shell, so a 1280 px tablet (1040 px next to
+/// the sidebar) keeps both panes.
+const _twoPaneWidth = 760.0;
 
 /// Category filter value for the store's favorites.
 const favoritesFilter = '__favorites__';
@@ -102,12 +103,11 @@ class SellScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final shift = ref.watch(openShiftProvider);
     final held = ref.watch(heldOrdersProvider).value?.length ?? 0;
-    final wide = MediaQuery.sizeOf(context).width >= _twoPaneWidth;
 
     final body = switch (shift) {
       AsyncData(value: null) => const _OpenShiftPanel(),
-      AsyncData() =>
-        wide
+      AsyncData() => LayoutBuilder(
+        builder: (context, c) => c.maxWidth >= _twoPaneWidth
             ? const Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -122,6 +122,7 @@ class SellScreen extends ConsumerWidget {
                   _CartBar(),
                 ],
               ),
+      ),
       AsyncError(:final error) => Center(
         child: Text(l10n.commonError('$error')),
       ),
@@ -142,10 +143,6 @@ class SellScreen extends ConsumerWidget {
               label: Text('$held'),
               child: const Icon(Icons.receipt_long_outlined),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            child: TerminalStatusChip(),
           ),
         ],
       ),
