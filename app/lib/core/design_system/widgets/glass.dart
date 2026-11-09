@@ -148,7 +148,7 @@ class GlassPill extends StatelessWidget {
     final pill = CustomPaint(
       painter: const GlassShadowPainter(radius: 20, blur: 14, dy: 4),
       child: DecoratedBox(
-        decoration: glassDecoration(level: GlassLevel.regular, radius: 20),
+        decoration: glassDecoration(radius: 20),
         child: SizedBox(
           height: 40,
           child: Padding(
