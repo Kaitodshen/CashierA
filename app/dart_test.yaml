@@ -1,0 +1,6 @@
+# Screenshot tests render real fonts and write PNGs for design review; they
+# are skipped in the normal run. Generate them with:
+#   flutter test --run-skipped --tags screenshots --update-goldens test/screenshots
+tags:
+  screenshots:
+    skip: "Design review screenshots: run with --run-skipped --tags screenshots"

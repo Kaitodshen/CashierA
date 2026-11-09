@@ -1,5 +1,6 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/theme.dart';
+import 'package:cashiera/core/design_system/visual_effects.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/presentation/admin_nav.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shell.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 Widget shell() => ProviderScope(
+  overrides: [visualEffectsProvider.overrideWith((ref) => Stream.value(true))],
   child: MaterialApp.router(
     theme: AppTheme.light(),
     locale: const Locale('en'),

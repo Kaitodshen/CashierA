@@ -79,6 +79,8 @@ BoxDecoration glassDecoration({
       color: AppColors.text.withValues(alpha: 0.08),
       blurRadius: 30,
       offset: const Offset(0, 10),
+      // Outside only: an inner shadow would grey the translucent fill.
+      blurStyle: BlurStyle.outer,
     ),
   ],
 );
@@ -107,6 +109,7 @@ class GlassPill extends StatelessWidget {
             color: AppColors.text.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 4),
+            blurStyle: BlurStyle.outer,
           ),
         ],
       ),

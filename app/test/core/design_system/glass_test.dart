@@ -54,6 +54,14 @@ void main() {
     );
   });
 
+  test('glass shadows stay outside the translucent fill', () {
+    // An inner shadow would show through the white and grey the card.
+    for (final level in GlassLevel.values) {
+      final shadows = glassDecoration(level: level).boxShadow!;
+      expect(shadows.map((s) => s.blurStyle), everyElement(BlurStyle.outer));
+    }
+  });
+
   testWidgets('GlassCard is tappable only with onTap', (t) async {
     var taps = 0;
     await t.pumpWidget(
