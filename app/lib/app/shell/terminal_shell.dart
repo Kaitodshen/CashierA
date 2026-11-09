@@ -1,8 +1,10 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/app/shell/sidebar.dart';
 import 'package:cashiera/app/shell/terminal_nav.dart';
+import 'package:cashiera/app/shell/terminal_search.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
 import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/inputs.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
@@ -231,6 +233,14 @@ class _TopBar extends ConsumerWidget {
       ),
     );
 
+    // One search-and-scan field for Register and Catalog; keyed per screen
+    // so each starts empty.
+    final searchKey = !showsSearch(location)
+        ? null
+        : location == AppRoutes.sell
+        ? 'sell-search'
+        : 'catalog-search';
+
     return GlassBlur(
       borderRadius: BorderRadius.zero,
       child: Container(
@@ -254,26 +264,41 @@ class _TopBar extends ConsumerWidget {
                 final roomy = c.maxWidth >= 900;
                 return Row(
                   children: [
-                    // The top-bar search arrives with the phase 2 Register and
-                    // Catalog screens (terminalSearchQueryProvider); until
-                    // then their own fields are used, so none is shown here.
-                    Expanded(
-                      child: Text(
-                        [
-                          l10n.shellRetailPos.toUpperCase(),
-                          ?storeName,
-                        ].join(' • '),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontFamily: AppFonts.label,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                          letterSpacing: 0.6,
-                          color: AppColors.text,
+                    if (!(compact && searchKey != null))
+                      Expanded(
+                        child: Text(
+                          [
+                            l10n.shellRetailPos.toUpperCase(),
+                            ?storeName,
+                          ].join(' • '),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontFamily: AppFonts.label,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                            letterSpacing: 0.6,
+                            color: AppColors.text,
+                          ),
                         ),
                       ),
-                    ),
+                    if (searchKey != null) ...[
+                      const SizedBox(width: AppSpacing.lg),
+                      Expanded(
+                        flex: 2,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 440),
+                            child: _TopSearchField(
+                              key: ValueKey('top-$searchKey'),
+                              fieldKey: Key(searchKey),
+                              autofocus: location == AppRoutes.sell,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                     const SizedBox(width: AppSpacing.md),
                     if (roomy) ...[
                       if (fnb) ...[
@@ -416,6 +441,62 @@ class _BottomBar extends ConsumerWidget {
             label: _label(l10n, s, short: true),
           ),
       ],
+    );
+  }
+}
+
+/// The top-bar field. Typing updates [terminalSearchProvider]; Enter (a
+/// scanner) submits and keeps focus for the next scan. Clears itself when
+/// the screen clears the query, and starts empty on every screen.
+class _TopSearchField extends ConsumerStatefulWidget {
+  const new({required this.fieldKey, required this.autofocus, super.key});
+
+  final Key fieldKey;
+  final bool autofocus;
+
+  @override
+  ConsumerState<_TopSearchField> createState() => _TopSearchFieldState();
+}
+
+class _TopSearchFieldState extends ConsumerState<_TopSearchField> {
+  final _controller = TextEditingController();
+  final _focus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // A new screen never inherits the previous screen's query.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(terminalSearchProvider.notifier).clear();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(terminalSearchProvider, (_, next) {
+      if (next.query.isEmpty && _controller.text.isNotEmpty) {
+        _controller.clear();
+      }
+    });
+    final notifier = ref.read(terminalSearchProvider.notifier);
+    return SearchScanField(
+      key: widget.fieldKey,
+      controller: _controller,
+      focusNode: _focus,
+      autofocus: widget.autofocus,
+      hint: context.l10n.shellSearchHint,
+      onChanged: notifier.type,
+      onSubmitted: (text) {
+        notifier.submit(text);
+        _focus.requestFocus();
+      },
     );
   }
 }

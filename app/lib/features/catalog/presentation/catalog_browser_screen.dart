@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cashiera/app/app_mode.dart';
+import 'package:cashiera/app/shell/terminal_search.dart';
 import 'package:cashiera/core/catalog/catalog_item.dart';
 import 'package:cashiera/core/catalog/catalog_sync.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
@@ -27,12 +30,13 @@ class CatalogBrowserScreen extends ConsumerStatefulWidget {
 }
 
 class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
-  final _search = TextEditingController();
-
   @override
-  void dispose() {
-    _search.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    // The list follows the top-bar field, which starts empty here.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(catalogQueryProvider.notifier).setSearch('');
+    });
   }
 
   /// Barcode scanners type the code and press Enter: open the exact match.
@@ -46,8 +50,7 @@ class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
       }
       return;
     }
-    _search.clear();
-    ref.read(catalogQueryProvider.notifier).setSearch('');
+    ref.read(terminalSearchProvider.notifier).clear();
     await _openItem(item);
   }
 
@@ -72,6 +75,15 @@ class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // The top-bar field: typing filters, Enter (a scanner) opens the item.
+    ref.listen(terminalSearchProvider, (previous, next) {
+      if (next.query != previous?.query) {
+        ref.read(catalogQueryProvider.notifier).setSearch(next.query);
+      }
+      if (next.submissions != previous?.submissions) {
+        unawaited(_onSubmitted(next.lastSubmitted));
+      }
+    });
     final locale = Localizations.localeOf(context).toLanguageTag();
     final items = ref.watch(catalogItemsProvider);
     final categories = ref.watch(catalogCategoriesProvider).value ?? const [];
@@ -109,26 +121,6 @@ class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              AppSpacing.lg,
-              AppSpacing.lg,
-              AppSpacing.sm,
-            ),
-            child: TextField(
-              key: const Key('catalog-search'),
-              controller: _search,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: l10n.catalogSearchHint,
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: const Icon(Icons.qr_code_scanner),
-              ),
-              onChanged: ref.read(catalogQueryProvider.notifier).setSearch,
-              onSubmitted: _onSubmitted,
-            ),
-          ),
           SizedBox(
             height: AppSizes.minTouch + AppSpacing.sm,
             child: ListView(

@@ -1,15 +1,37 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// What is typed or scanned into the top-bar search field. Register and
-/// Catalog read it.
-class TerminalSearchQuery extends Notifier<String> {
+/// What is typed or scanned into the top-bar field: the live `query` and
+/// every Enter (`submissions` counts them so the same code twice still
+/// fires).
+typedef TerminalSearchState = ({
+  String query,
+  int submissions,
+  String lastSubmitted,
+});
+
+/// The one search-and-scan field of Register and Catalog, in the top bar.
+class TerminalSearch extends Notifier<TerminalSearchState> {
   @override
-  String build() => '';
+  TerminalSearchState build() => (query: '', submissions: 0, lastSubmitted: '');
 
-  String get query => state;
+  void type(String text) => state = (
+    query: text,
+    submissions: state.submissions,
+    lastSubmitted: state.lastSubmitted,
+  );
 
-  set query(String value) => state = value;
+  void submit(String text) => state = (
+    query: text,
+    submissions: state.submissions + 1,
+    lastSubmitted: text,
+  );
+
+  void clear() => state = (
+    query: '',
+    submissions: state.submissions,
+    lastSubmitted: state.lastSubmitted,
+  );
 }
 
-final terminalSearchQueryProvider =
-    NotifierProvider<TerminalSearchQuery, String>(TerminalSearchQuery.new);
+final terminalSearchProvider =
+    NotifierProvider<TerminalSearch, TerminalSearchState>(TerminalSearch.new);

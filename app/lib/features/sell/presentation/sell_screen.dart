@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cashiera/app/app_mode.dart';
+import 'package:cashiera/app/shell/terminal_search.dart';
 import 'package:cashiera/core/catalog/catalog_item.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
@@ -159,14 +162,13 @@ class _ProductPane extends ConsumerStatefulWidget {
 }
 
 class _ProductPaneState extends ConsumerState<_ProductPane> {
-  final _search = TextEditingController();
-  final _focus = FocusNode();
-
   @override
-  void dispose() {
-    _search.dispose();
-    _focus.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    // The grid follows the top-bar field, which starts empty here.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(sellQueryProvider.notifier).setSearch('');
+    });
   }
 
   /// A scanner types the code and Enter: add that item straight away.
@@ -179,15 +181,23 @@ class _ProductPaneState extends ConsumerState<_ProductPane> {
       AppToast.error(context, context.l10n.sellNotFound(code));
     } else {
       await addToCart(context, ref, item);
-      _search.clear();
-      ref.read(sellQueryProvider.notifier).setSearch('');
+      if (!mounted) return;
+      ref.read(terminalSearchProvider.notifier).clear();
     }
-    _focus.requestFocus();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // The top-bar field: typing filters, Enter (a scanner) adds the item.
+    ref.listen(terminalSearchProvider, (previous, next) {
+      if (next.query != previous?.query) {
+        ref.read(sellQueryProvider.notifier).setSearch(next.query);
+      }
+      if (next.submissions != previous?.submissions) {
+        unawaited(_submit(next.lastSubmitted));
+      }
+    });
     final query = ref.watch(sellQueryProvider);
     final categories = ref.watch(_categoriesProvider).value ?? const [];
     final items = ref.watch(sellItemsProvider);
@@ -195,35 +205,6 @@ class _ProductPaneState extends ConsumerState<_ProductPane> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            AppSpacing.lg,
-            AppSpacing.lg,
-            AppSpacing.sm,
-          ),
-          child: TextField(
-            key: const Key('sell-search'),
-            controller: _search,
-            focusNode: _focus,
-            autofocus: true,
-            decoration: InputDecoration(
-              hintText: l10n.catalogSearchHint,
-              prefixIcon: const Icon(Icons.qr_code_scanner),
-              suffixIcon: query.search.isEmpty
-                  ? null
-                  : IconButton(
-                      onPressed: () {
-                        _search.clear();
-                        ref.read(sellQueryProvider.notifier).setSearch('');
-                      },
-                      icon: const Icon(Icons.clear),
-                    ),
-            ),
-            onChanged: ref.read(sellQueryProvider.notifier).setSearch,
-            onSubmitted: _submit,
-          ),
-        ),
         SizedBox(
           height: 48,
           child: ListView(

@@ -9,6 +9,8 @@ class SearchScanField extends StatelessWidget {
     this.hint,
     this.shortcut,
     this.controller,
+    this.focusNode,
+    this.autofocus = false,
     super.key,
   });
 
@@ -19,6 +21,8 @@ class SearchScanField extends StatelessWidget {
   /// A keyboard hint shown at the end, e.g. `F2`.
   final String? shortcut;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +30,8 @@ class SearchScanField extends StatelessWidget {
       height: AppSizes.minTouch,
       child: TextField(
         controller: controller,
+        focusNode: focusNode,
+        autofocus: autofocus,
         onChanged: onChanged,
         onSubmitted: onSubmitted,
         textInputAction: TextInputAction.search,

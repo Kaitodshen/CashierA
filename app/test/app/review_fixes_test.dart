@@ -44,11 +44,6 @@ void main() {
     expect(MediaQuery.paddingOf(inner).top, 0);
   });
 
-  testWidgets('no dead search field in the top bar', (t) async {
-    await openTill(t, tablet);
-    expect(find.byKey(const Key('terminal-search')), findsNothing);
-  });
-
   testWidgets('phone cart sheet covers the bottom bar', (t) async {
     final (_, c) = await openTill(t, const Size(360, 740));
     await tapKey(t, 'sell-open-cart');
