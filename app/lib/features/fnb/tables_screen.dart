@@ -21,7 +21,7 @@ final StreamProvider<List<DiningTable>> diningTablesProvider =
 
 Color tableColor(String status) => switch (status) {
   'occupied' => AppColors.warning,
-  'cleaning' => AppColors.secondary,
+  'cleaning' => AppColors.success,
   'reserved' => AppColors.error,
   _ => AppColors.success,
 };

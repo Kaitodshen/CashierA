@@ -321,7 +321,7 @@ class _ProductTile extends ConsumerWidget {
                           ? '${item.price.format()}/${item.unitCode}'
                           : item.price.format(),
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.secondary,
+                        color: AppColors.success,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

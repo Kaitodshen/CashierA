@@ -1,28 +1,25 @@
 import 'package:flutter/widgets.dart';
 
-/// Colors from the CashierA design spec (docs/phase-0-architecture.md §4.10).
+/// Colors of the Stitch "Radiant Light White Glass" design
+/// (docs/superpowers/specs/2026-11-09-stitch-redesign-design.md §2.1).
 abstract final class AppColors {
-  // POS (dark)
-  static const posBackground = Color(0xFF0F172A);
-  static const posSurface = Color(0xFF1E293B);
-  static const posSurfaceRaised = Color(0xFF273449);
-  static const posBorder = Color(0xFF334155);
-  static const posText = Color(0xFFF8FAFC);
-  static const posTextMuted = Color(0xFF94A3B8);
+  static const primary = Color(0xFFE11D48);
+  static const primaryPressed = Color(0xFFBE123C);
+  static const primarySoft = Color(0xFFFFF1F2);
 
-  // Back office (light)
-  static const adminBackground = Color(0xFFF8FAFC);
-  static const adminSurface = Color(0xFFFFFFFF);
-  static const adminBorder = Color(0xFFE2E8F0);
-  static const adminText = Color(0xFF1E293B);
-  static const adminTextMuted = Color(0xFF64748B);
-
-  // Brand and status (both themes)
-  static const primary = Color(0xFF6366F1);
-  static const secondary = Color(0xFF14B8A6);
   static const success = Color(0xFF10B981);
   static const warning = Color(0xFFF59E0B);
+  static const warningSoft = Color(0xFFFEF3C7);
+  static const warningText = Color(0xFFD97706);
   static const error = Color(0xFFEF4444);
+
+  static const text = Color(0xFF0F172A);
+  static const textStrong = Color(0xFF020617);
+  static const textSecondary = Color(0xFF334155);
+  static const textMuted = Color(0xFF64748B);
+  static const hairline = Color(0xFFE2E8F0);
+
+  static const white = Color(0xFFFFFFFF);
 }
 
 abstract final class AppSpacing {
@@ -35,8 +32,10 @@ abstract final class AppSpacing {
 }
 
 abstract final class AppRadius {
-  static const card = 16.0;
-  static const control = 12.0;
+  static const card = 24.0;
+  static const tile = 20.0;
+  static const control = 14.0;
+  static const small = 8.0;
   static const pill = 999.0;
 }
 
@@ -45,14 +44,25 @@ abstract final class AppMotion {
   static const normal = Duration(milliseconds: 250);
 }
 
+abstract final class AppFonts {
+  /// Headings, body text and big numbers.
+  static const body = 'PlusJakartaSans';
+
+  /// Labels, chips, table headers and buttons.
+  static const label = 'Inter';
+}
+
+abstract final class AppTypography {
+  /// Money, quantities and codes line up in columns.
+  static const tabular = [FontFeature.tabularFigures()];
+}
+
 abstract final class AppSizes {
   /// Minimum touch target (dp).
   static const minTouch = 48.0;
 
-  /// Widths at or above this use the split layout (65% / 35%).
+  /// Widths at or above this use the wide layouts (sidebar, split views).
   static const splitBreakpoint = 600.0;
-
-  static const fontFamily = 'PlusJakartaSans';
 }
 
 extension BreakpointContext on BuildContext {

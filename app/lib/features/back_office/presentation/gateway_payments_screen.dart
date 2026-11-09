@@ -16,7 +16,7 @@ Color chargeStatusColor(GatewayChargeRow c) => c.unmatched
     : switch (c.status) {
         'paid' => AppColors.success,
         'pending' => AppColors.warning,
-        _ => AppColors.secondary,
+        _ => AppColors.success,
       };
 
 /// Pembayaran QRIS: every dynamic QRIS charge, with the money that arrived

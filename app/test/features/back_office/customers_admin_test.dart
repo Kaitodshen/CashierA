@@ -133,7 +133,7 @@ Widget app(
   ],
   child: ToastificationWrapper(
     child: MaterialApp(
-      theme: AppTheme.backOffice(),
+      theme: AppTheme.light(),
       locale: const Locale('id'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

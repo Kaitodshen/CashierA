@@ -257,7 +257,7 @@ class SummaryTile extends StatelessWidget {
               Row(
                 children: [
                   if (icon != null) ...[
-                    Icon(icon, size: 18, color: AppColors.secondary),
+                    Icon(icon, size: 18, color: AppColors.success),
                     const SizedBox(width: AppSpacing.xs),
                   ],
                   Expanded(

@@ -191,7 +191,7 @@ class _InfoCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, color: AppColors.secondary),
+              Icon(icon, color: AppColors.success),
               const SizedBox(height: AppSpacing.md),
               Text(
                 title,

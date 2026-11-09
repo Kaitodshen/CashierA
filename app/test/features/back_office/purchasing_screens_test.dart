@@ -192,7 +192,7 @@ Widget app(FakePurchasing fake, String location, Set<String> permissions) {
     ],
     child: ToastificationWrapper(
       child: MaterialApp.router(
-        theme: AppTheme.backOffice(),
+        theme: AppTheme.light(),
         locale: const Locale('id'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

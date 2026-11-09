@@ -168,7 +168,7 @@ class _AdminShiftsScreenState extends ConsumerState<AdminShiftsScreen> {
                             ? Text(
                                 l10n.shiftsOpen,
                                 style: const TextStyle(
-                                  color: AppColors.secondary,
+                                  color: AppColors.success,
                                 ),
                               )
                             : Text(

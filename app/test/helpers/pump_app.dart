@@ -10,7 +10,7 @@ extension PumpApp on WidgetTester {
     Locale locale = const Locale('id'),
   }) => pumpWidget(
     MaterialApp(
-      theme: AppTheme.pos(),
+      theme: AppTheme.light(),
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

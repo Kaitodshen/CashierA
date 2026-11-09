@@ -131,7 +131,7 @@ class CategoriesScreen extends ConsumerWidget {
 
 Color _color(String? hex) => hex != null && _colorPattern.hasMatch(hex)
     ? Color(int.parse('FF${hex.substring(1)}', radix: 16))
-    : AppColors.adminTextMuted;
+    : AppColors.textMuted;
 
 class _CategoryDialog extends StatefulWidget {
   const new({this.category});

@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 
 Widget shell() => ProviderScope(
   child: MaterialApp.router(
-    theme: AppTheme.backOffice(),
+    theme: AppTheme.light(),
     locale: const Locale('en'),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
