@@ -65,6 +65,7 @@ void main() {
     expect(find.byKey(const Key('terminal-kitchen')), findsOneWidget);
     await tapKey(t, 'terminal-kitchen');
     expect(c.read(routerProvider).state.matchedLocation, AppRoutes.kitchen);
+    await finish(t);
   });
 
   testWidgets('held orders pill opens the orders list', (t) async {
@@ -102,7 +103,7 @@ void main() {
     expect(t.takeException(), isNull);
     expect(find.byKey(const Key('terminal-bottom-bar')), findsOneWidget);
     await t.tap(find.byKey(const Key('terminal-nav-members')));
-    await t.pumpAndSettle();
+    await settleAndFlush(t);
     expect(c.read(routerProvider).state.matchedLocation, AppRoutes.customers);
     expect(t.takeException(), isNull);
   });

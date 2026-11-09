@@ -2389,5 +2389,13 @@
     }
   },
   "sellPriceLabel": "Harga",
-  "sellAddTooltip": "Tambah ke tagihan"
+  "sellAddTooltip": "Tambah ke tagihan",
+  "cartTitle": "Tiket aktif",
+  "cartWalkIn": "Pelanggan umum",
+  "cartTotalDue": "Total tagihan",
+  "cartQuickCash": "Uang cepat:",
+  "cartExact": "Uang pas",
+  "cartPaymentMethod": "Metode pembayaran",
+  "cartChange": "Ganti",
+  "commonRemove": "Hapus"
 }

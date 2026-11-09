@@ -915,5 +915,13 @@
   "sellItemsCount": "{count} items",
   "sellStockBadge": "{qty} in stock",
   "sellPriceLabel": "Price",
-  "sellAddTooltip": "Add to bill"
+  "sellAddTooltip": "Add to bill",
+  "cartTitle": "Active ticket",
+  "cartWalkIn": "Walk-in customer",
+  "cartTotalDue": "Total due",
+  "cartQuickCash": "Quick cash:",
+  "cartExact": "Exact",
+  "cartPaymentMethod": "Payment method",
+  "cartChange": "Change",
+  "commonRemove": "Remove"
 }

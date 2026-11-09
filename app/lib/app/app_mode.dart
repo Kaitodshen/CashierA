@@ -25,6 +25,20 @@ abstract final class AppRoutes {
   static const opname = '/pos/opname';
   static const sell = '/pos/sell';
   static const pay = '/pos/pay';
+
+  /// Payment with [methodId] chosen and [amount] typed in, from the cart's
+  /// payment tiles and quick-cash chips.
+  static String payWith({String? methodId, int? amount}) {
+    final query = {
+      'method': ?methodId,
+      if (amount != null) 'amount': '$amount',
+    };
+    return Uri(
+      path: pay,
+      queryParameters: query.isEmpty ? null : query,
+    ).toString();
+  }
+
   static const orders = '/pos/orders';
 
   /// Receipt of a terminal order; [justSold] right after payment.

@@ -82,6 +82,30 @@ void main() {
     );
   });
 
+  testWidgets('the whole GlassCard is tappable, not just its content', (
+    t,
+  ) async {
+    var taps = 0;
+    await t.pumpWidget(
+      MaterialApp(
+        home: Row(
+          children: [
+            Expanded(
+              child: GlassCard(
+                key: const Key('wide'),
+                onTap: () => taps++,
+                child: const Text('x'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    final rect = t.getRect(find.byKey(const Key('wide')));
+    await t.tapAt(rect.centerRight - const Offset(8, 0));
+    expect(taps, 1);
+  });
+
   testWidgets('GlassCard is tappable only with onTap', (t) async {
     var taps = 0;
     await t.pumpWidget(

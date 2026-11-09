@@ -54,6 +54,8 @@ class GlassCard extends StatelessWidget {
         child: ClipRRect(
           borderRadius: shape,
           child: Stack(
+            // The content (and its tap area) takes the card's full size.
+            fit: StackFit.passthrough,
             children: [
               content,
               // The 1 px highlight along the top edge (CSS: inset 0 1px 1px).

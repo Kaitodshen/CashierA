@@ -38,7 +38,14 @@ String settlementProblemText(AppLocalizations l10n, SettlementProblem p) =>
     };
 
 class PaymentScreen extends ConsumerStatefulWidget {
-  const new({super.key});
+  const new({this.initialMethodId, this.initialAmount, super.key});
+
+  /// Payment method to select on arrival (the cart's tiles); ignored when the
+  /// store does not offer it.
+  final String? initialMethodId;
+
+  /// Amount to type in after selecting [initialMethodId] (quick cash).
+  final int? initialAmount;
 
   @override
   ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
@@ -46,6 +53,7 @@ class PaymentScreen extends ConsumerStatefulWidget {
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   static const _uuid = Uuid();
+  bool _initialApplied = false;
   final _tenders = <Tender>[];
   final _amount = TextEditingController();
   final _reference = TextEditingController();
@@ -83,6 +91,24 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       _amount.clear();
       _reference.clear();
       _method = null;
+    });
+  }
+
+  /// Once: select the method (and amount) the cart asked for.
+  void _applyInitial(List<PaymentOption> options, int remaining) {
+    if (_initialApplied) return;
+    _initialApplied = true;
+    final initial = options
+        .where((o) => o.id == widget.initialMethodId)
+        .firstOrNull;
+    if (initial == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      await _select(initial, remaining);
+      final amount = widget.initialAmount;
+      if (mounted && amount != null && amount > 0) {
+        setState(() => _amount.text = '$amount');
+      }
     });
   }
 
@@ -200,6 +226,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         .where((o) => o.gateway == null || hasGateway)
         .toList();
     final method = _method;
+    _applyInitial(options, remaining);
 
     final summary = Card(
       child: Padding(

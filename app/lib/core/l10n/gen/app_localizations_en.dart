@@ -3321,4 +3321,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sellAddTooltip => 'Add to bill';
+
+  @override
+  String get cartTitle => 'Active ticket';
+
+  @override
+  String get cartWalkIn => 'Walk-in customer';
+
+  @override
+  String get cartTotalDue => 'Total due';
+
+  @override
+  String get cartQuickCash => 'Quick cash:';
+
+  @override
+  String get cartExact => 'Exact';
+
+  @override
+  String get cartPaymentMethod => 'Payment method';
+
+  @override
+  String get cartChange => 'Change';
+
+  @override
+  String get commonRemove => 'Remove';
 }

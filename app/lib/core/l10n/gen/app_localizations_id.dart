@@ -3276,4 +3276,28 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get sellAddTooltip => 'Tambah ke tagihan';
+
+  @override
+  String get cartTitle => 'Tiket aktif';
+
+  @override
+  String get cartWalkIn => 'Pelanggan umum';
+
+  @override
+  String get cartTotalDue => 'Total tagihan';
+
+  @override
+  String get cartQuickCash => 'Uang cepat:';
+
+  @override
+  String get cartExact => 'Uang pas';
+
+  @override
+  String get cartPaymentMethod => 'Metode pembayaran';
+
+  @override
+  String get cartChange => 'Ganti';
+
+  @override
+  String get commonRemove => 'Hapus';
 }

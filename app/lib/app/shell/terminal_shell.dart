@@ -9,8 +9,10 @@ import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
 import 'package:cashiera/features/pos_home/presentation/widgets/terminal_status_chip.dart';
+import 'package:cashiera/features/sell/presentation/cart_panel.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -53,18 +55,29 @@ class _TerminalShellState extends State<TerminalShell> {
     final section = terminalSectionFor(location);
     final wide = context.isWide;
 
-    if (!wide) {
-      return Scaffold(
-        body: Column(
-          children: [
-            _TopBar(location: location, compact: true),
-            Expanded(child: _withoutTopPadding(context, widget.child)),
-          ],
-        ),
-        bottomNavigationBar: _BottomBar(section: section),
-      );
-    }
+    return _PayShortcut(
+      active: location == AppRoutes.sell,
+      child: wide
+          ? _wide(context, location, section)
+          : _narrow(location, section),
+    );
+  }
 
+  Widget _narrow(String location, TerminalSection? section) => Scaffold(
+    body: Column(
+      children: [
+        _TopBar(location: location, compact: true),
+        Expanded(child: _withoutTopPadding(context, widget.child)),
+      ],
+    ),
+    bottomNavigationBar: _BottomBar(section: section),
+  );
+
+  Widget _wide(
+    BuildContext context,
+    String location,
+    TerminalSection? section,
+  ) {
     return Scaffold(
       body: Row(
         children: [
@@ -101,6 +114,30 @@ Widget _withoutTopPadding(
   removeLeft: left,
   child: child,
 );
+
+/// F12 on Register opens payment, with the same rule as the Pay button.
+/// It sits above the top bar, where the scan field usually has focus.
+class _PayShortcut extends ConsumerWidget {
+  const new({required this.active, required this.child});
+
+  final bool active;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (!active) return child;
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.f12): () {
+          if (canStartPayment(ref, context.l10n)) {
+            context.go(AppRoutes.pay);
+          }
+        },
+      },
+      child: child,
+    );
+  }
+}
 
 class _TerminalSidebar extends ConsumerWidget {
   const new({

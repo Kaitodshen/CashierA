@@ -5593,6 +5593,54 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Tambah ke tagihan'**
   String get sellAddTooltip;
+
+  /// No description provided for @cartTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Tiket aktif'**
+  String get cartTitle;
+
+  /// No description provided for @cartWalkIn.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelanggan umum'**
+  String get cartWalkIn;
+
+  /// No description provided for @cartTotalDue.
+  ///
+  /// In id, this message translates to:
+  /// **'Total tagihan'**
+  String get cartTotalDue;
+
+  /// No description provided for @cartQuickCash.
+  ///
+  /// In id, this message translates to:
+  /// **'Uang cepat:'**
+  String get cartQuickCash;
+
+  /// No description provided for @cartExact.
+  ///
+  /// In id, this message translates to:
+  /// **'Uang pas'**
+  String get cartExact;
+
+  /// No description provided for @cartPaymentMethod.
+  ///
+  /// In id, this message translates to:
+  /// **'Metode pembayaran'**
+  String get cartPaymentMethod;
+
+  /// No description provided for @cartChange.
+  ///
+  /// In id, this message translates to:
+  /// **'Ganti'**
+  String get cartChange;
+
+  /// No description provided for @commonRemove.
+  ///
+  /// In id, this message translates to:
+  /// **'Hapus'**
+  String get commonRemove;
 }
 
 class _AppLocalizationsDelegate

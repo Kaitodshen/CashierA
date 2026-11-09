@@ -285,7 +285,15 @@ Future<(AppDatabase, ProviderContainer)> openTill(
 
 Future<void> tapKey(WidgetTester tester, String key) async {
   await tester.tap(find.byKey(Key(key)));
+  await settleAndFlush(tester);
+}
+
+/// pumpAndSettle, then a tick so streams closed after the last frame (Drift
+/// schedules a zero timer when a disposed provider cancels its query) run
+/// before the test ends.
+Future<void> settleAndFlush(WidgetTester tester) async {
   await tester.pumpAndSettle();
+  await tester.pump(const Duration(milliseconds: 1));
 }
 
 Future<void> go(
@@ -294,7 +302,7 @@ Future<void> go(
   String location,
 ) async {
   container.read(routerProvider).go(location);
-  await tester.pumpAndSettle();
+  await settleAndFlush(tester);
 }
 
 /// Picks [approver] in the approval dialog and enters their PIN.
@@ -337,4 +345,11 @@ String todayStamp() {
   final wib = DateTime.now().toUtc().add(const Duration(hours: 7));
   String two(int n) => n.toString().padLeft(2, '0');
   return '${two(wib.year % 100)}${two(wib.month)}${two(wib.day)}';
+}
+
+/// Disposes the app inside the test so database streams closed on the way
+/// out are flushed before the test ends (avoids a pending-timer failure).
+Future<void> finish(WidgetTester tester) async {
+  await tester.pumpWidget(const SizedBox());
+  await tester.pump(const Duration(milliseconds: 10));
 }

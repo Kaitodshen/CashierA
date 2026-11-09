@@ -93,7 +93,13 @@ GoRouter router(Ref ref) {
           GoRoute(path: AppRoutes.sell, builder: (_, _) => const SellScreen()),
           GoRoute(
             path: AppRoutes.pay,
-            builder: (_, _) => const PaymentScreen(),
+            builder: (_, state) => PaymentScreen(
+              key: ValueKey(state.uri.toString()),
+              initialMethodId: state.uri.queryParameters['method'],
+              initialAmount: int.tryParse(
+                state.uri.queryParameters['amount'] ?? '',
+              ),
+            ),
           ),
           GoRoute(
             path: AppRoutes.orders,
