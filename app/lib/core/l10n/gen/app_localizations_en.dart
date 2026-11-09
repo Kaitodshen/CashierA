@@ -3302,4 +3302,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shellSearchHint => 'Scan barcode or search SKU / item';
+
+  @override
+  String get sellItemsTitle => 'Merchandise items';
+
+  @override
+  String sellItemsCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String sellStockBadge(String qty) {
+    return '$qty in stock';
+  }
+
+  @override
+  String get sellPriceLabel => 'Price';
+
+  @override
+  String get sellAddTooltip => 'Add to bill';
 }

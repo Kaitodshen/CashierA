@@ -3257,4 +3257,23 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get shellSearchHint => 'Pindai barcode atau cari SKU / barang';
+
+  @override
+  String get sellItemsTitle => 'Barang dagangan';
+
+  @override
+  String sellItemsCount(int count) {
+    return '$count barang';
+  }
+
+  @override
+  String sellStockBadge(String qty) {
+    return 'Stok $qty';
+  }
+
+  @override
+  String get sellPriceLabel => 'Harga';
+
+  @override
+  String get sellAddTooltip => 'Tambah ke tagihan';
 }

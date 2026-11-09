@@ -211,17 +211,37 @@ class InitialsAvatar extends StatelessWidget {
 /// The product picture, or a soft initials tile when there is none or it
 /// cannot load (offline terminals).
 class ProductThumb extends StatelessWidget {
-  const new({required this.name, this.imageUrl, this.size = 96, super.key});
+  const new({
+    required this.name,
+    this.imageUrl,
+    this.size = 96,
+    this.fill = false,
+    super.key,
+  });
 
   final String name;
   final String? imageUrl;
   final double size;
 
+  /// Fill the parent instead of a [size] square (product tiles).
+  final bool fill;
+
   @override
   Widget build(BuildContext context) {
+    if (!fill) return _thumb(size, size);
+    return LayoutBuilder(
+      builder: (context, c) => _thumb(
+        c.maxWidth.isFinite ? c.maxWidth : size,
+        c.maxHeight.isFinite ? c.maxHeight : size,
+      ),
+    );
+  }
+
+  Widget _thumb(double width, double height) {
+    final side = width < height ? width : height;
     final fallback = Container(
-      width: size,
-      height: size,
+      width: width,
+      height: height,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -234,7 +254,7 @@ class ProductThumb extends StatelessWidget {
         initialsOf(name),
         style: TextStyle(
           fontWeight: FontWeight.w700,
-          fontSize: size * 0.3,
+          fontSize: side * 0.3,
           color: AppColors.primary.withValues(alpha: 0.7),
         ),
       ),
@@ -246,8 +266,8 @@ class ProductThumb extends StatelessWidget {
           ? fallback
           : Image.network(
               url,
-              width: size,
-              height: size,
+              width: width,
+              height: height,
               fit: BoxFit.cover,
               errorBuilder: (_, _, _) => fallback,
             ),

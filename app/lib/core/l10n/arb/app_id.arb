@@ -2370,5 +2370,24 @@
   "shellCollapse": "Ciutkan menu",
   "shellExpand": "Lebarkan menu",
   "shellMore": "Lainnya",
-  "shellSearchHint": "Pindai barcode atau cari SKU / barang"
+  "shellSearchHint": "Pindai barcode atau cari SKU / barang",
+  "sellItemsTitle": "Barang dagangan",
+  "sellItemsCount": "{count} barang",
+  "@sellItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sellStockBadge": "Stok {qty}",
+  "@sellStockBadge": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "sellPriceLabel": "Harga",
+  "sellAddTooltip": "Tambah ke tagihan"
 }

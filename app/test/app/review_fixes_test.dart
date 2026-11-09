@@ -39,8 +39,8 @@ void main() {
     t.view.padding = const FakeViewPadding(top: 48);
     addTearDown(t.view.resetPadding);
     await openTill(t, tablet);
-    // The sell screen's own AppBar sits under the shell top bar.
-    final inner = t.element(find.byType(AppBar).first);
+    // Any element of the Register screen inside the shell.
+    final inner = t.element(find.byKey(const Key('sell-pay')));
     expect(MediaQuery.paddingOf(inner).top, 0);
   });
 

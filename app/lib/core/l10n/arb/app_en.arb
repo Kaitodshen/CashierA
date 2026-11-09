@@ -910,5 +910,10 @@
   "shellCollapse": "Collapse menu",
   "shellExpand": "Expand menu",
   "shellMore": "More",
-  "shellSearchHint": "Scan barcode or search SKU / item"
+  "shellSearchHint": "Scan barcode or search SKU / item",
+  "sellItemsTitle": "Merchandise items",
+  "sellItemsCount": "{count} items",
+  "sellStockBadge": "{qty} in stock",
+  "sellPriceLabel": "Price",
+  "sellAddTooltip": "Add to bill"
 }

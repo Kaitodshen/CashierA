@@ -313,16 +313,15 @@ class _TopBar extends ConsumerWidget {
                       const SizedBox(width: AppSpacing.sm),
                       lockPill,
                       const SizedBox(width: AppSpacing.sm),
-                    ] else
+                    ] else ...[
+                      // Held orders stays one tap away on narrow screens.
+                      _HeldIconButton(badge: badge),
                       _OverflowMenu(
-                        heldLabel: [
-                          l10n.shellHeldOrders,
-                          if (badge.isNotEmpty) '($badge)',
-                        ].join(' '),
                         tables: fnb,
                         kitchen: kitchen,
                         onLock: lock,
                       ),
+                    ],
                     // Always shown: it also keeps the outbox draining.
                     const Flexible(child: TerminalStatusChip()),
                   ],
@@ -331,6 +330,27 @@ class _TopBar extends ConsumerWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _HeldIconButton extends StatelessWidget {
+  const new({required this.badge});
+
+  final String badge;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      key: const Key('terminal-held-orders'),
+      tooltip: context.l10n.shellHeldOrders,
+      onPressed: () => context.go(AppRoutes.orders),
+      icon: Badge(
+        isLabelVisible: badge.isNotEmpty,
+        label: Text(badge),
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.pause_circle_outline, color: AppColors.text),
       ),
     );
   }
@@ -366,13 +386,11 @@ class _CountBadge extends StatelessWidget {
 
 class _OverflowMenu extends StatelessWidget {
   const new({
-    required this.heldLabel,
     required this.tables,
     required this.kitchen,
     required this.onLock,
   });
 
-  final String heldLabel;
   final bool tables;
   final bool kitchen;
   final VoidCallback onLock;
@@ -385,7 +403,6 @@ class _OverflowMenu extends StatelessWidget {
       tooltip: l10n.shellMore,
       icon: const Icon(Icons.more_vert, color: AppColors.text),
       onSelected: (v) => switch (v) {
-        'held' => context.go(AppRoutes.orders),
         'tables' => context.go(AppRoutes.tables),
         'kitchen' => context.go(AppRoutes.kitchen),
         'sync' => context.go(AppRoutes.sync),
@@ -398,11 +415,6 @@ class _OverflowMenu extends StatelessWidget {
             value: 'tables',
             child: Text(l10n.navTables),
           ),
-        PopupMenuItem(
-          key: const Key('terminal-held-orders'),
-          value: 'held',
-          child: Text(heldLabel),
-        ),
         if (kitchen)
           PopupMenuItem(
             key: const Key('terminal-kitchen'),

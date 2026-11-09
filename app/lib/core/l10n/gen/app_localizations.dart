@@ -5563,6 +5563,36 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Pindai barcode atau cari SKU / barang'**
   String get shellSearchHint;
+
+  /// No description provided for @sellItemsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Barang dagangan'**
+  String get sellItemsTitle;
+
+  /// No description provided for @sellItemsCount.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} barang'**
+  String sellItemsCount(int count);
+
+  /// No description provided for @sellStockBadge.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok {qty}'**
+  String sellStockBadge(String qty);
+
+  /// No description provided for @sellPriceLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Harga'**
+  String get sellPriceLabel;
+
+  /// No description provided for @sellAddTooltip.
+  ///
+  /// In id, this message translates to:
+  /// **'Tambah ke tagihan'**
+  String get sellAddTooltip;
 }
 
 class _AppLocalizationsDelegate
