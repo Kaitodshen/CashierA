@@ -1,6 +1,5 @@
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/providers.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

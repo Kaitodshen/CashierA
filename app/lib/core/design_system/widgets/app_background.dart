@@ -43,10 +43,7 @@ class _BackgroundPainter extends CustomPainter {
       Color(0xFFF472B6),
     ], 0.45),
     _Glow(Offset(0.95, 0.3), 0.8, [Color(0xFFFDA4AF), Color(0xFFE0E7FF)], 0.45),
-    _Glow(Offset(0.45, 1.0), 0.85, [
-      Color(0xFFDDD6FE),
-      Color(0xFFFED7AA),
-    ], 0.40),
+    _Glow(Offset(0.45, 1), 0.85, [Color(0xFFDDD6FE), Color(0xFFFED7AA)], 0.40),
     _Glow(Offset(0.5, 0.6), 0.6, [Color(0xFFFECDD3), Color(0xFFFEE2E2)], 0.35),
     _Glow(Offset(0.8, 0.95), 0.65, [
       Color(0xFFFDA4AF),

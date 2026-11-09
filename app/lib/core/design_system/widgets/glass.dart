@@ -11,7 +11,7 @@ enum GlassLevel {
   regular(0.72),
   solid(0.92);
 
-  const new(this.alpha);
+  new(this.alpha);
   final double alpha;
 }
 
