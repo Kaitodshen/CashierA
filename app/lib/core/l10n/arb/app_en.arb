@@ -923,5 +923,16 @@
   "cartExact": "Exact",
   "cartPaymentMethod": "Payment method",
   "cartChange": "Change",
-  "commonRemove": "Remove"
+  "commonRemove": "Remove",
+  "overviewGross": "Gross sales",
+  "overviewTransactions": "Transactions",
+  "overviewCashInDrawer": "Cash in drawer",
+  "overviewNonCash": "Non-cash total",
+  "overviewFloat": "Float {amount}",
+  "overviewAverage": "Avg. basket {amount}",
+  "overviewOrders": "{count} orders",
+  "overviewRecent": "Recent orders",
+  "overviewPayments": "Payment breakdown",
+  "overviewNoOrders": "No sales in this shift yet.",
+  "overviewSubtitle": "Shift dashboard"
 }

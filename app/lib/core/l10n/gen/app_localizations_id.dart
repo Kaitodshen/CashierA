@@ -3300,4 +3300,43 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get commonRemove => 'Hapus';
+
+  @override
+  String get overviewGross => 'Penjualan kotor';
+
+  @override
+  String get overviewTransactions => 'Transaksi';
+
+  @override
+  String get overviewCashInDrawer => 'Uang di laci';
+
+  @override
+  String get overviewNonCash => 'Total non-tunai';
+
+  @override
+  String overviewFloat(String amount) {
+    return 'Modal $amount';
+  }
+
+  @override
+  String overviewAverage(String amount) {
+    return 'Rata-rata $amount';
+  }
+
+  @override
+  String overviewOrders(int count) {
+    return '$count pesanan';
+  }
+
+  @override
+  String get overviewRecent => 'Pesanan terakhir';
+
+  @override
+  String get overviewPayments => 'Rincian pembayaran';
+
+  @override
+  String get overviewNoOrders => 'Belum ada penjualan di shift ini.';
+
+  @override
+  String get overviewSubtitle => 'Dasbor shift';
 }

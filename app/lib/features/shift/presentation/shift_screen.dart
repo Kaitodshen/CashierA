@@ -2,7 +2,10 @@ import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
@@ -10,6 +13,7 @@ import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/features/printing/print_actions.dart';
 import 'package:cashiera/features/sell/presentation/sell_dialogs.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
+import 'package:cashiera/features/shift/presentation/overview_widgets.dart';
 import 'package:cashiera/features/shift/presentation/report_actions.dart';
 import 'package:cashiera/features/shift/presentation/shift_providers.dart';
 import 'package:cashiera/features/shift/presentation/shift_widgets.dart';
@@ -186,145 +190,181 @@ class ShiftScreen extends ConsumerWidget {
     String local(DateTime t) =>
         date.format(config?.localTime(t) ?? t.toLocal());
 
+    final history = recent.isEmpty
+        ? null
+        : GlassCard(
+            level: GlassLevel.solid,
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  l10n.shiftHistory,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                for (final s in recent)
+                  ListTile(
+                    key: Key('shift-history-${s.id}'),
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.history),
+                    title: Text(
+                      l10n.shiftHistoryLine(
+                        local(s.openedAt),
+                        s.closedByName ?? s.openedByName,
+                      ),
+                    ),
+                    trailing: s.countedCash == null || s.expectedCash == null
+                        ? null
+                        : Text(
+                            differenceText(
+                              l10n,
+                              Money(s.countedCash! - s.expectedCash!),
+                            ),
+                            style: TextStyle(
+                              color: differenceColor(
+                                Money(s.countedCash! - s.expectedCash!),
+                              ),
+                            ),
+                          ),
+                    onTap: () => context.go(AppRoutes.shiftReport(s.id)),
+                  ),
+              ],
+            ),
+          );
+
+    // The shell's top bar holds the title; this is the dashboard.
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
-        title: Text(l10n.shiftTitle),
-        actions: const [],
-      ),
-      body: Center(
+      body: Align(
+        alignment: Alignment.topCenter,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 760),
+          constraints: const BoxConstraints(maxWidth: 1200),
           child: ListView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             children: [
               if (open == null)
-                EmptyState(
-                  icon: Icons.lock_clock_outlined,
-                  message: l10n.shiftNoneOpen,
-                  action: FilledButton(
-                    key: const Key('shift-go-sell'),
-                    onPressed: () => context.go(AppRoutes.sell),
-                    child: Text(l10n.shiftGoSell),
+                GlassCard(
+                  child: EmptyState(
+                    icon: Icons.lock_clock_outlined,
+                    message: l10n.shiftNoneOpen,
+                    action: PrimaryButton(
+                      key: const Key('shift-go-sell'),
+                      label: l10n.shiftGoSell,
+                      onPressed: () => context.go(AppRoutes.sell),
+                    ),
                   ),
                 )
               else ...[
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(l10n.shiftDrawerExpected),
-                        Text(
-                          report?.cash.expected.format() ?? '…',
-                          key: const Key('shift-expected'),
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
+                PageHeader(
+                  title: l10n.shiftTitle,
+                  subtitle: l10n.overviewSubtitle,
+                  status: Row(
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: AppColors.success,
+                          shape: BoxShape.circle,
                         ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Text(
                           l10n.shiftOpenedBy(
                             local(open.openedAt),
                             open.openedByName,
                           ),
+                          style: const TextStyle(
+                            color: AppColors.primaryPressed,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: [
-                    if (staff?.can('shift.cash_movement') ?? false) ...[
-                      OutlinedButton.icon(
-                        key: const Key('shift-cash-in'),
-                        onPressed: () =>
-                            _movement(context, ref, open, isIn: true),
-                        icon: const Icon(Icons.south_west),
-                        label: Text(l10n.shiftCashIn),
-                      ),
-                      OutlinedButton.icon(
-                        key: const Key('shift-cash-out'),
-                        onPressed: () =>
-                            _movement(context, ref, open, isIn: false),
-                        icon: const Icon(Icons.north_east),
-                        label: Text(l10n.shiftCashOut),
                       ),
                     ],
-                    OutlinedButton.icon(
+                  ),
+                  actions: [
+                    if (staff?.can('shift.cash_movement') ?? false) ...[
+                      SecondaryButton(
+                        key: const Key('shift-cash-in'),
+                        icon: Icons.south_west,
+                        label: l10n.shiftCashIn,
+                        onPressed: () =>
+                            _movement(context, ref, open, isIn: true),
+                      ),
+                      SecondaryButton(
+                        key: const Key('shift-cash-out'),
+                        icon: Icons.north_east,
+                        label: l10n.shiftCashOut,
+                        onPressed: () =>
+                            _movement(context, ref, open, isIn: false),
+                      ),
+                    ],
+                    SecondaryButton(
                       key: const Key('shift-drawer'),
+                      icon: Icons.inbox_outlined,
+                      label: l10n.shiftOpenDrawer,
                       onPressed: () => openDrawerNoSale(context, ref),
-                      icon: const Icon(Icons.inbox_outlined),
-                      label: Text(l10n.shiftOpenDrawer),
                     ),
-                    OutlinedButton.icon(
+                    SecondaryButton(
                       key: const Key('shift-print-x'),
+                      icon: Icons.print_outlined,
+                      label: l10n.shiftPrintX,
                       onPressed: report == null || config == null
                           ? null
                           : () =>
                                 printShiftReport(context, ref, report, config),
-                      icon: const Icon(Icons.print_outlined),
-                      label: Text(l10n.shiftPrintX),
                     ),
                     if (staff?.can('shift.manage') ?? false)
-                      FilledButton.icon(
+                      PrimaryButton(
                         key: const Key('shift-close'),
+                        icon: Icons.lock_outline,
+                        label: l10n.shiftClose,
                         onPressed: () => context.go(AppRoutes.shiftClose),
-                        icon: const Icon(Icons.lock_outline),
-                        label: Text(l10n.shiftClose),
                       ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.lg),
+                OverviewStats(report: report),
+                const SizedBox(height: AppSpacing.lg),
+                LayoutBuilder(
+                  builder: (context, c) {
+                    final recentCard = RecentOrdersCard(shiftId: open.id);
+                    final payments = PaymentBreakdownCard(report: report);
+                    if (c.maxWidth < 900) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          recentCard,
+                          const SizedBox(height: AppSpacing.lg),
+                          payments,
+                        ],
+                      );
+                    }
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 3, child: recentCard),
+                        const SizedBox(width: AppSpacing.lg),
+                        Expanded(flex: 2, child: payments),
+                      ],
+                    );
+                  },
+                ),
+                const SizedBox(height: AppSpacing.lg),
                 if (report != null && config != null)
-                  ShiftReportView(
-                    report: report,
-                    utcOffsetMinutes: config.utcOffsetMinutes,
+                  GlassCard(
+                    level: GlassLevel.solid,
+                    child: ShiftReportView(
+                      report: report,
+                      utcOffsetMinutes: config.utcOffsetMinutes,
+                    ),
                   ),
+                const SizedBox(height: AppSpacing.lg),
                 _Movements(shiftId: open.id),
               ],
-              if (recent.isNotEmpty) ...[
+              if (history != null) ...[
                 const SizedBox(height: AppSpacing.lg),
-                Text(
-                  l10n.shiftHistory,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Card(
-                  child: Column(
-                    children: [
-                      for (final s in recent)
-                        ListTile(
-                          key: Key('shift-history-${s.id}'),
-                          leading: const Icon(Icons.history),
-                          title: Text(
-                            l10n.shiftHistoryLine(
-                              local(s.openedAt),
-                              s.closedByName ?? s.openedByName,
-                            ),
-                          ),
-                          trailing:
-                              s.countedCash == null || s.expectedCash == null
-                              ? null
-                              : Text(
-                                  differenceText(
-                                    l10n,
-                                    Money(s.countedCash! - s.expectedCash!),
-                                  ),
-                                  style: TextStyle(
-                                    color: differenceColor(
-                                      Money(s.countedCash! - s.expectedCash!),
-                                    ),
-                                  ),
-                                ),
-                          onTap: () => context.go(AppRoutes.shiftReport(s.id)),
-                        ),
-                    ],
-                  ),
-                ),
+                history,
               ],
             ],
           ),

@@ -2397,5 +2397,37 @@
   "cartExact": "Uang pas",
   "cartPaymentMethod": "Metode pembayaran",
   "cartChange": "Ganti",
-  "commonRemove": "Hapus"
+  "commonRemove": "Hapus",
+  "overviewGross": "Penjualan kotor",
+  "overviewTransactions": "Transaksi",
+  "overviewCashInDrawer": "Uang di laci",
+  "overviewNonCash": "Total non-tunai",
+  "overviewFloat": "Modal {amount}",
+  "@overviewFloat": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "overviewAverage": "Rata-rata {amount}",
+  "@overviewAverage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "overviewOrders": "{count} pesanan",
+  "@overviewOrders": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overviewRecent": "Pesanan terakhir",
+  "overviewPayments": "Rincian pembayaran",
+  "overviewNoOrders": "Belum ada penjualan di shift ini.",
+  "overviewSubtitle": "Dasbor shift"
 }

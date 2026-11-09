@@ -3345,4 +3345,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonRemove => 'Remove';
+
+  @override
+  String get overviewGross => 'Gross sales';
+
+  @override
+  String get overviewTransactions => 'Transactions';
+
+  @override
+  String get overviewCashInDrawer => 'Cash in drawer';
+
+  @override
+  String get overviewNonCash => 'Non-cash total';
+
+  @override
+  String overviewFloat(String amount) {
+    return 'Float $amount';
+  }
+
+  @override
+  String overviewAverage(String amount) {
+    return 'Avg. basket $amount';
+  }
+
+  @override
+  String overviewOrders(int count) {
+    return '$count orders';
+  }
+
+  @override
+  String get overviewRecent => 'Recent orders';
+
+  @override
+  String get overviewPayments => 'Payment breakdown';
+
+  @override
+  String get overviewNoOrders => 'No sales in this shift yet.';
+
+  @override
+  String get overviewSubtitle => 'Shift dashboard';
 }

@@ -5641,6 +5641,72 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Hapus'**
   String get commonRemove;
+
+  /// No description provided for @overviewGross.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan kotor'**
+  String get overviewGross;
+
+  /// No description provided for @overviewTransactions.
+  ///
+  /// In id, this message translates to:
+  /// **'Transaksi'**
+  String get overviewTransactions;
+
+  /// No description provided for @overviewCashInDrawer.
+  ///
+  /// In id, this message translates to:
+  /// **'Uang di laci'**
+  String get overviewCashInDrawer;
+
+  /// No description provided for @overviewNonCash.
+  ///
+  /// In id, this message translates to:
+  /// **'Total non-tunai'**
+  String get overviewNonCash;
+
+  /// No description provided for @overviewFloat.
+  ///
+  /// In id, this message translates to:
+  /// **'Modal {amount}'**
+  String overviewFloat(String amount);
+
+  /// No description provided for @overviewAverage.
+  ///
+  /// In id, this message translates to:
+  /// **'Rata-rata {amount}'**
+  String overviewAverage(String amount);
+
+  /// No description provided for @overviewOrders.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} pesanan'**
+  String overviewOrders(int count);
+
+  /// No description provided for @overviewRecent.
+  ///
+  /// In id, this message translates to:
+  /// **'Pesanan terakhir'**
+  String get overviewRecent;
+
+  /// No description provided for @overviewPayments.
+  ///
+  /// In id, this message translates to:
+  /// **'Rincian pembayaran'**
+  String get overviewPayments;
+
+  /// No description provided for @overviewNoOrders.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada penjualan di shift ini.'**
+  String get overviewNoOrders;
+
+  /// No description provided for @overviewSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Dasbor shift'**
+  String get overviewSubtitle;
 }
 
 class _AppLocalizationsDelegate

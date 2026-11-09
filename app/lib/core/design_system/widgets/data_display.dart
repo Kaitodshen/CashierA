@@ -284,9 +284,12 @@ class StatCard extends StatelessWidget {
     this.tint = AppColors.primary,
     this.badge,
     this.footnote,
+    this.valueKey,
     super.key,
   });
 
+  /// Key on the value text, for tests and screen readers.
+  final Key? valueKey;
   final IconData icon;
   final String label;
   final String value;
@@ -332,6 +335,7 @@ class StatCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           Text(
             value,
+            key: valueKey,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.displayMedium?.copyWith(
