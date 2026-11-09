@@ -22,7 +22,7 @@ final _day = DateFormat('dd/MM/yyyy');
 
 Color poStatusColor(String status) => switch (status) {
   'received' => AppColors.success,
-  'partially_received' || 'ordered' => AppColors.success,
+  'partially_received' || 'ordered' => AppColors.info,
   'cancelled' => AppColors.error,
   _ => AppColors.warning,
 };

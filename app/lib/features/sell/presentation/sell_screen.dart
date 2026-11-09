@@ -367,6 +367,8 @@ class _CartBar extends ConsumerWidget {
                   key: const Key('sell-open-cart'),
                   onPressed: () => showModalBottomSheet<void>(
                     context: context,
+                    // Over the shell's bottom bar, not inside it.
+                    useRootNavigator: true,
                     isScrollControlled: true,
                     builder: (_) => SizedBox(
                       height: MediaQuery.sizeOf(context).height * 0.9,

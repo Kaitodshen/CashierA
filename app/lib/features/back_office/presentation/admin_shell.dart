@@ -69,14 +69,23 @@ class AdminShell extends ConsumerWidget {
               child: _Tabs(tabs: tabs, selected: here.tab),
             ),
           ),
-        Expanded(child: child),
+        // The top bar pads for the status bar; the page must not again.
+        Expanded(
+          child: MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            removeLeft: wide,
+            child: child,
+          ),
+        ),
       ],
     );
 
     if (!wide) {
       return Scaffold(
         drawer: Drawer(
-          backgroundColor: Colors.transparent,
+          // Near-opaque: the page behind must not show through the menu.
+          backgroundColor: AppColors.primarySoft.withValues(alpha: 0.96),
           child: AppSidebar(collapsed: false, items: items(collapsed: false)),
         ),
         body: body,

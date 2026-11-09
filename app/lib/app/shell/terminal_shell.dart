@@ -1,10 +1,8 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/app/shell/sidebar.dart';
 import 'package:cashiera/app/shell/terminal_nav.dart';
-import 'package:cashiera/app/shell/terminal_search.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
 import 'package:cashiera/core/design_system/widgets/glass.dart';
-import 'package:cashiera/core/design_system/widgets/inputs.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/core/session/session_controller.dart';
@@ -33,7 +31,7 @@ String _label(AppLocalizations l10n, TerminalSection s, {bool short = false}) =>
     };
 
 /// The frame of every terminal screen after PIN login: the five-item
-/// sidebar (bottom bar on phones) and the top bar with search, Held Orders,
+/// sidebar (bottom bar on phones) and the top bar with Tables, Held Orders,
 /// Kitchen, Lock and the sync status.
 class TerminalShell extends StatefulWidget {
   const new({required this.child, super.key});
@@ -58,7 +56,7 @@ class _TerminalShellState extends State<TerminalShell> {
         body: Column(
           children: [
             _TopBar(location: location, compact: true),
-            Expanded(child: widget.child),
+            Expanded(child: _withoutTopPadding(context, widget.child)),
           ],
         ),
         bottomNavigationBar: _BottomBar(section: section),
@@ -77,7 +75,9 @@ class _TerminalShellState extends State<TerminalShell> {
             child: Column(
               children: [
                 _TopBar(location: location, compact: false),
-                Expanded(child: widget.child),
+                Expanded(
+                  child: _withoutTopPadding(context, widget.child, left: true),
+                ),
               ],
             ),
           ),
@@ -86,6 +86,19 @@ class _TerminalShellState extends State<TerminalShell> {
     );
   }
 }
+
+/// The top bar already pads for the status bar (and the sidebar for the
+/// left inset); screens inside must not add it again.
+Widget _withoutTopPadding(
+  BuildContext context,
+  Widget child, {
+  bool left = false,
+}) => MediaQuery.removePadding(
+  context: context,
+  removeTop: true,
+  removeLeft: left,
+  child: child,
+);
 
 class _TerminalSidebar extends ConsumerWidget {
   const new({
@@ -158,8 +171,8 @@ class _TopBar extends ConsumerWidget {
     final config = ref.watch(posConfigProvider).value;
     final held = ref.watch(heldOrdersProvider).value?.length ?? 0;
     final staff = session?.staff;
-    final kitchen =
-        (config?.fnbMode ?? false) && (staff?.can('kitchen.view') ?? false);
+    final fnb = config?.fnbMode ?? false;
+    final kitchen = fnb && (staff?.can('kitchen.view') ?? false);
     final storeName = config?.storeName ?? session?.store?.store.name;
     final badge = heldBadge(held);
 
@@ -193,6 +206,18 @@ class _TopBar extends ConsumerWidget {
         ],
       ),
     );
+    final tablesPill = GlassPill(
+      key: const Key('terminal-tables'),
+      onTap: () => context.go(AppRoutes.tables),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.table_restaurant_outlined),
+          const SizedBox(width: AppSpacing.sm),
+          Text(l10n.navTables),
+        ],
+      ),
+    );
     final lockPill = GlassPill(
       key: const Key('terminal-lock'),
       onTap: lock,
@@ -205,15 +230,6 @@ class _TopBar extends ConsumerWidget {
         ],
       ),
     );
-
-    final search = showsSearch(location)
-        ? SearchScanField(
-            key: const Key('terminal-search'),
-            hint: l10n.shellSearchHint,
-            onChanged: (v) =>
-                ref.read(terminalSearchQueryProvider.notifier).query = v,
-          )
-        : null;
 
     return GlassBlur(
       borderRadius: BorderRadius.zero,
@@ -238,39 +254,32 @@ class _TopBar extends ConsumerWidget {
                 final roomy = c.maxWidth >= 900;
                 return Row(
                   children: [
-                    if (!compact || search == null)
-                      Expanded(
-                        child: Text(
-                          [
-                            l10n.shellRetailPos.toUpperCase(),
-                            ?storeName,
-                          ].join(' • '),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontFamily: AppFonts.label,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                            letterSpacing: 0.6,
-                            color: AppColors.text,
-                          ),
+                    // The top-bar search arrives with the phase 2 Register and
+                    // Catalog screens (terminalSearchQueryProvider); until
+                    // then their own fields are used, so none is shown here.
+                    Expanded(
+                      child: Text(
+                        [
+                          l10n.shellRetailPos.toUpperCase(),
+                          ?storeName,
+                        ].join(' • '),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: AppFonts.label,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                          letterSpacing: 0.6,
+                          color: AppColors.text,
                         ),
                       ),
-                    if (search != null) ...[
-                      const SizedBox(width: AppSpacing.lg),
-                      Expanded(
-                        flex: 2,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 420),
-                            child: search,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                     const SizedBox(width: AppSpacing.md),
                     if (roomy) ...[
+                      if (fnb) ...[
+                        tablesPill,
+                        const SizedBox(width: AppSpacing.sm),
+                      ],
                       heldPill,
                       if (kitchen) ...[
                         const SizedBox(width: AppSpacing.sm),
@@ -285,6 +294,7 @@ class _TopBar extends ConsumerWidget {
                           l10n.shellHeldOrders,
                           if (badge.isNotEmpty) '($badge)',
                         ].join(' '),
+                        tables: fnb,
                         kitchen: kitchen,
                         onLock: lock,
                       ),
@@ -332,11 +342,13 @@ class _CountBadge extends StatelessWidget {
 class _OverflowMenu extends StatelessWidget {
   const new({
     required this.heldLabel,
+    required this.tables,
     required this.kitchen,
     required this.onLock,
   });
 
   final String heldLabel;
+  final bool tables;
   final bool kitchen;
   final VoidCallback onLock;
 
@@ -349,11 +361,18 @@ class _OverflowMenu extends StatelessWidget {
       icon: const Icon(Icons.more_vert, color: AppColors.text),
       onSelected: (v) => switch (v) {
         'held' => context.go(AppRoutes.orders),
+        'tables' => context.go(AppRoutes.tables),
         'kitchen' => context.go(AppRoutes.kitchen),
         'sync' => context.go(AppRoutes.sync),
         _ => onLock(),
       },
       itemBuilder: (_) => [
+        if (tables)
+          PopupMenuItem(
+            key: const Key('terminal-tables'),
+            value: 'tables',
+            child: Text(l10n.navTables),
+          ),
         PopupMenuItem(
           key: const Key('terminal-held-orders'),
           value: 'held',

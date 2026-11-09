@@ -11,12 +11,16 @@ import 'package:intl/intl.dart';
 
 final _at = DateFormat('dd/MM/yyyy HH:mm');
 
-Color chargeStatusColor(GatewayChargeRow c) => c.unmatched
+Color chargeStatusColor(GatewayChargeRow c) =>
+    chargeColorFor(status: c.status, unmatched: c.unmatched);
+
+Color chargeColorFor({required String status, required bool unmatched}) =>
+    unmatched
     ? AppColors.error
-    : switch (c.status) {
+    : switch (status) {
         'paid' => AppColors.success,
         'pending' => AppColors.warning,
-        _ => AppColors.success,
+        _ => AppColors.textMuted,
       };
 
 /// Pembayaran QRIS: every dynamic QRIS charge, with the money that arrived

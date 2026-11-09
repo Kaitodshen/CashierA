@@ -13,10 +13,15 @@ abstract final class AppColors {
   static const warningText = Color(0xFFD97706);
   static const error = Color(0xFFEF4444);
 
+  /// In-between states (in transit, ordered, cleaning).
+  static const info = Color(0xFF0D9488);
+
   static const text = Color(0xFF0F172A);
   static const textStrong = Color(0xFF020617);
   static const textSecondary = Color(0xFF334155);
-  static const textMuted = Color(0xFF64748B);
+
+  /// Darker than Stitch's #64748B so it reads on 22 % glass (≈ 4.5:1).
+  static const textMuted = Color(0xFF475569);
   static const hairline = Color(0xFFE2E8F0);
 
   static const white = Color(0xFFFFFFFF);

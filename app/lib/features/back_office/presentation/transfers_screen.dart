@@ -17,7 +17,7 @@ final _at = DateFormat('dd/MM/yyyy HH:mm');
 
 Color transferStatusColor(String status) => switch (status) {
   'received' => AppColors.success,
-  'approved' || 'in_transit' => AppColors.success,
+  'approved' || 'in_transit' => AppColors.info,
   'rejected' || 'cancelled' => AppColors.error,
   _ => AppColors.warning,
 };
