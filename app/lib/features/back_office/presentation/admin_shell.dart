@@ -1,199 +1,196 @@
-import 'package:cashiera/app/app_mode.dart';
+import 'package:cashiera/app/shell/sidebar.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/session/session_controller.dart';
+import 'package:cashiera/features/back_office/presentation/admin_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class _Destination {
-  const new(this.route, this.icon, this.label);
+IconData _icon(AdminSection s) => switch (s) {
+  AdminSection.overview => Icons.space_dashboard_outlined,
+  AdminSection.catalog => Icons.inventory_2_outlined,
+  AdminSection.sales => Icons.sell_outlined,
+  AdminSection.members => Icons.loyalty_outlined,
+  AdminSection.settings => Icons.settings_outlined,
+};
 
-  final String route;
-  final IconData icon;
-  final String Function(AppLocalizations) label;
-}
-
-final _destinations = <_Destination>[
-  _Destination(AppRoutes.admin, Icons.dashboard_outlined, (l) => l.navHome),
-  _Destination(AppRoutes.adminReports, Icons.bar_chart, (l) => l.navReports),
-  _Destination(
-    AppRoutes.adminProducts,
-    Icons.inventory_2_outlined,
-    (l) => l.navProducts,
-  ),
-  _Destination(
-    AppRoutes.adminCategories,
-    Icons.category_outlined,
-    (l) => l.navCategories,
-  ),
-  _Destination(
-    AppRoutes.adminSuppliers,
-    Icons.local_shipping_outlined,
-    (l) => l.navSuppliers,
-  ),
-  _Destination(
-    AppRoutes.adminStock,
-    Icons.warehouse_outlined,
-    (l) => l.navStock,
-  ),
-  _Destination(
-    AppRoutes.adminPurchaseOrders,
-    Icons.shopping_cart_outlined,
-    (l) => l.navPurchasing,
-  ),
-  _Destination(
-    AppRoutes.adminTransfers,
-    Icons.swap_horiz,
-    (l) => l.navTransfers,
-  ),
-  _Destination(
-    AppRoutes.adminGatewayPayments,
-    Icons.qr_code_2,
-    (l) => l.navGatewayPayments,
-  ),
-  _Destination(
-    AppRoutes.adminTables,
-    Icons.table_restaurant_outlined,
-    (l) => l.navTables,
-  ),
-  _Destination(AppRoutes.adminImport, Icons.import_export, (l) => l.navImport),
-  _Destination(
-    AppRoutes.adminPromotions,
-    Icons.sell_outlined,
-    (l) => l.navPromotions,
-  ),
-  _Destination(
-    AppRoutes.adminVouchers,
-    Icons.confirmation_number_outlined,
-    (l) => l.navVouchers,
-  ),
-  _Destination(
-    AppRoutes.adminShifts,
-    Icons.lock_clock_outlined,
-    (l) => l.navShifts,
-  ),
-  _Destination(AppRoutes.adminAudit, Icons.policy_outlined, (l) => l.navAudit),
-  _Destination(
-    AppRoutes.adminCustomers,
-    Icons.people_outline,
-    (l) => l.navCustomers,
-  ),
-  _Destination(
-    AppRoutes.adminKasbon,
-    Icons.request_quote_outlined,
-    (l) => l.navKasbon,
-  ),
-  _Destination(
-    AppRoutes.adminLoyalty,
-    Icons.stars_outlined,
-    (l) => l.navLoyalty,
-  ),
-  _Destination(
-    AppRoutes.adminSettings,
-    Icons.settings_outlined,
-    (l) => l.navSettings,
-  ),
-];
-
-/// Back-office frame: navigation rail on wide screens, drawer on phones,
-/// one app bar with the page title and sign-out.
+/// Back-office frame: the five-section sidebar (a drawer on phones), a top
+/// bar with the page title and sign-out, and the section's page tabs.
 class AdminShell extends ConsumerWidget {
   const new({required this.child, super.key});
 
   final Widget child;
 
-  int _selected(String location) {
-    for (var i = _destinations.length - 1; i > 0; i--) {
-      if (location.startsWith(_destinations[i].route)) return i;
-    }
-    return 0;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final location = GoRouterState.of(context).matchedLocation;
-    final selected = _selected(location);
+    final here = adminLocate(location);
+    final tabs = adminTabs(here.section);
     final wide = context.isWide;
 
-    void go(int i) {
-      context.go(_destinations[i].route);
+    void open(AdminSection s) {
+      context.go(adminTabs(s).first.route);
       if (!wide) Navigator.of(context).maybePop();
     }
 
-    final signOut = TextButton.icon(
-      key: const Key('sign-out'),
-      onPressed: () => ref.read(sessionControllerProvider.notifier).signOut(),
-      icon: const Icon(Icons.logout),
-      label: Text(l10n.adminSignOut),
+    List<Widget> items({required bool collapsed}) => [
+      for (final s in AdminSection.values)
+        SidebarItem(
+          key: Key('admin-nav-${s.name}'),
+          icon: _icon(s),
+          label: adminSectionLabel(l10n, s),
+          selected: s == here.section,
+          collapsed: collapsed,
+          onTap: () => open(s),
+        ),
+    ];
+
+    final body = Column(
+      children: [
+        _AdminTopBar(
+          title: tabs[here.tab].label(l10n),
+          showMenu: !wide,
+          onSignOut: () =>
+              ref.read(sessionControllerProvider.notifier).signOut(),
+        ),
+        if (tabs.length > 1)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              0,
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: _Tabs(tabs: tabs, selected: here.tab),
+            ),
+          ),
+        Expanded(child: child),
+      ],
     );
 
+    if (!wide) {
+      return Scaffold(
+        drawer: Drawer(
+          backgroundColor: Colors.transparent,
+          child: AppSidebar(collapsed: false, items: items(collapsed: false)),
+        ),
+        body: body,
+      );
+    }
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_destinations[selected].label(l10n)),
-        actions: [
-          signOut,
-          const SizedBox(width: AppSpacing.sm),
+      body: Row(
+        children: [
+          AppSidebar(collapsed: false, items: items(collapsed: false)),
+          Expanded(child: body),
         ],
       ),
-      drawer: wide
-          ? null
-          : NavigationDrawer(
-              selectedIndex: selected,
-              onDestinationSelected: go,
+    );
+  }
+}
+
+class _Tabs extends StatelessWidget {
+  const new({required this.tabs, required this.selected});
+
+  final List<AdminTab> tabs;
+  final int selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final (i, tab) in tabs.indexed)
+            Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.sm),
+              child: ChoiceChip(
+                key: Key('admin-tab-${tab.route}'),
+                label: Text(tab.label(l10n)),
+                selected: i == selected,
+                showCheckmark: false,
+                onSelected: (_) => context.go(tab.route),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AdminTopBar extends StatelessWidget {
+  const new({
+    required this.title,
+    required this.showMenu,
+    required this.onSignOut,
+  });
+
+  final String title;
+  final bool showMenu;
+  final VoidCallback onSignOut;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return GlassBlur(
+      borderRadius: BorderRadius.zero,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white.withValues(alpha: 0.45),
+          border: Border(
+            bottom: BorderSide(color: AppColors.white.withValues(alpha: 0.7)),
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          left: showMenu,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.sm,
+            ),
+            child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.xl),
-                  child: Text(
-                    l10n.appTitle,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                if (showMenu)
+                  Builder(
+                    builder: (context) => IconButton(
+                      key: const Key('admin-drawer-button'),
+                      tooltip: l10n.shellMore,
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                      icon: const Icon(Icons.menu, color: AppColors.text),
                     ),
                   ),
-                ),
-                for (final d in _destinations)
-                  NavigationDrawerDestination(
-                    icon: Icon(d.icon),
-                    label: Text(d.label(l10n)),
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                GlassPill(
+                  key: const Key('sign-out'),
+                  onTap: onSignOut,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.logout),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(l10n.adminSignOut),
+                    ],
+                  ),
+                ),
               ],
             ),
-      body: wide
-          ? Row(
-              children: [
-                // 18 destinations no longer fit a laptop screen: the rail
-                // scrolls instead of overflowing.
-                LayoutBuilder(
-                  builder: (context, constraints) => SingleChildScrollView(
-                    key: const Key('admin-rail-scroll'),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: IntrinsicHeight(
-                        child: NavigationRail(
-                          selectedIndex: selected,
-                          onDestinationSelected: go,
-                          labelType: NavigationRailLabelType.all,
-                          destinations: [
-                            for (final d in _destinations)
-                              NavigationRailDestination(
-                                icon: Icon(d.icon),
-                                label: Text(d.label(l10n)),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const VerticalDivider(width: 1),
-                Expanded(child: child),
-              ],
-            )
-          : child,
+          ),
+        ),
+      ),
     );
   }
 }
