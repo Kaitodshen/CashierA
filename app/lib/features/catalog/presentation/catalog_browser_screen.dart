@@ -5,7 +5,12 @@ import 'package:cashiera/app/shell/terminal_search.dart';
 import 'package:cashiera/core/catalog/catalog_item.dart';
 import 'package:cashiera/core/catalog/catalog_sync.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
+import 'package:cashiera/core/design_system/widgets/inputs.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
@@ -72,6 +77,8 @@ class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
     }
   }
 
+  StockFilter _stockFilter = StockFilter.all;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -90,83 +97,126 @@ class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
     final query = ref.watch(catalogQueryProvider);
     final sync = ref.watch(catalogSyncProvider);
     final staff = ref.watch(sessionControllerProvider).value?.staff;
-    final list = items.value ?? const <CatalogItem>[];
+    final all = items.value ?? const <CatalogItem>[];
+    final list = [
+      for (final i in all)
+        if (matchesStockFilter(i, _stockFilter)) i,
+    ];
+    final categoryNames = {for (final c in categories) c.id: c.name};
+    final unfiltered =
+        query.search.isEmpty &&
+        query.categoryId == null &&
+        _stockFilter == StockFilter.all;
 
+    // The shell's top bar holds the search; this is the stock table.
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
-        title: Text(l10n.catalogTitle),
-        actions: [
-          if (staff?.can('inventory.opname') ?? false)
-            TextButton.icon(
-              onPressed: () => context.go(AppRoutes.opname),
-              icon: const Icon(Icons.fact_check_outlined),
-              label: Text(l10n.opnameTitle),
-            ),
-          IconButton(
-            tooltip: sync.lastPulledAt == null
-                ? l10n.catalogRefresh
-                : l10n.catalogLastSync(
-                    DateFormat.Hm(locale).format(sync.lastPulledAt!),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            children: [
+              PageHeader(
+                title: l10n.catalogTitle,
+                status: Text(
+                  l10n.catalogHeaderCount(
+                    all.length,
+                    all.where((i) => i.isLow).length,
                   ),
-            onPressed: sync.running ? null : _refresh,
-            icon: sync.running
-                ? const SizedBox.square(
-                    dimension: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.cloud_download_outlined),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: AppSizes.minTouch + AppSpacing.sm,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              children: [
-                _CategoryChip(
-                  label: l10n.catalogAll,
-                  selected: query.categoryId == null,
-                  onTap: () =>
-                      ref.read(catalogQueryProvider.notifier).setCategory(null),
                 ),
-                for (final c in categories)
-                  _CategoryChip(
-                    label: c.name,
-                    color: _parseColor(c.color),
-                    selected: query.categoryId == c.id,
-                    onTap: () => ref
-                        .read(catalogQueryProvider.notifier)
-                        .setCategory(c.id),
+                actions: [
+                  if (staff?.can('inventory.opname') ?? false)
+                    SecondaryButton(
+                      key: const Key('catalog-opname'),
+                      label: l10n.opnameTitle,
+                      icon: Icons.fact_check_outlined,
+                      onPressed: () => context.go(AppRoutes.opname),
+                    ),
+                  IconButton(
+                    tooltip: sync.lastPulledAt == null
+                        ? l10n.catalogRefresh
+                        : l10n.catalogLastSync(
+                            DateFormat.Hm(locale).format(sync.lastPulledAt!),
+                          ),
+                    onPressed: sync.running ? null : _refresh,
+                    icon: sync.running
+                        ? const SizedBox.square(
+                            dimension: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.cloud_download_outlined),
                   ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: items.isLoading
-                ? Skeletonizer(
-                    child: _ItemList(items: _placeholders, onTap: (_) {}),
-                  )
-                : list.isEmpty
-                ? EmptyState(
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              GlassCard(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Wrap(
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.sm,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    ChipTabs<String?>(
+                      items: [
+                        (null, l10n.catalogAll),
+                        for (final c in categories) (c.id, c.name),
+                      ],
+                      selected: query.categoryId,
+                      onSelected: (id) => ref
+                          .read(catalogQueryProvider.notifier)
+                          .setCategory(id),
+                    ),
+                    // Three segments are wider than a phone card: scroll.
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: SegmentedTabs<StockFilter>(
+                        items: [
+                          (StockFilter.all, l10n.stockFilterAll),
+                          (StockFilter.low, l10n.stockFilterLow),
+                          (StockFilter.out, l10n.stockFilterOut),
+                        ],
+                        selected: _stockFilter,
+                        onSelected: (f) => setState(() => _stockFilter = f),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              if (items.isLoading)
+                Skeletonizer(
+                  child: _ItemTable(
+                    items: _placeholders,
+                    categoryNames: const {},
+                    onTap: (_) {},
+                  ),
+                )
+              else if (list.isEmpty)
+                GlassCard(
+                  child: EmptyState(
                     icon: Icons.inventory_2_outlined,
-                    message: query.search.isEmpty && query.categoryId == null
+                    message: unfiltered
                         ? l10n.catalogEmpty
                         : l10n.catalogNoMatch,
-                    action: query.search.isEmpty && query.categoryId == null
-                        ? OutlinedButton.icon(
+                    action: unfiltered
+                        ? SecondaryButton(
                             onPressed: _refresh,
-                            icon: const Icon(Icons.cloud_download_outlined),
-                            label: Text(l10n.catalogRefresh),
+                            icon: Icons.cloud_download_outlined,
+                            label: l10n.catalogRefresh,
                           )
                         : null,
-                  )
-                : _ItemList(items: list, onTap: _openItem),
+                  ),
+                )
+              else
+                _ItemTable(
+                  items: list,
+                  categoryNames: categoryNames,
+                  onTap: _openItem,
+                ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -194,101 +244,143 @@ class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
   );
 }
 
-Color? _parseColor(String? hex) {
-  if (hex == null || !RegExp(r'^#[0-9A-Fa-f]{6}$').hasMatch(hex)) return null;
-  return Color(int.parse('FF${hex.substring(1)}', radix: 16));
+/// The stock-status filter above the catalog table.
+enum StockFilter { all, low, out }
+
+bool matchesStockFilter(CatalogItem i, StockFilter f) => switch (f) {
+  StockFilter.all => true,
+  StockFilter.low => i.trackStock && i.isLow,
+  StockFilter.out => i.trackStock && i.stock.milli <= 0,
+};
+
+StatusTone _stockTone(CatalogItem i) => i.stock.milli <= 0
+    ? StatusTone.error
+    : i.isLow
+    ? StatusTone.warning
+    : StatusTone.success;
+
+/// Fill of the stock bar: stock against three times the reorder point (a
+/// full bar is "comfortably stocked"); full when there is no reorder point.
+double _stockFraction(CatalogItem i) {
+  final reorder = i.reorderPoint?.milli ?? 0;
+  if (reorder <= 0) return i.stock.milli > 0 ? 1 : 0;
+  return i.stock.milli / (reorder * 3);
 }
 
-class _CategoryChip extends StatelessWidget {
+class _ItemTable extends StatelessWidget {
   const new({
-    required this.label,
-    required this.selected,
+    required this.items,
+    required this.categoryNames,
     required this.onTap,
-    this.color,
   });
 
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-  final Color? color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: AppSpacing.sm),
-      child: ChoiceChip(
-        label: Text(label),
-        selected: selected,
-        onSelected: (_) => onTap(),
-        avatar: color == null
-            ? null
-            : CircleAvatar(backgroundColor: color, radius: 6),
-      ),
-    );
-  }
-}
-
-class _ItemList extends StatelessWidget {
-  const new({required this.items, required this.onTap});
-
   final List<CatalogItem> items;
-  final ValueChanged<CatalogItem> onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: items.length,
-      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-      itemBuilder: (context, i) => _ItemTile(item: items[i], onTap: onTap),
-    );
-  }
-}
-
-class _ItemTile extends StatelessWidget {
-  const new({required this.item, required this.onTap});
-
-  final CatalogItem item;
+  final Map<String, String> categoryNames;
   final ValueChanged<CatalogItem> onTap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    return Card(
-      key: Key('catalog-item-${item.sku}'),
-      child: ListTile(
-        onTap: () => onTap(item),
-        title: Text(
-          item.displayName,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        subtitle: Text(
-          [
-            item.sku,
-            if (item.trackStock)
-              l10n.catalogStock(item.stock.toPlain(), item.unitCode),
-          ].join(' · '),
-          style: TextStyle(color: item.isLow ? AppColors.warning : null),
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              item.price.format(),
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: AppColors.textMuted,
+    );
+    return GlassTable<CatalogItem>(
+      rows: items,
+      onRowTap: onTap,
+      columns: [
+        GlassColumn(
+          label: l10n.catalogColProduct,
+          flex: 4,
+          cell: (i) => Row(
+            key: Key('catalog-item-${i.sku}'),
+            children: [
+              ProductThumb(name: i.productName, size: 40),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      i.productName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    if (i.variantName != 'Default')
+                      Text(
+                        i.variantName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: muted,
+                      ),
+                  ],
+                ),
               ),
+            ],
+          ),
+        ),
+        GlassColumn(
+          label: l10n.catalogColSku,
+          flex: 2,
+          cell: (i) => Text(
+            [i.sku, ?i.barcode].join('\n'),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: muted?.copyWith(
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
-            if (item.isLow)
-              Text(
-                l10n.catalogLow,
-                style: const TextStyle(color: AppColors.warning, fontSize: 12),
-              ),
-          ],
+          ),
         ),
-      ),
+        GlassColumn(
+          label: l10n.catalogColCategory,
+          flex: 2,
+          cell: (i) {
+            final name = categoryNames[i.categoryId];
+            return name == null
+                ? const Text('—')
+                : StatusChip(label: name, tone: StatusTone.primary);
+          },
+        ),
+        GlassColumn(
+          label: l10n.catalogColStock,
+          flex: 2,
+          cell: (i) => !i.trackStock
+              ? const Text('—')
+              : SizedBox(
+                  width: 120,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${i.stock.toPlain()} ${i.unitCode}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: _stockTone(i).text,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      StockBar(
+                        fraction: _stockFraction(i),
+                        tone: _stockTone(i),
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+        GlassColumn(
+          label: l10n.catalogColPrice,
+          flex: 2,
+          numeric: true,
+          cell: (i) => MoneyText(
+            i.price,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+        ),
+      ],
     );
   }
 }

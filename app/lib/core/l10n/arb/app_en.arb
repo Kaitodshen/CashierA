@@ -934,5 +934,14 @@
   "overviewRecent": "Recent orders",
   "overviewPayments": "Payment breakdown",
   "overviewNoOrders": "No sales in this shift yet.",
-  "overviewSubtitle": "Shift dashboard"
+  "overviewSubtitle": "Shift dashboard",
+  "catalogHeaderCount": "{count} SKUs • {low} low stock",
+  "stockFilterAll": "All stock",
+  "stockFilterLow": "Low",
+  "stockFilterOut": "Out",
+  "catalogColProduct": "Product",
+  "catalogColSku": "SKU / Barcode",
+  "catalogColCategory": "Category",
+  "catalogColStock": "Stock",
+  "catalogColPrice": "Price"
 }

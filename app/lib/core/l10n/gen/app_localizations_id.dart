@@ -3339,4 +3339,33 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get overviewSubtitle => 'Dasbor shift';
+
+  @override
+  String catalogHeaderCount(int count, int low) {
+    return '$count SKU • $low stok menipis';
+  }
+
+  @override
+  String get stockFilterAll => 'Semua stok';
+
+  @override
+  String get stockFilterLow => 'Menipis';
+
+  @override
+  String get stockFilterOut => 'Habis';
+
+  @override
+  String get catalogColProduct => 'Produk';
+
+  @override
+  String get catalogColSku => 'SKU / Barcode';
+
+  @override
+  String get catalogColCategory => 'Kategori';
+
+  @override
+  String get catalogColStock => 'Stok';
+
+  @override
+  String get catalogColPrice => 'Harga';
 }

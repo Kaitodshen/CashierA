@@ -2429,5 +2429,24 @@
   "overviewRecent": "Pesanan terakhir",
   "overviewPayments": "Rincian pembayaran",
   "overviewNoOrders": "Belum ada penjualan di shift ini.",
-  "overviewSubtitle": "Dasbor shift"
+  "overviewSubtitle": "Dasbor shift",
+  "catalogHeaderCount": "{count} SKU • {low} stok menipis",
+  "@catalogHeaderCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "low": {
+        "type": "int"
+      }
+    }
+  },
+  "stockFilterAll": "Semua stok",
+  "stockFilterLow": "Menipis",
+  "stockFilterOut": "Habis",
+  "catalogColProduct": "Produk",
+  "catalogColSku": "SKU / Barcode",
+  "catalogColCategory": "Kategori",
+  "catalogColStock": "Stok",
+  "catalogColPrice": "Harga"
 }

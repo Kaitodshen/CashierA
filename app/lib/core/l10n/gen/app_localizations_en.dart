@@ -3384,4 +3384,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overviewSubtitle => 'Shift dashboard';
+
+  @override
+  String catalogHeaderCount(int count, int low) {
+    return '$count SKUs • $low low stock';
+  }
+
+  @override
+  String get stockFilterAll => 'All stock';
+
+  @override
+  String get stockFilterLow => 'Low';
+
+  @override
+  String get stockFilterOut => 'Out';
+
+  @override
+  String get catalogColProduct => 'Product';
+
+  @override
+  String get catalogColSku => 'SKU / Barcode';
+
+  @override
+  String get catalogColCategory => 'Category';
+
+  @override
+  String get catalogColStock => 'Stock';
+
+  @override
+  String get catalogColPrice => 'Price';
 }

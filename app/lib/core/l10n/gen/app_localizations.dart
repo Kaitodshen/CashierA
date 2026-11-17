@@ -5707,6 +5707,60 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Dasbor shift'**
   String get overviewSubtitle;
+
+  /// No description provided for @catalogHeaderCount.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} SKU • {low} stok menipis'**
+  String catalogHeaderCount(int count, int low);
+
+  /// No description provided for @stockFilterAll.
+  ///
+  /// In id, this message translates to:
+  /// **'Semua stok'**
+  String get stockFilterAll;
+
+  /// No description provided for @stockFilterLow.
+  ///
+  /// In id, this message translates to:
+  /// **'Menipis'**
+  String get stockFilterLow;
+
+  /// No description provided for @stockFilterOut.
+  ///
+  /// In id, this message translates to:
+  /// **'Habis'**
+  String get stockFilterOut;
+
+  /// No description provided for @catalogColProduct.
+  ///
+  /// In id, this message translates to:
+  /// **'Produk'**
+  String get catalogColProduct;
+
+  /// No description provided for @catalogColSku.
+  ///
+  /// In id, this message translates to:
+  /// **'SKU / Barcode'**
+  String get catalogColSku;
+
+  /// No description provided for @catalogColCategory.
+  ///
+  /// In id, this message translates to:
+  /// **'Kategori'**
+  String get catalogColCategory;
+
+  /// No description provided for @catalogColStock.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok'**
+  String get catalogColStock;
+
+  /// No description provided for @catalogColPrice.
+  ///
+  /// In id, this message translates to:
+  /// **'Harga'**
+  String get catalogColPrice;
 }
 
 class _AppLocalizationsDelegate
