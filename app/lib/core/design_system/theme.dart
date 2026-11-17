@@ -142,6 +142,26 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(AppRadius.pill),
         ),
       ),
+      // Selected segments follow the selected chips: rose on soft rose.
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? AppColors.primarySoft
+                : null,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? AppColors.primary
+                : null,
+          ),
+          iconColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? AppColors.primary
+                : null,
+          ),
+        ),
+      ),
       dialogTheme: DialogThemeData(
         backgroundColor: AppColors.white.withValues(alpha: 0.78),
         surfaceTintColor: Colors.transparent,
