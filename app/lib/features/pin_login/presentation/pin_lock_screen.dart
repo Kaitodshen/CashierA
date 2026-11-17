@@ -1,7 +1,10 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/auth/pin_verifier.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/pin_pad.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
@@ -106,20 +109,31 @@ class _PinLockScreenState extends ConsumerState<PinLockScreen> {
                 : () => setState(() => _selected = null),
           );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          [
-            session?.store?.store.name,
-            if (session?.device != null)
-              l10n.posTerminal(session!.device!.deviceCode),
-          ].nonNulls.join(' · '),
-        ),
-        actions: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            child: TerminalStatusChip(),
+    final header = GlassCard(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      child: Row(
+        children: [
+          if (context.isWide) ...[
+            const AppLogoTile(size: 40),
+            const SizedBox(width: AppSpacing.md),
+          ],
+          Expanded(
+            child: Text(
+              [
+                session?.store?.store.name,
+                if (session?.device != null)
+                  l10n.posTerminal(session!.device!.deviceCode),
+              ].nonNulls.join(' · '),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
+          const SizedBox(width: AppSpacing.sm),
+          const Flexible(child: TerminalStatusChip()),
           IconButton(
             tooltip: l10n.lockRefreshStaff,
             onPressed: _refreshing ? null : _refreshRoster,
@@ -127,21 +141,40 @@ class _PinLockScreenState extends ConsumerState<PinLockScreen> {
           ),
         ],
       ),
+    );
+    Widget pane(Widget child) =>
+        GlassCard(level: GlassLevel.solid, child: child);
+
+    return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.lg),
-          child: context.isWide
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(flex: 65, child: _titled(l10n.lockTitle, grid)),
-                    const SizedBox(width: AppSpacing.lg),
-                    Expanded(flex: 35, child: Center(child: pad)),
-                  ],
-                )
-              : _selected == null
-              ? _titled(l10n.lockTitle, grid)
-              : Center(child: pad),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              header,
+              const SizedBox(height: AppSpacing.lg),
+              Expanded(
+                child: context.isWide
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            flex: 65,
+                            child: pane(_titled(l10n.lockTitle, grid)),
+                          ),
+                          const SizedBox(width: AppSpacing.lg),
+                          Expanded(flex: 35, child: pane(Center(child: pad))),
+                        ],
+                      )
+                    : pane(
+                        _selected == null
+                            ? _titled(l10n.lockTitle, grid)
+                            : Center(child: pad),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -191,56 +224,42 @@ class _StaffGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 180,
         mainAxisSpacing: AppSpacing.md,
         crossAxisSpacing: AppSpacing.md,
-        childAspectRatio: 1.1,
       ),
       itemCount: staff.length,
       itemBuilder: (context, i) {
         final member = staff[i];
         final selected = member.employeeId == selectedId;
-        return Card(
+        return Container(
           key: Key('staff-${member.employeeId}'),
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.card),
-            side: BorderSide(
-              color: selected ? AppColors.primary : scheme.outline,
-              width: selected ? 2 : 1,
-            ),
-          ),
-          child: InkWell(
+          foregroundDecoration: selected
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppRadius.tile),
+                  border: Border.all(color: AppColors.primary, width: 2),
+                )
+              : null,
+          child: GlassCard(
+            level: selected ? GlassLevel.solid : GlassLevel.regular,
+            radius: AppRadius.tile,
+            padding: const EdgeInsets.all(AppSpacing.md),
             onTap: () => onSelected(member),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 26,
-                    backgroundColor: AppColors.primary.withValues(alpha: 0.2),
-                    child: Text(
-                      member.initials,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    member.fullName,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InitialsAvatar(name: member.fullName, size: 44),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  member.fullName,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ],
             ),
           ),
         );
@@ -279,9 +298,11 @@ class _PinPanel extends StatelessWidget {
                   onPressed: onBack,
                   icon: const Icon(Icons.arrow_back),
                 ),
-              Text(
-                l10n.lockEnterPin(staff.fullName),
-                style: Theme.of(context).textTheme.titleMedium,
+              Flexible(
+                child: Text(
+                  l10n.lockEnterPin(staff.fullName),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ),
             ],
           ),

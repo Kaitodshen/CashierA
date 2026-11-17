@@ -1,6 +1,8 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/auth/pairing_code.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/session/session_controller.dart';
@@ -52,55 +54,54 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.pairTitle)),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(l10n.pairBody),
-                  const SizedBox(height: AppSpacing.xl),
-                  TextFormField(
-                    key: const Key('pairing-code'),
-                    controller: _code,
-                    enabled: !_busy,
-                    autofocus: true,
-                    textCapitalization: TextCapitalization.characters,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      letterSpacing: 6,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    inputFormatters: [LengthLimitingTextInputFormatter(10)],
-                    decoration: InputDecoration(labelText: l10n.pairCodeLabel),
-                    validator: (value) => isValidPairingCode(value ?? '')
-                        ? null
-                        : l10n.pairInvalidCode,
-                    onFieldSubmitted: (_) => _submit(),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  FilledButton.icon(
-                    key: const Key('pairing-submit'),
-                    onPressed: _busy ? null : _submit,
-                    icon: _busy
-                        ? const SizedBox.square(
-                            dimension: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.link),
-                    label: Text(l10n.pairButton),
-                  ),
-                ],
-              ),
+    return CenteredGlassPage(
+      maxWidth: 460,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Align(alignment: Alignment.centerLeft, child: AppLogoTile()),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              l10n.pairTitle,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
-          ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(l10n.pairBody),
+            const SizedBox(height: AppSpacing.xl),
+            TextFormField(
+              key: const Key('pairing-code'),
+              controller: _code,
+              enabled: !_busy,
+              autofocus: true,
+              textCapitalization: TextCapitalization.characters,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 28,
+                letterSpacing: 6,
+                fontWeight: FontWeight.w600,
+              ),
+              inputFormatters: [LengthLimitingTextInputFormatter(10)],
+              decoration: InputDecoration(labelText: l10n.pairCodeLabel),
+              validator: (value) =>
+                  isValidPairingCode(value ?? '') ? null : l10n.pairInvalidCode,
+              onFieldSubmitted: (_) => _submit(),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            PrimaryButton(
+              key: const Key('pairing-submit'),
+              onPressed: _busy ? null : _submit,
+              icon: Icons.link,
+              label: l10n.pairButton,
+              expand: true,
+            ),
+            if (_busy) ...[
+              const SizedBox(height: AppSpacing.md),
+              const LinearProgressIndicator(),
+            ],
+          ],
         ),
       ),
     );

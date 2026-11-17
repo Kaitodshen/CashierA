@@ -78,3 +78,27 @@ class FlowHeader extends StatelessWidget {
     );
   }
 }
+
+/// The rose CashierA logo tile of the sidebar, for screens without one.
+class AppLogoTile extends StatelessWidget {
+  const new({this.size = 56, super.key});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryPressed],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppRadius.tile),
+      ),
+      child: Icon(Icons.storefront, color: AppColors.white, size: size * 0.5),
+    );
+  }
+}
