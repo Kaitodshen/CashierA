@@ -949,5 +949,13 @@
   "membersCount": "Members",
   "membersPoints": "Points outstanding",
   "membersOwed": "Kasbon owed",
-  "commonBack": "Back"
+  "commonBack": "Back",
+  "settingsTitle": "Settings",
+  "settingsStoreProfile": "Store profile",
+  "settingsTerminal": "Terminal & sync",
+  "settingsOpenSync": "Open sync",
+  "settingsVisualEffects": "Visual effects",
+  "settingsVisualEffectsHint": "Frosted blur on the top bar and dialogs. Turn off on slow tablets.",
+  "settingsPaper": "Receipt paper {mm} mm",
+  "settingsTaxOff": "Not charged"
 }

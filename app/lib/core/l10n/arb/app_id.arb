@@ -2454,5 +2454,20 @@
   "membersCount": "Member",
   "membersPoints": "Poin beredar",
   "membersOwed": "Kasbon belum lunas",
-  "commonBack": "Kembali"
+  "commonBack": "Kembali",
+  "settingsTitle": "Pengaturan",
+  "settingsStoreProfile": "Profil toko",
+  "settingsTerminal": "Terminal & sinkronisasi",
+  "settingsOpenSync": "Buka sinkronisasi",
+  "settingsVisualEffects": "Efek visual",
+  "settingsVisualEffectsHint": "Blur kaca di bar atas dan dialog. Matikan di tablet yang lambat.",
+  "settingsPaper": "Kertas struk {mm} mm",
+  "@settingsPaper": {
+    "placeholders": {
+      "mm": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsTaxOff": "Tidak dipungut"
 }

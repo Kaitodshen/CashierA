@@ -5797,6 +5797,54 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Kembali'**
   String get commonBack;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengaturan'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsStoreProfile.
+  ///
+  /// In id, this message translates to:
+  /// **'Profil toko'**
+  String get settingsStoreProfile;
+
+  /// No description provided for @settingsTerminal.
+  ///
+  /// In id, this message translates to:
+  /// **'Terminal & sinkronisasi'**
+  String get settingsTerminal;
+
+  /// No description provided for @settingsOpenSync.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka sinkronisasi'**
+  String get settingsOpenSync;
+
+  /// No description provided for @settingsVisualEffects.
+  ///
+  /// In id, this message translates to:
+  /// **'Efek visual'**
+  String get settingsVisualEffects;
+
+  /// No description provided for @settingsVisualEffectsHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Blur kaca di bar atas dan dialog. Matikan di tablet yang lambat.'**
+  String get settingsVisualEffectsHint;
+
+  /// No description provided for @settingsPaper.
+  ///
+  /// In id, this message translates to:
+  /// **'Kertas struk {mm} mm'**
+  String settingsPaper(int mm);
+
+  /// No description provided for @settingsTaxOff.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak dipungut'**
+  String get settingsTaxOff;
 }
 
 class _AppLocalizationsDelegate

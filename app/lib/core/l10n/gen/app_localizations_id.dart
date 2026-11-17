@@ -3386,4 +3386,31 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get commonBack => 'Kembali';
+
+  @override
+  String get settingsTitle => 'Pengaturan';
+
+  @override
+  String get settingsStoreProfile => 'Profil toko';
+
+  @override
+  String get settingsTerminal => 'Terminal & sinkronisasi';
+
+  @override
+  String get settingsOpenSync => 'Buka sinkronisasi';
+
+  @override
+  String get settingsVisualEffects => 'Efek visual';
+
+  @override
+  String get settingsVisualEffectsHint =>
+      'Blur kaca di bar atas dan dialog. Matikan di tablet yang lambat.';
+
+  @override
+  String settingsPaper(int mm) {
+    return 'Kertas struk $mm mm';
+  }
+
+  @override
+  String get settingsTaxOff => 'Tidak dipungut';
 }

@@ -3431,4 +3431,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonBack => 'Back';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsStoreProfile => 'Store profile';
+
+  @override
+  String get settingsTerminal => 'Terminal & sync';
+
+  @override
+  String get settingsOpenSync => 'Open sync';
+
+  @override
+  String get settingsVisualEffects => 'Visual effects';
+
+  @override
+  String get settingsVisualEffectsHint =>
+      'Frosted blur on the top bar and dialogs. Turn off on slow tablets.';
+
+  @override
+  String settingsPaper(int mm) {
+    return 'Receipt paper $mm mm';
+  }
+
+  @override
+  String get settingsTaxOff => 'Not charged';
 }
