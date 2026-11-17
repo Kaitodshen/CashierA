@@ -142,8 +142,8 @@ class TerminalSyncCard extends ConsumerWidget {
         children: [
           if (device != null)
             _InfoRow(
-              l10n.settingsTerminal,
-              l10n.posTerminal(device.deviceCode),
+              l10n.reportTerminal,
+              [device.deviceCode, device.name].join(' · '),
             ),
           _InfoRow(
             l10n.syncTitle,
