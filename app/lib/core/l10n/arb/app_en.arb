@@ -943,5 +943,11 @@
   "catalogColSku": "SKU / Barcode",
   "catalogColCategory": "Category",
   "catalogColStock": "Stock",
-  "catalogColPrice": "Price"
+  "catalogColPrice": "Price",
+  "membersTitle": "Members",
+  "membersSubtitle": "Points, kasbon and purchase history",
+  "membersCount": "Members",
+  "membersPoints": "Points outstanding",
+  "membersOwed": "Kasbon owed",
+  "commonBack": "Back"
 }

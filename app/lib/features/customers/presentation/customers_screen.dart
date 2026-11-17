@@ -1,7 +1,10 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
@@ -134,79 +137,181 @@ class _CustomersScreenState extends ConsumerState<CustomersScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
     final customers =
         ref.watch(customerSearchProvider(_query)).value ?? const [];
+    // The header counts the store's members, not the search result.
+    final everyone = ref.watch(customerSearchProvider('')).value ?? const [];
     final owed = ref.watch(kasbonOutstandingProvider).value ?? const {};
     final canAdd = ref.watch(saleContextProvider)?.staff.can('customer.manage');
+    final totals = memberTotals(everyone, owed);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
-        title: Text(l10n.customersTitle),
-        actions: const [],
+    final stats = [
+      StatCard(
+        icon: Icons.groups_outlined,
+        label: l10n.membersCount,
+        value: '${totals.members}',
       ),
-      floatingActionButton: canAdd ?? false
-          ? FloatingActionButton.extended(
-              key: const Key('customer-add'),
-              onPressed: _add,
-              icon: const Icon(Icons.person_add_alt),
-              label: Text(l10n.commonAdd),
-            )
-          : null,
-      body: Column(
-        children: [
-          Padding(
+      StatCard(
+        icon: Icons.stars_outlined,
+        label: l10n.membersPoints,
+        value: '${totals.points}',
+        tint: AppColors.warning,
+      ),
+      StatCard(
+        icon: Icons.receipt_long_outlined,
+        label: l10n.membersOwed,
+        value: totals.owed.format(),
+        tint: AppColors.error,
+      ),
+    ];
+
+    // The shell's top bar holds the title; this is the member list.
+    return Scaffold(
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: ListView(
             padding: const EdgeInsets.all(AppSpacing.lg),
-            child: TextField(
-              key: const Key('customer-search'),
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                hintText: l10n.customersSearch,
+            children: [
+              PageHeader(
+                title: l10n.membersTitle,
+                subtitle: l10n.membersSubtitle,
+                actions: [
+                  if (canAdd ?? false)
+                    PrimaryButton(
+                      key: const Key('customer-add'),
+                      label: l10n.commonAdd,
+                      icon: Icons.person_add_alt,
+                      onPressed: _add,
+                    ),
+                ],
               ),
-              onChanged: (v) => setState(() => _query = v),
-            ),
-          ),
-          Expanded(
-            child: customers.isEmpty
-                ? EmptyState(
+              const SizedBox(height: AppSpacing.lg),
+              LayoutBuilder(
+                builder: (context, c) => c.maxWidth < AppSizes.splitBreakpoint
+                    ? Column(
+                        children: [
+                          for (final s in stats)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: AppSpacing.sm,
+                              ),
+                              child: s,
+                            ),
+                        ],
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final (i, s) in stats.indexed) ...[
+                            if (i > 0) const SizedBox(width: AppSpacing.md),
+                            Expanded(child: s),
+                          ],
+                        ],
+                      ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              GlassCard(
+                level: GlassLevel.solid,
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: TextField(
+                  key: const Key('customer-search'),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: l10n.customersSearch,
+                  ),
+                  onChanged: (v) => setState(() => _query = v),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              if (customers.isEmpty)
+                GlassCard(
+                  child: EmptyState(
                     icon: Icons.people_outline,
                     message: l10n.customersEmpty,
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.only(bottom: 96),
-                    itemCount: customers.length,
-                    separatorBuilder: (_, _) => const Divider(height: 1),
-                    itemBuilder: (context, i) {
-                      final c = customers[i];
-                      final debt = owed[c.id];
-                      return ListTile(
-                        key: Key('customer-${c.id}'),
-                        leading: const CircleAvatar(child: Icon(Icons.person)),
-                        title: Text(c.name),
-                        subtitle: Text(
-                          [
-                            ?c.phone,
-                            l10n.customersPoints(c.pointsBalance),
-                          ].join(' · '),
-                        ),
-                        trailing: debt == null
-                            ? null
-                            : Text(
-                                l10n.customersOwes(debt.format()),
-                                style: const TextStyle(
-                                  color: AppColors.warning,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                        onTap: () => context.go(AppRoutes.customer(c.id)),
-                      );
-                    },
                   ),
+                )
+              else
+                for (final c in customers)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: GlassCard(
+                      key: Key('customer-${c.id}'),
+                      level: GlassLevel.solid,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.md,
+                      ),
+                      onTap: () => context.go(AppRoutes.customer(c.id)),
+                      child: Row(
+                        children: [
+                          InitialsAvatar(name: c.name, size: 44),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  c.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  [
+                                    ?c.phone,
+                                    l10n.customersPoints(c.pointsBalance),
+                                  ].join(' · '),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (owed[c.id] case final debt?) ...[
+                            const SizedBox(width: AppSpacing.sm),
+                            StatusChip(
+                              label: l10n.customersOwes(debt.format()),
+                              tone: StatusTone.warning,
+                            ),
+                          ],
+                          const Icon(
+                            Icons.chevron_right,
+                            color: AppColors.textMuted,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              const SizedBox(height: AppSpacing.xxl),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
+}
+
+/// Header numbers of the member list: how many, their points, and the
+/// kasbon they owe (only the listed customers' debts count).
+({int members, int points, Money owed}) memberTotals(
+  List<CustomerRow> customers,
+  Map<String, Money> owed,
+) {
+  var points = 0;
+  var debt = Money.zero;
+  for (final c in customers) {
+    points += c.pointsBalance;
+    debt = debt + (owed[c.id] ?? Money.zero);
+  }
+  return (members: customers.length, points: points, owed: debt);
 }
 
 /// One customer: points, open kasbon, installments, and **Bayar kasbon**.
@@ -327,12 +432,42 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
     ]);
     final time = DateFormat('dd/MM HH:mm');
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.customers)),
-        title: Text(customer?.name ?? l10n.customersTitle),
-        actions: [
-          if (customer != null && (ctx?.staff.can('customer.manage') ?? false))
+    if (customer == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: AppColors.textMuted,
+    );
+    Widget title(String text) => Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Text(text, style: theme.textTheme.titleMedium),
+    );
+
+    final profile = GlassCard(
+      level: GlassLevel.solid,
+      child: Row(
+        children: [
+          InitialsAvatar(name: customer.name, size: 64),
+          const SizedBox(width: AppSpacing.lg),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  customer.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleLarge,
+                ),
+                Text(
+                  [?customer.code, ?customer.phone].join(' · '),
+                  style: muted,
+                ),
+              ],
+            ),
+          ),
+          if (ctx?.staff.can('customer.manage') ?? false)
             IconButton(
               key: const Key('customer-edit'),
               tooltip: l10n.customerEdit,
@@ -341,124 +476,180 @@ class _CustomerDetailScreenState extends ConsumerState<CustomerDetailScreen> {
             ),
         ],
       ),
-      body: customer == null
-          ? const Center(child: CircularProgressIndicator())
-          : Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 680),
-                child: ListView(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  children: [
-                    Card(
-                      child: ListTile(
-                        leading: const Icon(Icons.stars_outlined),
-                        title: Text(
-                          l10n.customersPoints(customer.pointsBalance),
-                          key: const Key('customer-points'),
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        subtitle: Text(
-                          [?customer.code, ?customer.phone].join(' · '),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            l10n.customerTotalOwed(owed.format()),
-                            key: const Key('customer-owed'),
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                        ),
-                        if (ctx?.staff.can('kasbon.manage') ?? false)
-                          FilledButton.icon(
-                            key: const Key('customer-pay'),
-                            onPressed: _busy || owed.rupiah == 0
-                                ? null
-                                : () => _repay(customer, owed),
-                            icon: const Icon(Icons.payments_outlined),
-                            label: Text(l10n.customerPay),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Card(
-                      child: Column(
-                        children: [
-                          if (kasbon.isEmpty)
-                            ListTile(title: Text(l10n.customerNoKasbon)),
-                          for (final r in kasbon)
-                            () {
-                              final debt = KasbonDebt(
-                                orderId: r.orderId,
-                                amount: Money(r.amount),
-                                paid: Money(r.paidAmount),
-                                dueDate: r.dueDate,
-                              );
-                              final late = debt.daysLate(today);
-                              return ListTile(
-                                key: Key('kasbon-${r.orderId}'),
-                                title: Text(
-                                  l10n.customerKasbonLine(
-                                    debt.remaining.format(),
-                                    debt.amount.format(),
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  [
-                                    ?numbers[r.orderId],
-                                    l10n.customerDue(_day.format(r.dueDate)),
-                                  ].join(' · '),
-                                ),
-                                trailing: late > 0
-                                    ? Text(
-                                        l10n.customerOverdue(late),
-                                        style: const TextStyle(
-                                          color: AppColors.error,
-                                        ),
-                                      )
-                                    : null,
-                              );
-                            }(),
-                        ],
-                      ),
-                    ),
-                    if (installments.isNotEmpty) ...[
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(
-                        l10n.customerInstallments,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Card(
-                        child: Column(
-                          children: [
-                            for (final p in installments)
-                              ListTile(
-                                dense: true,
-                                title: Text(Money(p.amount).format()),
-                                subtitle: Text(
-                                  [
-                                    time.format(
-                                      config?.localTime(p.paidAt) ??
-                                          p.paidAt.toLocal(),
-                                    ),
-                                    refundMethodLabel(l10n, p.methodType),
-                                    ?p.reference,
-                                    p.employeeName,
-                                  ].join(' · '),
-                                ),
-                                trailing: Text(numbers[p.orderId] ?? ''),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+    );
+
+    final points = GlassCard(
+      level: GlassLevel.solid,
+      child: Row(
+        children: [
+          const Icon(Icons.stars_outlined, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(
+              l10n.customersPoints(customer.pointsBalance),
+              key: const Key('customer-points'),
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+
+    final kasbonCard = GlassCard(
+      level: GlassLevel.solid,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: AppSpacing.md,
+            runSpacing: AppSpacing.sm,
+            children: [
+              Text(
+                l10n.customerTotalOwed(owed.format()),
+                key: const Key('customer-owed'),
+                style: theme.textTheme.titleMedium,
+              ),
+              if (ctx?.staff.can('kasbon.manage') ?? false)
+                PrimaryButton(
+                  key: const Key('customer-pay'),
+                  onPressed: _busy || owed.rupiah == 0
+                      ? null
+                      : () => _repay(customer, owed),
+                  icon: Icons.payments_outlined,
+                  label: l10n.customerPay,
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          if (kasbon.isEmpty)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.customerNoKasbon),
+            ),
+          for (final r in kasbon)
+            () {
+              final debt = KasbonDebt(
+                orderId: r.orderId,
+                amount: Money(r.amount),
+                paid: Money(r.paidAmount),
+                dueDate: r.dueDate,
+              );
+              final late = debt.daysLate(today);
+              return ListTile(
+                key: Key('kasbon-${r.orderId}'),
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  l10n.customerKasbonLine(
+                    debt.remaining.format(),
+                    debt.amount.format(),
+                  ),
+                ),
+                subtitle: Text(
+                  [
+                    ?numbers[r.orderId],
+                    l10n.customerDue(_day.format(r.dueDate)),
+                  ].join(' · '),
+                ),
+                trailing: late > 0
+                    ? StatusChip(
+                        label: l10n.customerOverdue(late),
+                        tone: StatusTone.error,
+                      )
+                    : null,
+              );
+            }(),
+        ],
+      ),
+    );
+
+    final installmentsCard = installments.isEmpty
+        ? null
+        : GlassCard(
+            level: GlassLevel.solid,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                title(l10n.customerInstallments),
+                for (final p in installments)
+                  ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(Money(p.amount).format()),
+                    subtitle: Text(
+                      [
+                        time.format(
+                          config?.localTime(p.paidAt) ?? p.paidAt.toLocal(),
+                        ),
+                        refundMethodLabel(l10n, p.methodType),
+                        ?p.reference,
+                        p.employeeName,
+                      ].join(' · '),
+                    ),
+                    trailing: Text(numbers[p.orderId] ?? ''),
+                  ),
+              ],
+            ),
+          );
+
+    const gap = SizedBox(height: AppSpacing.md, width: AppSpacing.md);
+    final left = [profile, gap, points];
+    final right = [
+      kasbonCard,
+      if (installmentsCard != null) ...[gap, installmentsCard],
+    ];
+
+    return Scaffold(
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SecondaryButton(
+                  key: const Key('member-back'),
+                  label: l10n.commonBack,
+                  icon: Icons.arrow_back,
+                  onPressed: () => context.go(AppRoutes.customers),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              LayoutBuilder(
+                builder: (context, c) => c.maxWidth < 900
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [...left, gap, ...right],
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: left,
+                            ),
+                          ),
+                          gap,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: right,
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

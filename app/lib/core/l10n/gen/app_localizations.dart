@@ -5761,6 +5761,42 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Harga'**
   String get catalogColPrice;
+
+  /// No description provided for @membersTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Member'**
+  String get membersTitle;
+
+  /// No description provided for @membersSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Poin, kasbon dan riwayat belanja'**
+  String get membersSubtitle;
+
+  /// No description provided for @membersCount.
+  ///
+  /// In id, this message translates to:
+  /// **'Member'**
+  String get membersCount;
+
+  /// No description provided for @membersPoints.
+  ///
+  /// In id, this message translates to:
+  /// **'Poin beredar'**
+  String get membersPoints;
+
+  /// No description provided for @membersOwed.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon belum lunas'**
+  String get membersOwed;
+
+  /// No description provided for @commonBack.
+  ///
+  /// In id, this message translates to:
+  /// **'Kembali'**
+  String get commonBack;
 }
 
 class _AppLocalizationsDelegate

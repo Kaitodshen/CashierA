@@ -2448,5 +2448,11 @@
   "catalogColSku": "SKU / Barcode",
   "catalogColCategory": "Kategori",
   "catalogColStock": "Stok",
-  "catalogColPrice": "Harga"
+  "catalogColPrice": "Harga",
+  "membersTitle": "Member",
+  "membersSubtitle": "Poin, kasbon dan riwayat belanja",
+  "membersCount": "Member",
+  "membersPoints": "Poin beredar",
+  "membersOwed": "Kasbon belum lunas",
+  "commonBack": "Kembali"
 }

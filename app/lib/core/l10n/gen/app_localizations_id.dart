@@ -3368,4 +3368,22 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get catalogColPrice => 'Harga';
+
+  @override
+  String get membersTitle => 'Member';
+
+  @override
+  String get membersSubtitle => 'Poin, kasbon dan riwayat belanja';
+
+  @override
+  String get membersCount => 'Member';
+
+  @override
+  String get membersPoints => 'Poin beredar';
+
+  @override
+  String get membersOwed => 'Kasbon belum lunas';
+
+  @override
+  String get commonBack => 'Kembali';
 }

@@ -3413,4 +3413,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get catalogColPrice => 'Price';
+
+  @override
+  String get membersTitle => 'Members';
+
+  @override
+  String get membersSubtitle => 'Points, kasbon and purchase history';
+
+  @override
+  String get membersCount => 'Members';
+
+  @override
+  String get membersPoints => 'Points outstanding';
+
+  @override
+  String get membersOwed => 'Kasbon owed';
+
+  @override
+  String get commonBack => 'Back';
 }
