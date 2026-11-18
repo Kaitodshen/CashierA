@@ -40,6 +40,8 @@ final Map<AdminSection, List<AdminTab>> _tabs = {
   ],
   AdminSection.settings: [
     AdminTab(AppRoutes.adminSettings, (l) => l.navSettings),
+    AdminTab(AppRoutes.adminStores, (l) => l.navStores),
+    AdminTab(AppRoutes.adminStaff, (l) => l.navStaff),
     AdminTab(AppRoutes.adminTables, (l) => l.navTables),
   ],
 };

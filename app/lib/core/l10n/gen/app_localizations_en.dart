@@ -3497,4 +3497,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminColUsed => 'Used';
+
+  @override
+  String get navStores => 'Stores';
+
+  @override
+  String get navStaff => 'Staff';
+
+  @override
+  String get storesAdd => 'Add store';
+
+  @override
+  String get storesEmpty => 'No stores yet.';
+
+  @override
+  String get storeEditTitle => 'Edit store';
+
+  @override
+  String get storeCode => 'Code';
+
+  @override
+  String get storeCodeHint => '2–5 letters or digits, cannot be changed later';
+
+  @override
+  String get storeCodeInvalid => 'Use 2–5 letters or digits.';
+
+  @override
+  String get storeNameLabel => 'Store name';
+
+  @override
+  String get storeAddress => 'Address';
+
+  @override
+  String get storePhone => 'Phone';
+
+  @override
+  String get storeTimezone => 'Time zone';
+
+  @override
+  String get tzWib => 'WIB (Jakarta)';
+
+  @override
+  String get tzWita => 'WITA (Makassar)';
+
+  @override
+  String get tzWit => 'WIT (Jayapura)';
+
+  @override
+  String get storeSaved => 'Store saved.';
+
+  @override
+  String get adminColStore => 'Store';
+
+  @override
+  String get adminColContact => 'Address & phone';
+
+  @override
+  String get adminColTimezone => 'Time zone';
+
+  @override
+  String get staffErrorDuplicateCode => 'This store code is already used.';
+
+  @override
+  String get staffErrorPermission => 'You are not allowed to do this.';
 }

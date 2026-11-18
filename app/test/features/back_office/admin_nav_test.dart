@@ -8,7 +8,7 @@ void main() {
       for (final s in AdminSection.values) ...adminTabs(s).map((t) => t.route),
     ];
     expect(routes.toSet().length, routes.length);
-    expect(routes.length, 19);
+    expect(routes.length, 21);
   });
 
   test('sections hold the agreed tabs in order', () {
@@ -31,6 +31,8 @@ void main() {
     ]);
     expect(r(AdminSection.settings), [
       AppRoutes.adminSettings,
+      AppRoutes.adminStores,
+      AppRoutes.adminStaff,
       AppRoutes.adminTables,
     ]);
     expect(r(AdminSection.catalog).first, AppRoutes.adminProducts);
@@ -61,7 +63,11 @@ void main() {
     ));
     expect(adminLocate('/admin/tables'), (
       section: AdminSection.settings,
-      tab: 1,
+      tab: 3,
+    ));
+    expect(adminLocate('/admin/staff'), (
+      section: AdminSection.settings,
+      tab: 2,
     ));
   });
 }

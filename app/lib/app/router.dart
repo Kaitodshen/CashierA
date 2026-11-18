@@ -20,6 +20,7 @@ import 'package:cashiera/features/back_office/presentation/purchase_orders_scree
 import 'package:cashiera/features/back_office/presentation/sign_in_screen.dart';
 import 'package:cashiera/features/back_office/presentation/stock_screen.dart';
 import 'package:cashiera/features/back_office/presentation/store_settings_screen.dart';
+import 'package:cashiera/features/back_office/presentation/stores_admin_screen.dart';
 import 'package:cashiera/features/back_office/presentation/suppliers_screen.dart';
 import 'package:cashiera/features/back_office/presentation/transfers_screen.dart';
 import 'package:cashiera/features/back_office/presentation/vouchers_screen.dart';
@@ -279,6 +280,10 @@ GoRouter router(Ref ref) {
           GoRoute(
             path: AppRoutes.adminTables,
             builder: (_, _) => const DiningTablesScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminStores,
+            builder: (_, _) => const StoresAdminScreen(),
           ),
         ],
       ),

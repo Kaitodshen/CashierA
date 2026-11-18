@@ -79,6 +79,8 @@ abstract final class AppRoutes {
   static const adminPurchaseOrders = '/admin/purchase-orders';
   static const adminTransfers = '/admin/transfers';
   static const adminTables = '/admin/tables';
+  static const adminStores = '/admin/stores';
+  static const adminStaff = '/admin/staff';
   static const adminGatewayPayments = '/admin/qris-payments';
 
   /// Purchase order detail or editor; `new` creates one.

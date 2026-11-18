@@ -3452,4 +3452,67 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get adminColUsed => 'Dipakai';
+
+  @override
+  String get navStores => 'Toko';
+
+  @override
+  String get navStaff => 'Staf';
+
+  @override
+  String get storesAdd => 'Tambah toko';
+
+  @override
+  String get storesEmpty => 'Belum ada toko.';
+
+  @override
+  String get storeEditTitle => 'Ubah toko';
+
+  @override
+  String get storeCode => 'Kode';
+
+  @override
+  String get storeCodeHint => '2–5 huruf atau angka, tidak bisa diubah nanti';
+
+  @override
+  String get storeCodeInvalid => 'Kode 2–5 huruf atau angka.';
+
+  @override
+  String get storeNameLabel => 'Nama toko';
+
+  @override
+  String get storeAddress => 'Alamat';
+
+  @override
+  String get storePhone => 'Telepon';
+
+  @override
+  String get storeTimezone => 'Zona waktu';
+
+  @override
+  String get tzWib => 'WIB (Jakarta)';
+
+  @override
+  String get tzWita => 'WITA (Makassar)';
+
+  @override
+  String get tzWit => 'WIT (Jayapura)';
+
+  @override
+  String get storeSaved => 'Toko disimpan.';
+
+  @override
+  String get adminColStore => 'Toko';
+
+  @override
+  String get adminColContact => 'Alamat & telepon';
+
+  @override
+  String get adminColTimezone => 'Zona waktu';
+
+  @override
+  String get staffErrorDuplicateCode => 'Kode toko ini sudah dipakai.';
+
+  @override
+  String get staffErrorPermission => 'Anda tidak berhak melakukan ini.';
 }

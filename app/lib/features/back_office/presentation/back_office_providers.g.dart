@@ -2138,3 +2138,122 @@ final class GatewayChargesFamily extends $Family
   @override
   String toString() => r'gatewayChargesProvider';
 }
+
+@ProviderFor(staffAdmin)
+final staffAdminProvider = StaffAdminProvider._();
+
+final class StaffAdminProvider
+    extends $FunctionalProvider<StaffAdmin, StaffAdmin, StaffAdmin>
+    with $Provider<StaffAdmin> {
+  StaffAdminProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'staffAdminProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$staffAdminHash();
+
+  @$internal
+  @override
+  $ProviderElement<StaffAdmin> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  StaffAdmin create(Ref ref) {
+    return staffAdmin(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StaffAdmin value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<StaffAdmin>(value),
+    );
+  }
+}
+
+String _$staffAdminHash() => r'd3d28677b708ae6043cb5d831cc73defc2107c0f';
+
+@ProviderFor(adminStoresList)
+final adminStoresListProvider = AdminStoresListProvider._();
+
+final class AdminStoresListProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<AdminStore>>,
+          List<AdminStore>,
+          FutureOr<List<AdminStore>>
+        >
+    with $FutureModifier<List<AdminStore>>, $FutureProvider<List<AdminStore>> {
+  AdminStoresListProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'adminStoresListProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$adminStoresListHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<AdminStore>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<AdminStore>> create(Ref ref) {
+    return adminStoresList(ref);
+  }
+}
+
+String _$adminStoresListHash() => r'aaa082e10c685673073ea6bbe44c3181850769ef';
+
+@ProviderFor(adminStaffList)
+final adminStaffListProvider = AdminStaffListProvider._();
+
+final class AdminStaffListProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<AdminStaff>>,
+          List<AdminStaff>,
+          FutureOr<List<AdminStaff>>
+        >
+    with $FutureModifier<List<AdminStaff>>, $FutureProvider<List<AdminStaff>> {
+  AdminStaffListProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'adminStaffListProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$adminStaffListHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<AdminStaff>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<AdminStaff>> create(Ref ref) {
+    return adminStaffList(ref);
+  }
+}
+
+String _$adminStaffListHash() => r'8607b10696b54043450faa539e0200ea1ee9b975';

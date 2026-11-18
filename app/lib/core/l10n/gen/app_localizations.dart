@@ -5923,6 +5923,132 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Dipakai'**
   String get adminColUsed;
+
+  /// No description provided for @navStores.
+  ///
+  /// In id, this message translates to:
+  /// **'Toko'**
+  String get navStores;
+
+  /// No description provided for @navStaff.
+  ///
+  /// In id, this message translates to:
+  /// **'Staf'**
+  String get navStaff;
+
+  /// No description provided for @storesAdd.
+  ///
+  /// In id, this message translates to:
+  /// **'Tambah toko'**
+  String get storesAdd;
+
+  /// No description provided for @storesEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada toko.'**
+  String get storesEmpty;
+
+  /// No description provided for @storeEditTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Ubah toko'**
+  String get storeEditTitle;
+
+  /// No description provided for @storeCode.
+  ///
+  /// In id, this message translates to:
+  /// **'Kode'**
+  String get storeCode;
+
+  /// No description provided for @storeCodeHint.
+  ///
+  /// In id, this message translates to:
+  /// **'2–5 huruf atau angka, tidak bisa diubah nanti'**
+  String get storeCodeHint;
+
+  /// No description provided for @storeCodeInvalid.
+  ///
+  /// In id, this message translates to:
+  /// **'Kode 2–5 huruf atau angka.'**
+  String get storeCodeInvalid;
+
+  /// No description provided for @storeNameLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Nama toko'**
+  String get storeNameLabel;
+
+  /// No description provided for @storeAddress.
+  ///
+  /// In id, this message translates to:
+  /// **'Alamat'**
+  String get storeAddress;
+
+  /// No description provided for @storePhone.
+  ///
+  /// In id, this message translates to:
+  /// **'Telepon'**
+  String get storePhone;
+
+  /// No description provided for @storeTimezone.
+  ///
+  /// In id, this message translates to:
+  /// **'Zona waktu'**
+  String get storeTimezone;
+
+  /// No description provided for @tzWib.
+  ///
+  /// In id, this message translates to:
+  /// **'WIB (Jakarta)'**
+  String get tzWib;
+
+  /// No description provided for @tzWita.
+  ///
+  /// In id, this message translates to:
+  /// **'WITA (Makassar)'**
+  String get tzWita;
+
+  /// No description provided for @tzWit.
+  ///
+  /// In id, this message translates to:
+  /// **'WIT (Jayapura)'**
+  String get tzWit;
+
+  /// No description provided for @storeSaved.
+  ///
+  /// In id, this message translates to:
+  /// **'Toko disimpan.'**
+  String get storeSaved;
+
+  /// No description provided for @adminColStore.
+  ///
+  /// In id, this message translates to:
+  /// **'Toko'**
+  String get adminColStore;
+
+  /// No description provided for @adminColContact.
+  ///
+  /// In id, this message translates to:
+  /// **'Alamat & telepon'**
+  String get adminColContact;
+
+  /// No description provided for @adminColTimezone.
+  ///
+  /// In id, this message translates to:
+  /// **'Zona waktu'**
+  String get adminColTimezone;
+
+  /// No description provided for @staffErrorDuplicateCode.
+  ///
+  /// In id, this message translates to:
+  /// **'Kode toko ini sudah dipakai.'**
+  String get staffErrorDuplicateCode;
+
+  /// No description provided for @staffErrorPermission.
+  ///
+  /// In id, this message translates to:
+  /// **'Anda tidak berhak melakukan ini.'**
+  String get staffErrorPermission;
 }
 
 class _AppLocalizationsDelegate

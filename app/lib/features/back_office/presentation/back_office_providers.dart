@@ -8,6 +8,7 @@ import 'package:cashiera/features/back_office/data/payments_admin_repository.dar
 import 'package:cashiera/features/back_office/data/pos_admin_repository.dart';
 import 'package:cashiera/features/back_office/data/purchasing_repository.dart';
 import 'package:cashiera/features/back_office/data/shift_audit_repository.dart';
+import 'package:cashiera/features/back_office/data/staff_admin_repository.dart';
 import 'package:cashiera_core/cashiera_core.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -178,3 +179,15 @@ Future<List<GatewayChargeRow>> gatewayCharges(
 }) => ref
     .watch(paymentsAdminProvider)
     .gatewayCharges(from: from, to: to, storeId: storeId);
+
+@Riverpod(keepAlive: true)
+StaffAdmin staffAdmin(Ref ref) =>
+    SupabaseStaffAdmin(ref.watch(supabaseClientProvider));
+
+@riverpod
+Future<List<AdminStore>> adminStoresList(Ref ref) =>
+    ref.watch(staffAdminProvider).stores();
+
+@riverpod
+Future<List<AdminStaff>> adminStaffList(Ref ref) =>
+    ref.watch(staffAdminProvider).staff();
