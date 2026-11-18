@@ -3,6 +3,7 @@
 
 import { createClient, type SupabaseClient } from 'jsr:@supabase/supabase-js@2';
 import type { Charge, Deps, GatewayDb, Reply } from './handlers.ts';
+import type { StaffDb, StaffDeps } from './staff.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -71,4 +72,33 @@ export function gatewayDeps(req: Request | null): Deps {
     isProduction: Deno.env.get('MIDTRANS_IS_PRODUCTION') === 'true',
     expiryMinutes: Number(Deno.env.get('QRIS_EXPIRY_MINUTES') ?? '15'),
   };
+}
+
+/** [req]'s caller (an owner or manager) for the permission check, the service
+ * role to create and link the login. */
+export function staffDeps(req: Request): StaffDeps {
+  const url = Deno.env.get('SUPABASE_URL')!;
+  const service = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
+    auth: { persistSession: false },
+  });
+  const caller = createClient(url, Deno.env.get('SUPABASE_ANON_KEY')!, {
+    auth: { persistSession: false },
+    global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
+  });
+  const db: StaffDb = {
+    prepareAsCaller: async (id, email) => ({
+      resend: await call<boolean>(caller, 'prepare_staff_invite', { p_employee_id: id, p_email: email }),
+    }),
+    invite: async (email, redirectTo, fullName) => {
+      const { data, error } = await service.auth.admin.inviteUserByEmail(email, {
+        redirectTo,
+        data: fullName ? { full_name: fullName } : undefined,
+      });
+      if (error) throw new Error(error.message);
+      return { userId: data.user.id };
+    },
+    link: (id, userId, email) =>
+      call(service, 'link_staff_login', { p_employee_id: id, p_auth_user_id: userId, p_email: email }),
+  };
+  return { db, siteUrl: Deno.env.get('SITE_URL') ?? '' };
 }
