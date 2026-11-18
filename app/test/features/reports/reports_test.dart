@@ -336,6 +336,18 @@ void main() {
     expect(fake.calls.where((c) => c == 'sales').length, greaterThan(before));
   });
 
+  testWidgets('dashboard heading keeps its width on a phone', (tester) async {
+    tester.view
+      ..physicalSize = const Size(390, 1600)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      app(FakeReports(), const SingleChildScrollView(child: DashboardPanel())),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.text('Hari ini')).width, greaterThan(40));
+  });
+
   testWidgets('dashboard: today against yesterday and what needs attention', (
     tester,
   ) async {

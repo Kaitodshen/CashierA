@@ -1,5 +1,6 @@
 import 'package:cashiera/core/design_system/theme.dart';
 import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -108,5 +109,28 @@ void main() {
       ),
     );
     expect(find.text('Kosong'), findsOneWidget);
+  });
+
+  testWidgets('a numeric column does not touch the next header', (t) async {
+    await pump(
+      t,
+      const Size(900, 600),
+      Scaffold(
+        body: GlassTable<int>(
+          rows: const [1],
+          columns: [
+            GlassColumn(
+              label: 'Harga',
+              numeric: true,
+              cell: (_) => const Text('Rp 10.000'),
+            ),
+            GlassColumn(label: 'Status', cell: (_) => const Text('Aktif')),
+          ],
+        ),
+      ),
+    );
+    final price = t.getRect(find.text('HARGA'));
+    final status = t.getRect(find.text('STATUS'));
+    expect(status.left - price.right, greaterThanOrEqualTo(16));
   });
 }

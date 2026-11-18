@@ -45,11 +45,16 @@ class GlassTable<T> extends StatelessWidget {
   Widget _table(BuildContext context) {
     final header = Theme.of(context).textTheme.labelMedium
         ?.copyWith(color: AppColors.textMuted, letterSpacing: 1.2);
+    // A gap on both sides keeps a right-aligned number from touching the
+    // left-aligned column after it.
     Widget cellBox(GlassColumn<T> col, Widget child) => Expanded(
       flex: col.flex,
-      child: Align(
-        alignment: col.numeric ? Alignment.centerRight : Alignment.centerLeft,
-        child: child,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+        child: Align(
+          alignment: col.numeric ? Alignment.centerRight : Alignment.centerLeft,
+          child: child,
+        ),
       ),
     );
     return GlassCard(

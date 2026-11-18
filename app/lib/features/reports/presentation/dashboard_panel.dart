@@ -40,16 +40,18 @@ class _DashboardPanelState extends ConsumerState<DashboardPanel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
+        // Wraps on phones so the heading keeps its width.
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
           children: [
-            Expanded(
-              child: Text(l10n.dashTitle, style: theme.textTheme.titleMedium),
-            ),
+            Text(l10n.dashTitle, style: theme.textTheme.titleMedium),
             StoreFilter(
               value: _storeId,
               onChanged: (v) => setState(() => _storeId = v),
             ),
-            const SizedBox(width: AppSpacing.sm),
             TextButton.icon(
               key: const Key('dash-reports'),
               onPressed: () => context.go(AppRoutes.adminReports),
