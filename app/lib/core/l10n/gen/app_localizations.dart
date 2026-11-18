@@ -6049,6 +6049,318 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Anda tidak berhak melakukan ini.'**
   String get staffErrorPermission;
+
+  /// No description provided for @staffAdd.
+  ///
+  /// In id, this message translates to:
+  /// **'Tambah staf'**
+  String get staffAdd;
+
+  /// No description provided for @staffEditTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Ubah staf'**
+  String get staffEditTitle;
+
+  /// No description provided for @staffEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada staf.'**
+  String get staffEmpty;
+
+  /// No description provided for @staffSearch.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari nama'**
+  String get staffSearch;
+
+  /// No description provided for @staffAllStoresFilter.
+  ///
+  /// In id, this message translates to:
+  /// **'Semua toko'**
+  String get staffAllStoresFilter;
+
+  /// No description provided for @staffName.
+  ///
+  /// In id, this message translates to:
+  /// **'Nama lengkap'**
+  String get staffName;
+
+  /// No description provided for @staffPhone.
+  ///
+  /// In id, this message translates to:
+  /// **'Nomor HP'**
+  String get staffPhone;
+
+  /// No description provided for @staffRole.
+  ///
+  /// In id, this message translates to:
+  /// **'Jabatan'**
+  String get staffRole;
+
+  /// No description provided for @staffStores.
+  ///
+  /// In id, this message translates to:
+  /// **'Toko'**
+  String get staffStores;
+
+  /// No description provided for @staffStoresRequired.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih minimal satu toko.'**
+  String get staffStoresRequired;
+
+  /// No description provided for @roleManager.
+  ///
+  /// In id, this message translates to:
+  /// **'Manager'**
+  String get roleManager;
+
+  /// No description provided for @roleCashier.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasir'**
+  String get roleCashier;
+
+  /// No description provided for @roleKitchen.
+  ///
+  /// In id, this message translates to:
+  /// **'Dapur'**
+  String get roleKitchen;
+
+  /// No description provided for @roleInventory.
+  ///
+  /// In id, this message translates to:
+  /// **'Gudang'**
+  String get roleInventory;
+
+  /// No description provided for @roleOwner.
+  ///
+  /// In id, this message translates to:
+  /// **'Owner'**
+  String get roleOwner;
+
+  /// No description provided for @staffColPerson.
+  ///
+  /// In id, this message translates to:
+  /// **'Staf'**
+  String get staffColPerson;
+
+  /// No description provided for @staffColRole.
+  ///
+  /// In id, this message translates to:
+  /// **'Jabatan'**
+  String get staffColRole;
+
+  /// No description provided for @staffColStores.
+  ///
+  /// In id, this message translates to:
+  /// **'Toko'**
+  String get staffColStores;
+
+  /// No description provided for @staffColLogin.
+  ///
+  /// In id, this message translates to:
+  /// **'Login back office'**
+  String get staffColLogin;
+
+  /// No description provided for @staffColPin.
+  ///
+  /// In id, this message translates to:
+  /// **'PIN'**
+  String get staffColPin;
+
+  /// No description provided for @staffAllStores.
+  ///
+  /// In id, this message translates to:
+  /// **'Semua toko'**
+  String get staffAllStores;
+
+  /// No description provided for @staffLoginNone.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada'**
+  String get staffLoginNone;
+
+  /// No description provided for @staffLoginInvited.
+  ///
+  /// In id, this message translates to:
+  /// **'Diundang'**
+  String get staffLoginInvited;
+
+  /// No description provided for @staffLoginActive.
+  ///
+  /// In id, this message translates to:
+  /// **'Aktif'**
+  String get staffLoginActive;
+
+  /// No description provided for @staffPinSet.
+  ///
+  /// In id, this message translates to:
+  /// **'Sudah'**
+  String get staffPinSet;
+
+  /// No description provided for @staffPinMissing.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum'**
+  String get staffPinMissing;
+
+  /// No description provided for @staffActions.
+  ///
+  /// In id, this message translates to:
+  /// **'Aksi'**
+  String get staffActions;
+
+  /// No description provided for @staffSetPin.
+  ///
+  /// In id, this message translates to:
+  /// **'Atur PIN'**
+  String get staffSetPin;
+
+  /// No description provided for @staffInvite.
+  ///
+  /// In id, this message translates to:
+  /// **'Undang ke back office'**
+  String get staffInvite;
+
+  /// No description provided for @staffInviteAgain.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim ulang undangan'**
+  String get staffInviteAgain;
+
+  /// No description provided for @staffDeactivate.
+  ///
+  /// In id, this message translates to:
+  /// **'Nonaktifkan'**
+  String get staffDeactivate;
+
+  /// No description provided for @staffReactivate.
+  ///
+  /// In id, this message translates to:
+  /// **'Aktifkan lagi'**
+  String get staffReactivate;
+
+  /// No description provided for @staffDeactivateTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Nonaktifkan {name}?'**
+  String staffDeactivateTitle(String name);
+
+  /// No description provided for @staffDeactivateBody.
+  ///
+  /// In id, this message translates to:
+  /// **'Ia tidak bisa login di terminal maupun back office. Riwayatnya tetap tersimpan.'**
+  String get staffDeactivateBody;
+
+  /// No description provided for @staffPinTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'PIN untuk {name}'**
+  String staffPinTitle(String name);
+
+  /// No description provided for @staffPinNew.
+  ///
+  /// In id, this message translates to:
+  /// **'PIN baru (4–6 angka)'**
+  String get staffPinNew;
+
+  /// No description provided for @staffPinAgain.
+  ///
+  /// In id, this message translates to:
+  /// **'Ulangi PIN'**
+  String get staffPinAgain;
+
+  /// No description provided for @staffPinMismatch.
+  ///
+  /// In id, this message translates to:
+  /// **'PIN tidak sama.'**
+  String get staffPinMismatch;
+
+  /// No description provided for @staffPinSaved.
+  ///
+  /// In id, this message translates to:
+  /// **'PIN disimpan.'**
+  String get staffPinSaved;
+
+  /// No description provided for @staffInviteTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Undang {name}'**
+  String staffInviteTitle(String name);
+
+  /// No description provided for @staffInviteBody.
+  ///
+  /// In id, this message translates to:
+  /// **'Kami kirim email berisi link untuk membuat password back office.'**
+  String get staffInviteBody;
+
+  /// No description provided for @staffInviteEmail.
+  ///
+  /// In id, this message translates to:
+  /// **'Email'**
+  String get staffInviteEmail;
+
+  /// No description provided for @staffInviteSend.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim undangan'**
+  String get staffInviteSend;
+
+  /// No description provided for @staffInviteSent.
+  ///
+  /// In id, this message translates to:
+  /// **'Undangan terkirim ke {email}.'**
+  String staffInviteSent(String email);
+
+  /// No description provided for @staffSaved.
+  ///
+  /// In id, this message translates to:
+  /// **'Staf disimpan.'**
+  String get staffSaved;
+
+  /// No description provided for @staffErrorWeakPin.
+  ///
+  /// In id, this message translates to:
+  /// **'PIN terlalu mudah ditebak.'**
+  String get staffErrorWeakPin;
+
+  /// No description provided for @staffErrorInvalidPin.
+  ///
+  /// In id, this message translates to:
+  /// **'PIN harus 4–6 angka.'**
+  String get staffErrorInvalidPin;
+
+  /// No description provided for @staffErrorEmailTaken.
+  ///
+  /// In id, this message translates to:
+  /// **'Email ini sudah dipakai orang lain.'**
+  String get staffErrorEmailTaken;
+
+  /// No description provided for @staffErrorInvalidEmail.
+  ///
+  /// In id, this message translates to:
+  /// **'Email tidak valid.'**
+  String get staffErrorInvalidEmail;
+
+  /// No description provided for @staffErrorAlreadyLinked.
+  ///
+  /// In id, this message translates to:
+  /// **'Staf ini sudah punya login.'**
+  String get staffErrorAlreadyLinked;
+
+  /// No description provided for @staffErrorLastOwner.
+  ///
+  /// In id, this message translates to:
+  /// **'Harus ada minimal satu owner aktif.'**
+  String get staffErrorLastOwner;
+
+  /// No description provided for @staffErrorInviteFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Undangan gagal dikirim. Coba lagi nanti.'**
+  String get staffErrorInviteFailed;
 }
 
 class _AppLocalizationsDelegate

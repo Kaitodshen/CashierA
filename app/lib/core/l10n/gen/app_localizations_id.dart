@@ -3515,4 +3515,171 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get staffErrorPermission => 'Anda tidak berhak melakukan ini.';
+
+  @override
+  String get staffAdd => 'Tambah staf';
+
+  @override
+  String get staffEditTitle => 'Ubah staf';
+
+  @override
+  String get staffEmpty => 'Belum ada staf.';
+
+  @override
+  String get staffSearch => 'Cari nama';
+
+  @override
+  String get staffAllStoresFilter => 'Semua toko';
+
+  @override
+  String get staffName => 'Nama lengkap';
+
+  @override
+  String get staffPhone => 'Nomor HP';
+
+  @override
+  String get staffRole => 'Jabatan';
+
+  @override
+  String get staffStores => 'Toko';
+
+  @override
+  String get staffStoresRequired => 'Pilih minimal satu toko.';
+
+  @override
+  String get roleManager => 'Manager';
+
+  @override
+  String get roleCashier => 'Kasir';
+
+  @override
+  String get roleKitchen => 'Dapur';
+
+  @override
+  String get roleInventory => 'Gudang';
+
+  @override
+  String get roleOwner => 'Owner';
+
+  @override
+  String get staffColPerson => 'Staf';
+
+  @override
+  String get staffColRole => 'Jabatan';
+
+  @override
+  String get staffColStores => 'Toko';
+
+  @override
+  String get staffColLogin => 'Login back office';
+
+  @override
+  String get staffColPin => 'PIN';
+
+  @override
+  String get staffAllStores => 'Semua toko';
+
+  @override
+  String get staffLoginNone => 'Belum ada';
+
+  @override
+  String get staffLoginInvited => 'Diundang';
+
+  @override
+  String get staffLoginActive => 'Aktif';
+
+  @override
+  String get staffPinSet => 'Sudah';
+
+  @override
+  String get staffPinMissing => 'Belum';
+
+  @override
+  String get staffActions => 'Aksi';
+
+  @override
+  String get staffSetPin => 'Atur PIN';
+
+  @override
+  String get staffInvite => 'Undang ke back office';
+
+  @override
+  String get staffInviteAgain => 'Kirim ulang undangan';
+
+  @override
+  String get staffDeactivate => 'Nonaktifkan';
+
+  @override
+  String get staffReactivate => 'Aktifkan lagi';
+
+  @override
+  String staffDeactivateTitle(String name) {
+    return 'Nonaktifkan $name?';
+  }
+
+  @override
+  String get staffDeactivateBody =>
+      'Ia tidak bisa login di terminal maupun back office. Riwayatnya tetap tersimpan.';
+
+  @override
+  String staffPinTitle(String name) {
+    return 'PIN untuk $name';
+  }
+
+  @override
+  String get staffPinNew => 'PIN baru (4–6 angka)';
+
+  @override
+  String get staffPinAgain => 'Ulangi PIN';
+
+  @override
+  String get staffPinMismatch => 'PIN tidak sama.';
+
+  @override
+  String get staffPinSaved => 'PIN disimpan.';
+
+  @override
+  String staffInviteTitle(String name) {
+    return 'Undang $name';
+  }
+
+  @override
+  String get staffInviteBody =>
+      'Kami kirim email berisi link untuk membuat password back office.';
+
+  @override
+  String get staffInviteEmail => 'Email';
+
+  @override
+  String get staffInviteSend => 'Kirim undangan';
+
+  @override
+  String staffInviteSent(String email) {
+    return 'Undangan terkirim ke $email.';
+  }
+
+  @override
+  String get staffSaved => 'Staf disimpan.';
+
+  @override
+  String get staffErrorWeakPin => 'PIN terlalu mudah ditebak.';
+
+  @override
+  String get staffErrorInvalidPin => 'PIN harus 4–6 angka.';
+
+  @override
+  String get staffErrorEmailTaken => 'Email ini sudah dipakai orang lain.';
+
+  @override
+  String get staffErrorInvalidEmail => 'Email tidak valid.';
+
+  @override
+  String get staffErrorAlreadyLinked => 'Staf ini sudah punya login.';
+
+  @override
+  String get staffErrorLastOwner => 'Harus ada minimal satu owner aktif.';
+
+  @override
+  String get staffErrorInviteFailed =>
+      'Undangan gagal dikirim. Coba lagi nanti.';
 }

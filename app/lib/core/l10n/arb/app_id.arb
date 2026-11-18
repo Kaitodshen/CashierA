@@ -2503,5 +2503,85 @@
   "adminColContact": "Alamat & telepon",
   "adminColTimezone": "Zona waktu",
   "staffErrorDuplicateCode": "Kode toko ini sudah dipakai.",
-  "staffErrorPermission": "Anda tidak berhak melakukan ini."
+  "staffErrorPermission": "Anda tidak berhak melakukan ini.",
+  "staffAdd": "Tambah staf",
+  "staffEditTitle": "Ubah staf",
+  "staffEmpty": "Belum ada staf.",
+  "staffSearch": "Cari nama",
+  "staffAllStoresFilter": "Semua toko",
+  "staffName": "Nama lengkap",
+  "staffPhone": "Nomor HP",
+  "staffRole": "Jabatan",
+  "staffStores": "Toko",
+  "staffStoresRequired": "Pilih minimal satu toko.",
+  "roleManager": "Manager",
+  "roleCashier": "Kasir",
+  "roleKitchen": "Dapur",
+  "roleInventory": "Gudang",
+  "roleOwner": "Owner",
+  "staffColPerson": "Staf",
+  "staffColRole": "Jabatan",
+  "staffColStores": "Toko",
+  "staffColLogin": "Login back office",
+  "staffColPin": "PIN",
+  "staffAllStores": "Semua toko",
+  "staffLoginNone": "Belum ada",
+  "staffLoginInvited": "Diundang",
+  "staffLoginActive": "Aktif",
+  "staffPinSet": "Sudah",
+  "staffPinMissing": "Belum",
+  "staffActions": "Aksi",
+  "staffSetPin": "Atur PIN",
+  "staffInvite": "Undang ke back office",
+  "staffInviteAgain": "Kirim ulang undangan",
+  "staffDeactivate": "Nonaktifkan",
+  "staffReactivate": "Aktifkan lagi",
+  "staffDeactivateTitle": "Nonaktifkan {name}?",
+  "@staffDeactivateTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "staffDeactivateBody": "Ia tidak bisa login di terminal maupun back office. Riwayatnya tetap tersimpan.",
+  "staffPinTitle": "PIN untuk {name}",
+  "@staffPinTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "staffPinNew": "PIN baru (4–6 angka)",
+  "staffPinAgain": "Ulangi PIN",
+  "staffPinMismatch": "PIN tidak sama.",
+  "staffPinSaved": "PIN disimpan.",
+  "staffInviteTitle": "Undang {name}",
+  "@staffInviteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "staffInviteBody": "Kami kirim email berisi link untuk membuat password back office.",
+  "staffInviteEmail": "Email",
+  "staffInviteSend": "Kirim undangan",
+  "staffInviteSent": "Undangan terkirim ke {email}.",
+  "@staffInviteSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "staffSaved": "Staf disimpan.",
+  "staffErrorWeakPin": "PIN terlalu mudah ditebak.",
+  "staffErrorInvalidPin": "PIN harus 4–6 angka.",
+  "staffErrorEmailTaken": "Email ini sudah dipakai orang lain.",
+  "staffErrorInvalidEmail": "Email tidak valid.",
+  "staffErrorAlreadyLinked": "Staf ini sudah punya login.",
+  "staffErrorLastOwner": "Harus ada minimal satu owner aktif.",
+  "staffErrorInviteFailed": "Undangan gagal dikirim. Coba lagi nanti."
 }

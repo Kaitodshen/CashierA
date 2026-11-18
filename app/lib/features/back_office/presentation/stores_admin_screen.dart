@@ -24,6 +24,13 @@ String staffErrorText(AppLocalizations l10n, BackendException e) =>
     switch (e.code) {
       'duplicate_code' => l10n.staffErrorDuplicateCode,
       'permission_denied' || 'owner_only' => l10n.staffErrorPermission,
+      'weak_pin' => l10n.staffErrorWeakPin,
+      'invalid_pin' => l10n.staffErrorInvalidPin,
+      'email_taken' => l10n.staffErrorEmailTaken,
+      'invalid_email' => l10n.staffErrorInvalidEmail,
+      'already_linked' => l10n.staffErrorAlreadyLinked,
+      'last_owner' => l10n.staffErrorLastOwner,
+      'invite_failed' => l10n.staffErrorInviteFailed,
       _ => l10n.commonError(e.message),
     };
 

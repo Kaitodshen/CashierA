@@ -3560,4 +3560,171 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get staffErrorPermission => 'You are not allowed to do this.';
+
+  @override
+  String get staffAdd => 'Add staff';
+
+  @override
+  String get staffEditTitle => 'Edit staff';
+
+  @override
+  String get staffEmpty => 'No staff yet.';
+
+  @override
+  String get staffSearch => 'Search name';
+
+  @override
+  String get staffAllStoresFilter => 'All stores';
+
+  @override
+  String get staffName => 'Full name';
+
+  @override
+  String get staffPhone => 'Phone';
+
+  @override
+  String get staffRole => 'Role';
+
+  @override
+  String get staffStores => 'Stores';
+
+  @override
+  String get staffStoresRequired => 'Pick at least one store.';
+
+  @override
+  String get roleManager => 'Manager';
+
+  @override
+  String get roleCashier => 'Cashier';
+
+  @override
+  String get roleKitchen => 'Kitchen';
+
+  @override
+  String get roleInventory => 'Inventory';
+
+  @override
+  String get roleOwner => 'Owner';
+
+  @override
+  String get staffColPerson => 'Staff';
+
+  @override
+  String get staffColRole => 'Role';
+
+  @override
+  String get staffColStores => 'Stores';
+
+  @override
+  String get staffColLogin => 'Back-office login';
+
+  @override
+  String get staffColPin => 'PIN';
+
+  @override
+  String get staffAllStores => 'All stores';
+
+  @override
+  String get staffLoginNone => 'None';
+
+  @override
+  String get staffLoginInvited => 'Invited';
+
+  @override
+  String get staffLoginActive => 'Active';
+
+  @override
+  String get staffPinSet => 'Set';
+
+  @override
+  String get staffPinMissing => 'Not set';
+
+  @override
+  String get staffActions => 'Actions';
+
+  @override
+  String get staffSetPin => 'Set PIN';
+
+  @override
+  String get staffInvite => 'Invite to back office';
+
+  @override
+  String get staffInviteAgain => 'Send the invitation again';
+
+  @override
+  String get staffDeactivate => 'Deactivate';
+
+  @override
+  String get staffReactivate => 'Reactivate';
+
+  @override
+  String staffDeactivateTitle(String name) {
+    return 'Deactivate $name?';
+  }
+
+  @override
+  String get staffDeactivateBody =>
+      'They can no longer sign in on terminals or the back office. Their history is kept.';
+
+  @override
+  String staffPinTitle(String name) {
+    return 'PIN for $name';
+  }
+
+  @override
+  String get staffPinNew => 'New PIN (4–6 digits)';
+
+  @override
+  String get staffPinAgain => 'Repeat the PIN';
+
+  @override
+  String get staffPinMismatch => 'The PINs do not match.';
+
+  @override
+  String get staffPinSaved => 'PIN saved.';
+
+  @override
+  String staffInviteTitle(String name) {
+    return 'Invite $name';
+  }
+
+  @override
+  String get staffInviteBody =>
+      'We email a link to set a back-office password.';
+
+  @override
+  String get staffInviteEmail => 'Email';
+
+  @override
+  String get staffInviteSend => 'Send invitation';
+
+  @override
+  String staffInviteSent(String email) {
+    return 'Invitation sent to $email.';
+  }
+
+  @override
+  String get staffSaved => 'Staff saved.';
+
+  @override
+  String get staffErrorWeakPin => 'This PIN is too easy to guess.';
+
+  @override
+  String get staffErrorInvalidPin => 'A PIN has 4–6 digits.';
+
+  @override
+  String get staffErrorEmailTaken => 'This email already belongs to someone.';
+
+  @override
+  String get staffErrorInvalidEmail => 'Not a valid email.';
+
+  @override
+  String get staffErrorAlreadyLinked => 'This person already has a login.';
+
+  @override
+  String get staffErrorLastOwner => 'At least one active owner is needed.';
+
+  @override
+  String get staffErrorInviteFailed =>
+      'The invitation could not be sent. Try again later.';
 }

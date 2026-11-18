@@ -18,6 +18,7 @@ import 'package:cashiera/features/back_office/presentation/promotion_editor_scre
 import 'package:cashiera/features/back_office/presentation/promotions_screen.dart';
 import 'package:cashiera/features/back_office/presentation/purchase_orders_screen.dart';
 import 'package:cashiera/features/back_office/presentation/sign_in_screen.dart';
+import 'package:cashiera/features/back_office/presentation/staff_admin_screen.dart';
 import 'package:cashiera/features/back_office/presentation/stock_screen.dart';
 import 'package:cashiera/features/back_office/presentation/store_settings_screen.dart';
 import 'package:cashiera/features/back_office/presentation/stores_admin_screen.dart';
@@ -284,6 +285,10 @@ GoRouter router(Ref ref) {
           GoRoute(
             path: AppRoutes.adminStores,
             builder: (_, _) => const StoresAdminScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.adminStaff,
+            builder: (_, _) => const StaffAdminScreen(),
           ),
         ],
       ),
