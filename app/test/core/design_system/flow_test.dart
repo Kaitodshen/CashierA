@@ -60,5 +60,6 @@ void main() {
       style.foregroundColor!.resolve({WidgetState.selected}),
       AppColors.primary,
     );
+    expect(style.foregroundColor!.resolve({}), AppColors.textSecondary);
   });
 }

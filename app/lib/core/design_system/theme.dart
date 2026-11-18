@@ -151,14 +151,16 @@ abstract final class AppTheme {
                 : null,
           ),
           foregroundColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.selected)
+            (states) => states.contains(WidgetState.disabled)
+                ? AppColors.textMuted
+                : states.contains(WidgetState.selected)
                 ? AppColors.primary
-                : null,
+                : AppColors.textSecondary,
           ),
           iconColor: WidgetStateProperty.resolveWith(
             (states) => states.contains(WidgetState.selected)
                 ? AppColors.primary
-                : null,
+                : AppColors.textSecondary,
           ),
         ),
       ),

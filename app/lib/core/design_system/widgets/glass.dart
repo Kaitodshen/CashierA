@@ -228,6 +228,8 @@ class GlassDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      // Forms read best at a phone-like width, even on a wide terminal.
+      constraints: const BoxConstraints(maxWidth: 560),
       child: GlassBlur(
         borderRadius: radius,
         child: DecoratedBox(
