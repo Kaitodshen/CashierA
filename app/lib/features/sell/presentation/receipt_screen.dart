@@ -4,6 +4,10 @@ import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/receipt.dart';
@@ -85,7 +89,7 @@ class ReceiptView extends StatelessWidget {
     );
 
     return Container(
-      width: receipt.paperMm >= 80 ? 420 : 320,
+      constraints: BoxConstraints(maxWidth: receipt.paperMm >= 80 ? 420 : 320),
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFDF7),
@@ -271,19 +275,39 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
     ref.watch(saleContextProvider);
     final time = DateFormat('dd/MM HH:mm');
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.orders)),
-        title: Text(l10n.receiptTitle),
-      ),
-      body: switch (order) {
-        AsyncData(value: final row?) when config != null => () {
-          _afterSale(row);
-          final receipt = ReceiptData.fromOrder(row, config);
-          final completed = row.status == 'completed';
-          final refunded = refunds.fold(0, (a, r) => a + r.amount);
-          return ListView(
+    Widget page(List<Widget> children, {Widget? status}) => Scaffold(
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: ListView(
             padding: const EdgeInsets.all(AppSpacing.lg),
+            children: [
+              FlowHeader(
+                title: l10n.receiptTitle,
+                onBack: () => context.go(AppRoutes.orders),
+                backKey: const Key('receipt-back'),
+                status: status,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              ...children,
+            ],
+          ),
+        ),
+      ),
+    );
+
+    return switch (order) {
+      AsyncData(value: final row?) when config != null => () {
+        _afterSale(row);
+        final receipt = ReceiptData.fromOrder(row, config);
+        final completed = row.status == 'completed';
+        final refunded = refunds.fold(0, (a, r) => a + r.amount);
+
+        final paper = GlassCard(
+          level: GlassLevel.solid,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (completed &&
                   widget.justSold &&
@@ -295,7 +319,7 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
                     key: const Key('receipt-change'),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: AppColors.success,
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -314,97 +338,139 @@ class _ReceiptScreenState extends ConsumerState<ReceiptScreen> {
                     style: const TextStyle(color: AppColors.error),
                   ),
                 ),
-              if (refunds.isNotEmpty)
-                Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 420),
-                    child: Card(
-                      margin: const EdgeInsets.only(top: AppSpacing.md),
-                      child: Column(
-                        children: [
-                          for (final r in refunds)
-                            ListTile(
-                              key: Key('refund-${r.refundNumber}'),
-                              dense: true,
-                              leading: const Icon(Icons.undo),
-                              title: Text(
-                                l10n.receiptRefundLine(
-                                  r.refundNumber,
-                                  refundMethodLabel(l10n, r.methodType),
-                                ),
-                              ),
-                              subtitle: Text(
-                                '${time.format(config.localTime(r.refundedAt))}'
-                                ' · ${r.reason}',
-                              ),
-                              trailing: Text('-${Money(r.amount).format()}'),
-                            ),
-                          if (refunds.length > 1)
-                            ListTile(
-                              dense: true,
-                              title: Text(l10n.refundTotal),
-                              trailing: Text('-${Money(refunded).format()}'),
-                            ),
-                        ],
+              if (refunds.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.md),
+                for (final r in refunds)
+                  ListTile(
+                    key: Key('refund-${r.refundNumber}'),
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.undo),
+                    title: Text(
+                      l10n.receiptRefundLine(
+                        r.refundNumber,
+                        refundMethodLabel(l10n, r.methodType),
                       ),
                     ),
+                    subtitle: Text(
+                      '${time.format(config.localTime(r.refundedAt))}'
+                      ' · ${r.reason}',
+                    ),
+                    trailing: Text('-${Money(r.amount).format()}'),
                   ),
-                ),
-              const SizedBox(height: AppSpacing.lg),
+                if (refunds.length > 1)
+                  ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.refundTotal),
+                    trailing: Text('-${Money(refunded).format()}'),
+                  ),
+              ],
+            ],
+          ),
+        );
+
+        final actions = GlassCard(
+          level: GlassLevel.solid,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              PrimaryButton(
+                key: const Key('receipt-new-sale'),
+                expand: true,
+                onPressed: () => context.go(AppRoutes.sell),
+                icon: Icons.add_shopping_cart,
+                label: l10n.receiptNewSale,
+              ),
+              const SizedBox(height: AppSpacing.md),
               Wrap(
-                alignment: WrapAlignment.center,
-                spacing: AppSpacing.md,
-                runSpacing: AppSpacing.md,
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.sm,
                 children: [
-                  OutlinedButton.icon(
-                    key: const Key('receipt-share'),
-                    onPressed: _busy ? null : () => _share(row, receipt),
-                    icon: const Icon(Icons.share_outlined),
-                    label: Text(l10n.receiptShare),
-                  ),
-                  OutlinedButton.icon(
+                  SecondaryButton(
                     key: const Key('receipt-print'),
                     onPressed: _busy || !completed ? null : () => _print(row),
-                    icon: const Icon(Icons.print_outlined),
-                    label: Text(
-                      row.printedAt == null
-                          ? l10n.receiptPrint
-                          : l10n.receiptReprint,
-                    ),
+                    icon: Icons.print_outlined,
+                    label: row.printedAt == null
+                        ? l10n.receiptPrint
+                        : l10n.receiptReprint,
                   ),
-                  if (completed && refunds.isEmpty)
-                    OutlinedButton.icon(
-                      key: const Key('receipt-void'),
-                      onPressed: _busy ? null : () => _void(row),
-                      icon: const Icon(Icons.block),
-                      label: Text(l10n.receiptVoid),
-                    ),
+                  SecondaryButton(
+                    key: const Key('receipt-share'),
+                    onPressed: _busy ? null : () => _share(row, receipt),
+                    icon: Icons.share_outlined,
+                    label: l10n.receiptShare,
+                  ),
                   if (completed)
-                    OutlinedButton.icon(
+                    SecondaryButton(
                       key: const Key('receipt-refund'),
                       onPressed: _busy
                           ? null
                           : () => context.go(AppRoutes.refund(row.id)),
-                      icon: const Icon(Icons.undo),
-                      label: Text(l10n.receiptRefund),
+                      icon: Icons.undo,
+                      label: l10n.receiptRefund,
                     ),
-                  FilledButton.icon(
-                    key: const Key('receipt-new-sale'),
-                    onPressed: () => context.go(AppRoutes.sell),
-                    icon: const Icon(Icons.add_shopping_cart),
-                    label: Text(l10n.receiptNewSale),
-                  ),
+                  if (completed && refunds.isEmpty)
+                    SecondaryButton(
+                      key: const Key('receipt-void'),
+                      onPressed: _busy ? null : () => _void(row),
+                      icon: Icons.block,
+                      label: l10n.receiptVoid,
+                    ),
                 ],
               ),
             ],
-          );
-        }(),
-        AsyncData() => Center(child: Text(l10n.receiptMissing)),
-        AsyncError(:final error) => Center(
-          child: Text(l10n.commonError('$error')),
-        ),
-        _ => const Center(child: CircularProgressIndicator()),
-      },
-    );
+          ),
+        );
+
+        final status = switch (row.status) {
+          'completed' => StatusChip(
+            label: l10n.ordersStatusPaid,
+            tone: StatusTone.success,
+          ),
+          'voided' => StatusChip(
+            label: l10n.receiptVoid,
+            tone: StatusTone.error,
+          ),
+          'cancelled' => StatusChip(
+            label: l10n.ordersStatusCancelled,
+            tone: StatusTone.error,
+          ),
+          _ => StatusChip(
+            label: l10n.ordersStatusHeld,
+            tone: StatusTone.warning,
+          ),
+        };
+
+        return page([
+          LayoutBuilder(
+            builder: (context, c) => c.maxWidth >= 900
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: paper),
+                      const SizedBox(width: AppSpacing.lg),
+                      SizedBox(width: 360, child: actions),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      paper,
+                      const SizedBox(height: AppSpacing.md),
+                      actions,
+                    ],
+                  ),
+          ),
+        ], status: status);
+      }(),
+      AsyncData() => page([
+        GlassCard(child: Center(child: Text(l10n.receiptMissing))),
+      ]),
+      AsyncError(:final error) => page([
+        GlassCard(child: Center(child: Text(l10n.commonError('$error')))),
+      ]),
+      _ => page([const Center(child: CircularProgressIndicator())]),
+    };
   }
 }

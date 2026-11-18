@@ -1,6 +1,9 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/pos_config.dart';
@@ -176,55 +179,73 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
     final info = ref.watch(_refundInfoProvider(widget.orderId));
     final hasShift = ref.watch(saleContextProvider)?.shiftId != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () => context.go(AppRoutes.receipt(widget.orderId)),
-        ),
-        title: Text(l10n.refundTitle(order?.orderNumber ?? '')),
-      ),
-      body: switch (info) {
-        AsyncData(value: final data?) when order != null => () {
-          if (data.fullyRefunded) {
-            return Center(child: Text(l10n.refundFull));
-          }
-          final methods = [
-            if (hasShift) 'cash',
-            for (final m in refundMethodTypes)
-              if (m != 'cash' && data.paidMethodTypes.contains(m)) m,
-          ];
-          final method = methods.contains(_method)
-              ? _method
-              : (methods.isEmpty ? null : methods.first);
-          final plan = planRefund(
-            lines: [for (final l in data.lines) l.line],
-            quantities: _quantities,
-            refundable: data.refundable,
-          );
-          return ListView(
+    Widget page(List<Widget> children) => Scaffold(
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: ListView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             children: [
-              Text(
-                l10n.refundPickItems,
-                style: Theme.of(context).textTheme.titleMedium,
+              FlowHeader(
+                title: l10n.refundTitle(order?.orderNumber ?? ''),
+                onBack: () => context.go(AppRoutes.receipt(widget.orderId)),
+                backKey: const Key('refund-back'),
               ),
+              const SizedBox(height: AppSpacing.lg),
+              ...children,
+            ],
+          ),
+        ),
+      ),
+    );
+    Widget message(String text) => GlassCard(child: Center(child: Text(text)));
+
+    return switch (info) {
+      AsyncData(value: final data?) when order != null => () {
+        if (data.fullyRefunded) return page([message(l10n.refundFull)]);
+        final methods = [
+          if (hasShift) 'cash',
+          for (final m in refundMethodTypes)
+            if (m != 'cash' && data.paidMethodTypes.contains(m)) m,
+        ];
+        final method = methods.contains(_method)
+            ? _method
+            : (methods.isEmpty ? null : methods.first);
+        final plan = planRefund(
+          lines: [for (final l in data.lines) l.line],
+          quantities: _quantities,
+          refundable: data.refundable,
+        );
+        final theme = Theme.of(context);
+
+        final lines = GlassCard(
+          level: GlassLevel.solid,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l10n.refundPickItems, style: theme.textTheme.titleMedium),
               const SizedBox(height: AppSpacing.sm),
-              Card(
-                child: Column(
-                  children: [
-                    for (final line in data.lines)
-                      if (line.line.remainingQuantity.milli > 0)
-                        _RefundLineTile(
-                          key: Key('refund-line-${line.line.id}'),
-                          line: line,
-                          quantity: _quantities[line.line.id] ?? Qty.zero,
-                          onChanged: (milli) => _set(line, milli),
-                        ),
-                  ],
-                ),
-              ),
+              for (final line in data.lines)
+                if (line.line.remainingQuantity.milli > 0)
+                  _RefundLineTile(
+                    key: Key('refund-line-${line.line.id}'),
+                    line: line,
+                    quantity: _quantities[line.line.id] ?? Qty.zero,
+                    onChanged: (milli) => _set(line, milli),
+                  ),
+            ],
+          ),
+        );
+
+        final summary = GlassCard(
+          level: GlassLevel.solid,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
               SwitchListTile(
                 key: const Key('refund-restock'),
+                contentPadding: EdgeInsets.zero,
                 value: _restock,
                 onChanged: (v) => setState(() => _restock = v),
                 title: Text(l10n.refundRestock),
@@ -235,6 +256,7 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
               const SizedBox(height: AppSpacing.xs),
               Wrap(
                 spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.sm,
                 children: [
                   for (final m in methods)
                     ChoiceChip(
@@ -252,39 +274,80 @@ class _RefundScreenState extends ConsumerState<RefundScreen> {
                 decoration: InputDecoration(labelText: l10n.refundReason),
               ),
               const SizedBox(height: AppSpacing.lg),
-              ListTile(
-                title: Text(l10n.refundTotal),
-                subtitle: Text(l10n.refundRefundable(data.refundable.format())),
-                trailing: Text(
-                  plan.total.format(),
-                  key: const Key('refund-total'),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(l10n.refundTotal),
+                        Text(
+                          l10n.refundRefundable(data.refundable.format()),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    plan.total.format(),
+                    key: const Key('refund-total'),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
               if (plan.problem != null && plan.problem != RefundProblem.empty)
-                Text(
-                  refundProblemText(l10n, plan.problem!),
-                  style: const TextStyle(color: AppColors.error),
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: Text(
+                    refundProblemText(l10n, plan.problem!),
+                    style: const TextStyle(color: AppColors.error),
+                  ),
                 ),
               const SizedBox(height: AppSpacing.md),
-              FilledButton.icon(
+              PrimaryButton(
                 key: const Key('refund-submit'),
+                expand: true,
                 onPressed: _busy || plan.problem != null || method == null
                     ? null
                     : () => _submit(order, data, plan, method),
-                icon: const Icon(Icons.undo),
-                label: Text(l10n.refundSubmit(plan.total.format())),
+                icon: Icons.undo,
+                label: l10n.refundSubmit(plan.total.format()),
               ),
             ],
-          );
-        }(),
-        AsyncData() => Center(child: Text(l10n.receiptMissing)),
-        AsyncError(:final error) => Center(
-          child: Text(l10n.commonError('$error')),
-        ),
-        _ => const Center(child: CircularProgressIndicator()),
-      },
-    );
+          ),
+        );
+
+        return page([
+          LayoutBuilder(
+            builder: (context, c) => c.maxWidth >= 900
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: lines),
+                      const SizedBox(width: AppSpacing.lg),
+                      Expanded(child: summary),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      lines,
+                      const SizedBox(height: AppSpacing.md),
+                      summary,
+                    ],
+                  ),
+          ),
+        ]);
+      }(),
+      AsyncData() => page([message(l10n.receiptMissing)]),
+      AsyncError(:final error) => page([message(l10n.commonError('$error'))]),
+      _ => page([const Center(child: CircularProgressIndicator())]),
+    };
   }
 }
 

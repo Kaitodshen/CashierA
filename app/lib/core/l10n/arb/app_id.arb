@@ -2469,5 +2469,10 @@
       }
     }
   },
-  "settingsTaxOff": "Tidak dipungut"
+  "settingsTaxOff": "Tidak dipungut",
+  "ordersColNumber": "No. pesanan",
+  "ordersColTime": "Waktu",
+  "ordersColItems": "Barang",
+  "ordersColStatus": "Status",
+  "ordersColTotal": "Total"
 }

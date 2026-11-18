@@ -5845,6 +5845,36 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Tidak dipungut'**
   String get settingsTaxOff;
+
+  /// No description provided for @ordersColNumber.
+  ///
+  /// In id, this message translates to:
+  /// **'No. pesanan'**
+  String get ordersColNumber;
+
+  /// No description provided for @ordersColTime.
+  ///
+  /// In id, this message translates to:
+  /// **'Waktu'**
+  String get ordersColTime;
+
+  /// No description provided for @ordersColItems.
+  ///
+  /// In id, this message translates to:
+  /// **'Barang'**
+  String get ordersColItems;
+
+  /// No description provided for @ordersColStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'Status'**
+  String get ordersColStatus;
+
+  /// No description provided for @ordersColTotal.
+  ///
+  /// In id, this message translates to:
+  /// **'Total'**
+  String get ordersColTotal;
 }
 
 class _AppLocalizationsDelegate

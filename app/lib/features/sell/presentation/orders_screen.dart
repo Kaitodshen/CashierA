@@ -1,7 +1,11 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/pos_services.dart';
@@ -110,107 +114,163 @@ class OrdersScreen extends ConsumerWidget {
     String when(LocalOrderRow o) =>
         time.format(config?.localTime(o.updatedAt) ?? o.updatedAt.toLocal());
 
-    Widget tile(LocalOrderRow o, {required bool heldTab}) {
-      final status = switch (o.status) {
-        'held' => (l10n.ordersStatusHeld, AppColors.warning),
-        'cancelled' => (l10n.ordersStatusCancelled, AppColors.error),
-        'voided' => (l10n.receiptVoid, AppColors.error),
-        _ => (l10n.ordersStatusPaid, AppColors.success),
-      };
-      return ListTile(
-        key: Key('order-${o.orderNumber}'),
-        title: Text(o.orderNumber),
-        subtitle: Text(
-          [
-            when(o),
-            l10n.receiptItems(o.itemCount),
-            ?o.customerName,
-            o.cashierName,
-          ].join(' · '),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(Money(o.grandTotal).format()),
-                Text(
-                  status.$1,
-                  style: TextStyle(color: status.$2, fontSize: 12),
-                ),
-              ],
-            ),
-            if (heldTab)
-              IconButton(
-                key: Key('order-cancel-${o.orderNumber}'),
-                tooltip: l10n.ordersCancel,
-                onPressed: () => _cancel(context, ref, o),
-                icon: const Icon(Icons.cancel_outlined),
+    StatusChip statusChip(LocalOrderRow o) => switch (o.status) {
+      'held' => StatusChip(
+        label: l10n.ordersStatusHeld,
+        tone: StatusTone.warning,
+      ),
+      'cancelled' => StatusChip(
+        label: l10n.ordersStatusCancelled,
+        tone: StatusTone.error,
+      ),
+      'voided' => StatusChip(label: l10n.receiptVoid, tone: StatusTone.error),
+      _ => StatusChip(label: l10n.ordersStatusPaid, tone: StatusTone.success),
+    };
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+
+    Widget table(List<LocalOrderRow> rows, {required bool heldTab}) =>
+        GlassTable<LocalOrderRow>(
+          rows: rows,
+          onRowTap: (o) => o.status == 'held'
+              ? _resume(context, ref, o)
+              : context.go(AppRoutes.receipt(o.id)),
+          columns: [
+            GlassColumn(
+              label: l10n.ordersColNumber,
+              flex: 3,
+              cell: (o) => Column(
+                key: Key('order-${o.orderNumber}'),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    o.orderNumber,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                  Text(
+                    [?o.customerName, o.cashierName].join(' · '),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: muted,
+                  ),
+                ],
               ),
+            ),
+            GlassColumn(label: l10n.ordersColTime, cell: (o) => Text(when(o))),
+            GlassColumn(
+              label: l10n.ordersColItems,
+              cell: (o) => Text(l10n.receiptItems(o.itemCount)),
+            ),
+            GlassColumn(label: l10n.ordersColStatus, cell: statusChip),
+            GlassColumn(
+              label: l10n.ordersColTotal,
+              numeric: true,
+              flex: 2,
+              cell: (o) => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  MoneyText(
+                    Money(o.grandTotal),
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  if (heldTab)
+                    IconButton(
+                      key: Key('order-cancel-${o.orderNumber}'),
+                      tooltip: l10n.ordersCancel,
+                      onPressed: () => _cancel(context, ref, o),
+                      icon: const Icon(Icons.cancel_outlined),
+                    ),
+                ],
+              ),
+            ),
           ],
-        ),
-        onTap: () => o.status == 'held'
-            ? _resume(context, ref, o)
-            : context.go(AppRoutes.receipt(o.id)),
-      );
-    }
+        );
+
+    Widget tab(List<Widget> children) => ListView(
+      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+      children: children,
+    );
 
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          leading: BackButton(onPressed: () => context.go(AppRoutes.sell)),
-          title: Text(l10n.ordersTitle),
-          actions: const [],
-          bottom: TabBar(
-            tabs: [
-              Tab(text: l10n.ordersToday),
-              Tab(text: l10n.ordersHeld(held.length)),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            Column(
-              children: [
-                ListTile(
-                  title: Text(l10n.ordersTodayTotal),
-                  trailing: Text(
-                    Money(total).format(),
-                    key: const Key('orders-total'),
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  subtitle: Text(l10n.ordersTodayCount(completed.length)),
-                ),
-                const Divider(height: 1),
-                Expanded(
-                  child: today.isEmpty
-                      ? EmptyState(
-                          icon: Icons.receipt_long_outlined,
-                          message: l10n.ordersNone,
-                        )
-                      : ListView.separated(
-                          itemCount: today.length,
-                          separatorBuilder: (_, _) => const Divider(height: 1),
-                          itemBuilder: (_, i) => tile(today[i], heldTab: false),
-                        ),
-                ),
-              ],
-            ),
-            if (held.isEmpty)
-              EmptyState(
-                icon: Icons.pause_circle_outline,
-                message: l10n.ordersNoHeld,
-              )
-            else
-              ListView.separated(
-                itemCount: held.length,
-                separatorBuilder: (_, _) => const Divider(height: 1),
-                itemBuilder: (_, i) => tile(held[i], heldTab: true),
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.lg,
+                AppSpacing.lg,
+                0,
               ),
-          ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  FlowHeader(
+                    title: l10n.ordersTitle,
+                    onBack: () => context.go(AppRoutes.sell),
+                    backKey: const Key('orders-back'),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  GlassCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                    ),
+                    child: TabBar(
+                      dividerHeight: 0,
+                      tabs: [
+                        Tab(text: l10n.ordersToday),
+                        Tab(text: l10n.ordersHeld(held.length)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        tab([
+                          StatCard(
+                            icon: Icons.payments_outlined,
+                            label: l10n.ordersTodayTotal,
+                            value: Money(total).format(),
+                            valueKey: const Key('orders-total'),
+                            footnote: l10n.ordersTodayCount(completed.length),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          if (today.isEmpty)
+                            GlassCard(
+                              child: EmptyState(
+                                icon: Icons.receipt_long_outlined,
+                                message: l10n.ordersNone,
+                              ),
+                            )
+                          else
+                            table(today, heldTab: false),
+                        ]),
+                        tab([
+                          if (held.isEmpty)
+                            GlassCard(
+                              child: EmptyState(
+                                icon: Icons.pause_circle_outline,
+                                message: l10n.ordersNoHeld,
+                              ),
+                            )
+                          else
+                            table(held, heldTab: true),
+                        ]),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

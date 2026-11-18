@@ -957,5 +957,10 @@
   "settingsVisualEffects": "Visual effects",
   "settingsVisualEffectsHint": "Frosted blur on the top bar and dialogs. Turn off on slow tablets.",
   "settingsPaper": "Receipt paper {mm} mm",
-  "settingsTaxOff": "Not charged"
+  "settingsTaxOff": "Not charged",
+  "ordersColNumber": "Order no.",
+  "ordersColTime": "Time",
+  "ordersColItems": "Items",
+  "ordersColStatus": "Status",
+  "ordersColTotal": "Total"
 }

@@ -3413,4 +3413,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get settingsTaxOff => 'Tidak dipungut';
+
+  @override
+  String get ordersColNumber => 'No. pesanan';
+
+  @override
+  String get ordersColTime => 'Waktu';
+
+  @override
+  String get ordersColItems => 'Barang';
+
+  @override
+  String get ordersColStatus => 'Status';
+
+  @override
+  String get ordersColTotal => 'Total';
 }

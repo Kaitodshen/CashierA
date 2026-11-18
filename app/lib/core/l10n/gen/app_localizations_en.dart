@@ -3458,4 +3458,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTaxOff => 'Not charged';
+
+  @override
+  String get ordersColNumber => 'Order no.';
+
+  @override
+  String get ordersColTime => 'Time';
+
+  @override
+  String get ordersColItems => 'Items';
+
+  @override
+  String get ordersColStatus => 'Status';
+
+  @override
+  String get ordersColTotal => 'Total';
 }
