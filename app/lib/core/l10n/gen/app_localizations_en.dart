@@ -3494,4 +3494,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get productSectionBasics => 'Product details';
+
+  @override
+  String get adminColUsed => 'Used';
 }

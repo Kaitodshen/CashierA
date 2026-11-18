@@ -969,5 +969,6 @@
   "adminColStatus": "Status",
   "adminColOnHand": "On hand",
   "adminColReorder": "Reorder point",
-  "productSectionBasics": "Product details"
+  "productSectionBasics": "Product details",
+  "adminColUsed": "Used"
 }

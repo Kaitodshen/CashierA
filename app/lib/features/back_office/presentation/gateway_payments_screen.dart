@@ -1,5 +1,8 @@
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/payments_admin_repository.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shifts_screen.dart';
@@ -55,94 +58,117 @@ class _GatewayPaymentsScreenState extends ConsumerState<GatewayPaymentsScreen> {
     final paidTotal = paid.fold(Money.zero, (a, c) => a + c.amount);
     final unmatchedTotal = unmatched.fold(Money.zero, (a, c) => a + c.amount);
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      children: [
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            StoreFilter(
-              value: _storeId,
-              onChanged: (v) => setState(() => _storeId = v),
-            ),
-            PeriodFilter(
-              value: _period,
-              onChanged: (v) => setState(() => _period = v),
-            ),
-            FilterChip(
-              key: const Key('gateway-unmatched'),
-              label: Text(l10n.gatewayOnlyUnmatched),
-              selected: _onlyUnmatched,
-              onSelected: (v) => setState(() => _onlyUnmatched = v),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Wrap(
-          spacing: AppSpacing.lg,
-          runSpacing: AppSpacing.sm,
-          children: [
-            Text(
-              l10n.gatewayPaidTotal(paidTotal.format(), paid.length),
-              key: const Key('gateway-paid-total'),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            if (unmatched.isNotEmpty)
-              Text(
-                l10n.gatewayUnmatchedTotal(
-                  unmatchedTotal.format(),
-                  unmatched.length,
-                ),
-                key: const Key('gateway-unmatched-total'),
-                style: const TextStyle(
-                  color: AppColors.error,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-          ],
-        ),
-        if (unmatched.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xs),
-            child: Text(l10n.gatewayUnmatchedHint),
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          StoreFilter(
+            value: _storeId,
+            onChanged: (v) => setState(() => _storeId = v),
           ),
-        const SizedBox(height: AppSpacing.md),
+          PeriodFilter(
+            value: _period,
+            onChanged: (v) => setState(() => _period = v),
+          ),
+          FilterChip(
+            key: const Key('gateway-unmatched'),
+            label: Text(l10n.gatewayOnlyUnmatched),
+            selected: _onlyUnmatched,
+            onSelected: (v) => setState(() => _onlyUnmatched = v),
+          ),
+        ],
+      ),
+      children: [
+        GlassCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.gatewayPaidTotal(paidTotal.format(), paid.length),
+                key: const Key('gateway-paid-total'),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              if (unmatched.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  l10n.gatewayUnmatchedTotal(
+                    unmatchedTotal.format(),
+                    unmatched.length,
+                  ),
+                  key: const Key('gateway-unmatched-total'),
+                  style: const TextStyle(
+                    color: AppColors.error,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(l10n.gatewayUnmatchedHint, style: muted),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
         if (charges.isLoading && all.isEmpty)
           const Center(child: CircularProgressIndicator())
         else if (charges.hasError)
-          Text(l10n.commonError('${charges.error}'))
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('${charges.error}'),
+          )
         else if (list.isEmpty)
-          EmptyState(icon: Icons.qr_code_2, message: l10n.gatewayEmpty)
+          adminMessage(icon: Icons.qr_code_2, message: l10n.gatewayEmpty)
         else
-          Card(
-            child: Column(
-              children: [
-                for (final c in list)
-                  ListTile(
-                    key: Key('charge-${c.id}'),
-                    leading: Icon(Icons.qr_code_2, color: chargeStatusColor(c)),
-                    title: Text(
-                      [
-                        c.amount.format(),
-                        if (c.unmatched)
-                          l10n.gatewayUnmatched
-                        else
-                          l10n.gatewayStatus(c.status),
-                      ].join(' · '),
-                    ),
-                    subtitle: Text(
+          GlassTable<GatewayChargeRow>(
+            rows: list,
+            columns: [
+              GlassColumn(
+                label: l10n.ordersColTime,
+                flex: 3,
+                cell: (c) => Column(
+                  key: Key('charge-${c.id}'),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
                       [
                         c.storeCode,
                         _at.format(c.createdAt.toLocal()),
-                        ?c.orderNumber,
-                        ?c.providerRef,
                       ].join(' · '),
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
-                  ),
-              ],
-            ),
+                    Text(
+                      [?c.orderNumber, ?c.providerRef].join(' · '),
+                      style: muted,
+                    ),
+                  ],
+                ),
+              ),
+              GlassColumn(
+                label: l10n.adminColStatus,
+                flex: 2,
+                cell: (c) => StatusChip(
+                  label: c.unmatched
+                      ? l10n.gatewayUnmatched
+                      : l10n.gatewayStatus(c.status),
+                  tone: c.unmatched
+                      ? StatusTone.error
+                      : switch (c.status) {
+                          'paid' => StatusTone.success,
+                          'pending' => StatusTone.warning,
+                          _ => StatusTone.error,
+                        },
+                ),
+              ),
+              GlassColumn(
+                label: l10n.ordersColTotal,
+                numeric: true,
+                flex: 2,
+                cell: (c) => Text(
+                  c.amount.format(),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
           ),
       ],
     );

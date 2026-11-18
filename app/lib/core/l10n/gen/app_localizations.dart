@@ -5917,6 +5917,12 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Data produk'**
   String get productSectionBasics;
+
+  /// No description provided for @adminColUsed.
+  ///
+  /// In id, this message translates to:
+  /// **'Dipakai'**
+  String get adminColUsed;
 }
 
 class _AppLocalizationsDelegate

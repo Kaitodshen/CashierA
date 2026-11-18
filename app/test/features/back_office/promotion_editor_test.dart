@@ -10,6 +10,43 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:toastification/toastification.dart';
 
+Future<void> pumpEditor(WidgetTester tester, Size size) async {
+  tester.view
+    ..physicalSize = size
+    ..devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        promotionScopeOptionsProvider.overrideWith(
+          (ref) async => const ScopeOptions(
+            categories: [ScopeOption(id: 'c-1', label: 'Minuman')],
+            products: [ScopeOption(id: 'p-1', label: 'Mie Goreng')],
+            variants: [
+              ScopeOption(id: 'v-1', label: 'Air 600 ml', detail: 'AIR-600'),
+            ],
+          ),
+        ),
+        backOfficeStoresProvider.overrideWith(
+          (ref) async => const [
+            StoreSummary(id: 's-1', code: 'PST', name: 'Pusat'),
+          ],
+        ),
+      ],
+      child: ToastificationWrapper(
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          locale: const Locale('id'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const PromotionEditorScreen(promotionId: 'new'),
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('every promotion type renders its rule fields', (tester) async {
     tester.view
@@ -71,6 +108,20 @@ void main() {
     expect(find.text('Isi nama promo.', findRichText: true), findsOneWidget);
     await tester.pump(const Duration(seconds: 5));
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('the editor is on glass with Save in its toolbar', (
+    tester,
+  ) async {
+    await pumpEditor(tester, const Size(1280, 900));
+    expect(find.byKey(const Key('promo-save')), findsOneWidget);
+    expect(find.byType(FloatingActionButton), findsNothing);
+    expect(find.byType(Card), findsNothing);
+  });
+
+  testWidgets('the editor fits a phone', (tester) async {
+    await pumpEditor(tester, const Size(390, 844));
+    expect(tester.takeException(), isNull);
   });
 }
 

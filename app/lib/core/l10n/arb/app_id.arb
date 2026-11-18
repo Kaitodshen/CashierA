@@ -2481,5 +2481,6 @@
   "adminColStatus": "Status",
   "adminColOnHand": "Stok",
   "adminColReorder": "Stok minimum",
-  "productSectionBasics": "Data produk"
+  "productSectionBasics": "Data produk",
+  "adminColUsed": "Dipakai"
 }

@@ -1,6 +1,9 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
@@ -49,38 +52,46 @@ class VouchersScreen extends ConsumerWidget {
     final list = vouchers.value ?? const <AdminVoucher>[];
     final date = DateFormat.yMMMd();
 
-    return Scaffold(
-      floatingActionButton: canEdit
-          ? FloatingActionButton.extended(
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    return AdminPage(
+      toolbar: AdminToolbar(
+        actions: [
+          if (canEdit)
+            PrimaryButton(
               key: const Key('voucher-add'),
               onPressed: () => _edit(context, ref),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.commonAdd),
-            )
-          : null,
-      body: vouchers.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : list.isEmpty
-          ? EmptyState(
-              icon: Icons.confirmation_number_outlined,
-              message: l10n.vouchersEmpty,
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.lg,
-                AppSpacing.lg,
-                96,
-              ),
-              itemCount: list.length,
-              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (context, i) {
-                final v = list[i];
-                return Card(
-                  child: ListTile(
-                    key: Key('voucher-${v.code}'),
-                    title: Text('${v.code} · ${voucherValueText(v)}'),
-                    subtitle: Text(
+              icon: Icons.add,
+              label: l10n.commonAdd,
+            ),
+        ],
+      ),
+      children: [
+        if (vouchers.isLoading)
+          const Center(child: CircularProgressIndicator())
+        else if (list.isEmpty)
+          adminMessage(
+            icon: Icons.confirmation_number_outlined,
+            message: l10n.vouchersEmpty,
+          )
+        else
+          GlassTable<AdminVoucher>(
+            rows: list,
+            onRowTap: canEdit ? (v) => _edit(context, ref, v) : null,
+            columns: [
+              GlassColumn(
+                label: l10n.navVouchers,
+                flex: 4,
+                cell: (v) => Column(
+                  key: Key('voucher-${v.code}'),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${v.code} · ${voucherValueText(v)}',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
                       [
                         ?v.description,
                         if (v.minSubtotal > 0)
@@ -91,17 +102,30 @@ class VouchersScreen extends ConsumerWidget {
                           l10n.voucherMaxDiscount(
                             Money(v.maxDiscount!).format(),
                           ),
-                        l10n.voucherUsed(v.usedCount, '${v.maxUses ?? '∞'}'),
                         if (v.endsAt != null)
                           l10n.voucherUntil(date.format(v.endsAt!.toLocal())),
-                        if (!v.isActive) l10n.commonInactive,
                       ].join(' · '),
+                      style: muted,
                     ),
-                    onTap: canEdit ? () => _edit(context, ref, v) : null,
-                  ),
-                );
-              },
-            ),
+                  ],
+                ),
+              ),
+              GlassColumn(
+                label: l10n.adminColUsed,
+                flex: 2,
+                cell: (v) =>
+                    Text(l10n.voucherUsed(v.usedCount, '${v.maxUses ?? '∞'}')),
+              ),
+              GlassColumn(
+                label: l10n.adminColStatus,
+                cell: (v) => StatusChip(
+                  label: v.isActive ? l10n.commonActive : l10n.commonInactive,
+                  tone: v.isActive ? StatusTone.success : StatusTone.neutral,
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }

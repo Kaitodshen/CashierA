@@ -3449,4 +3449,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get productSectionBasics => 'Data produk';
+
+  @override
+  String get adminColUsed => 'Dipakai';
 }
