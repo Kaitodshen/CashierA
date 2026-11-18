@@ -777,6 +777,16 @@ class _Stepper extends StatelessWidget {
 }
 
 /// A payment-method tile: QRIS, card or cash.
+/// The icon of a payment method kind, on cart and payment tiles.
+IconData tenderIcon(TenderKind kind) => switch (kind) {
+  TenderKind.cash => Icons.payments_outlined,
+  TenderKind.qris => Icons.qr_code_2,
+  TenderKind.card => Icons.credit_card,
+  TenderKind.transfer => Icons.account_balance_outlined,
+  TenderKind.ewallet => Icons.account_balance_wallet_outlined,
+  TenderKind.kasbon => Icons.request_quote_outlined,
+};
+
 class _TenderTile extends StatelessWidget {
   const new({required this.option, required this.onTap, super.key});
 
@@ -785,14 +795,7 @@ class _TenderTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = switch (option.kind) {
-      TenderKind.cash => Icons.payments_outlined,
-      TenderKind.qris => Icons.qr_code_2,
-      TenderKind.card => Icons.credit_card,
-      TenderKind.transfer => Icons.account_balance_outlined,
-      TenderKind.ewallet => Icons.account_balance_wallet_outlined,
-      TenderKind.kasbon => Icons.request_quote_outlined,
-    };
+    final icon = tenderIcon(option.kind);
     return Opacity(
       opacity: onTap == null ? 0.5 : 1,
       child: GlassCard(

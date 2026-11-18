@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/database/app_database.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/payments/payment_gateway.dart';
 import 'package:cashiera/core/providers.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
@@ -54,6 +56,7 @@ void main() {
     await startQris(tester);
 
     expect(find.byKey(const Key('qris-code')), findsOneWidget);
+    expect(find.byType(GlassDialog), findsOneWidget);
     expect(find.text('QRIS Rp 7.000'), findsOneWidget);
     final request = gateway.requests.single;
     expect(request.amount.rupiah, 7000);
@@ -147,7 +150,7 @@ void main() {
     );
     expect(
       tester
-          .widget<FilledButton>(find.byKey(const Key('pay-finish')))
+          .widget<PrimaryButton>(find.byKey(const Key('pay-finish')))
           .onPressed,
       isNotNull,
     );

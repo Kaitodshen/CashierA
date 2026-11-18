@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:barcode/barcode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/payments/payment_gateway.dart';
 import 'package:cashiera_core/cashiera_core.dart';
@@ -269,9 +271,12 @@ class _QrisDialogState extends State<_QrisDialog> {
     }
 
     final pending = state == ChargeState.pending;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.qrisTitle(widget.amount.format())),
-      content: SizedBox(width: 320, child: Center(child: body)),
+      content: SizedBox(
+        width: 320,
+        child: SingleChildScrollView(child: Center(child: body)),
+      ),
       actions: [
         if (!pending && (charge != null || _error != null))
           TextButton(
@@ -286,10 +291,10 @@ class _QrisDialogState extends State<_QrisDialog> {
             child: Text(l10n.qrisCancel),
           )
         else
-          FilledButton(
+          PrimaryButton(
             key: const Key('qris-close'),
             onPressed: _close,
-            child: Text(l10n.commonClose),
+            label: l10n.commonClose,
           ),
       ],
     );
