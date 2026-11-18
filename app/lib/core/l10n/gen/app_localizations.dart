@@ -5887,6 +5887,30 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Detail'**
   String get auditDetail;
+
+  /// No description provided for @adminColVariants.
+  ///
+  /// In id, this message translates to:
+  /// **'Varian'**
+  String get adminColVariants;
+
+  /// No description provided for @adminColStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'Status'**
+  String get adminColStatus;
+
+  /// No description provided for @adminColOnHand.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok'**
+  String get adminColOnHand;
+
+  /// No description provided for @adminColReorder.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok minimum'**
+  String get adminColReorder;
 }
 
 class _AppLocalizationsDelegate

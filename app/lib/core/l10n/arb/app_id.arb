@@ -2476,5 +2476,9 @@
   "ordersColStatus": "Status",
   "ordersColTotal": "Total",
   "auditWho": "Oleh",
-  "auditDetail": "Detail"
+  "auditDetail": "Detail",
+  "adminColVariants": "Varian",
+  "adminColStatus": "Status",
+  "adminColOnHand": "Stok",
+  "adminColReorder": "Stok minimum"
 }

@@ -3434,4 +3434,16 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get auditDetail => 'Detail';
+
+  @override
+  String get adminColVariants => 'Varian';
+
+  @override
+  String get adminColStatus => 'Status';
+
+  @override
+  String get adminColOnHand => 'Stok';
+
+  @override
+  String get adminColReorder => 'Stok minimum';
 }

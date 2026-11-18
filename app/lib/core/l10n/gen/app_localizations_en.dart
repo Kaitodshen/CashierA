@@ -3479,4 +3479,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get auditDetail => 'Detail';
+
+  @override
+  String get adminColVariants => 'Variants';
+
+  @override
+  String get adminColStatus => 'Status';
+
+  @override
+  String get adminColOnHand => 'On hand';
+
+  @override
+  String get adminColReorder => 'Reorder point';
 }

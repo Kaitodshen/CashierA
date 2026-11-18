@@ -964,5 +964,9 @@
   "ordersColStatus": "Status",
   "ordersColTotal": "Total",
   "auditWho": "By",
-  "auditDetail": "Detail"
+  "auditDetail": "Detail",
+  "adminColVariants": "Variants",
+  "adminColStatus": "Status",
+  "adminColOnHand": "On hand",
+  "adminColReorder": "Reorder point"
 }

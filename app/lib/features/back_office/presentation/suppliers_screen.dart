@@ -1,6 +1,9 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_models.dart';
@@ -41,48 +44,60 @@ class SuppliersScreen extends ConsumerWidget {
     final suppliers = ref.watch(adminSuppliersProvider);
     final list = suppliers.value ?? const <AdminSupplier>[];
 
-    return Scaffold(
-      floatingActionButton: canEdit
-          ? FloatingActionButton.extended(
+    return AdminPage(
+      toolbar: AdminToolbar(
+        actions: [
+          if (canEdit)
+            PrimaryButton(
+              key: const Key('supplier-new'),
               onPressed: () => _edit(context, ref),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.commonAdd),
-            )
-          : null,
-      body: suppliers.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : list.isEmpty
-          ? EmptyState(
-              icon: Icons.local_shipping_outlined,
-              message: l10n.suppliersEmpty,
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.lg,
-                AppSpacing.lg,
-                96,
-              ),
-              itemCount: list.length,
-              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (context, i) {
-                final s = list[i];
-                return Card(
-                  child: ListTile(
-                    title: Text(s.name),
-                    subtitle: Text(
-                      [
-                        s.contactName,
-                        s.phone,
-                        s.email,
-                        if (!s.isActive) l10n.commonInactive,
-                      ].nonNulls.where((v) => v.isNotEmpty).join(' · '),
-                    ),
-                    onTap: canEdit ? () => _edit(context, ref, s) : null,
-                  ),
-                );
-              },
+              icon: Icons.add,
+              label: l10n.commonAdd,
             ),
+        ],
+      ),
+      children: [
+        if (suppliers.isLoading)
+          const Center(child: CircularProgressIndicator())
+        else if (list.isEmpty)
+          adminMessage(
+            icon: Icons.local_shipping_outlined,
+            message: l10n.suppliersEmpty,
+          )
+        else
+          GlassTable<AdminSupplier>(
+            rows: list,
+            onRowTap: canEdit ? (s) => _edit(context, ref, s) : null,
+            columns: [
+              GlassColumn(
+                label: l10n.supplierName,
+                flex: 2,
+                cell: (s) => Text(
+                  s.name,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+              GlassColumn(
+                label: l10n.supplierContact,
+                flex: 3,
+                cell: (s) => Text(
+                  [
+                    s.contactName,
+                    s.phone,
+                    s.email,
+                  ].nonNulls.where((v) => v.isNotEmpty).join(' · '),
+                ),
+              ),
+              GlassColumn(
+                label: l10n.adminColStatus,
+                cell: (s) => StatusChip(
+                  label: s.isActive ? l10n.commonActive : l10n.commonInactive,
+                  tone: s.isActive ? StatusTone.success : StatusTone.neutral,
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_models.dart';
@@ -51,80 +54,124 @@ class CategoriesScreen extends ConsumerWidget {
     final categories = ref.watch(adminCategoriesProvider);
     final list = categories.value ?? const <AdminCategory>[];
 
+    final toolbar = AdminToolbar(
+      filters: [
+        if (canEdit)
+          Text(
+            l10n.categoryOrderHint,
+            style: const TextStyle(color: AppColors.textMuted),
+          ),
+      ],
+      actions: [
+        if (canEdit)
+          PrimaryButton(
+            key: const Key('category-new'),
+            onPressed: () => _edit(
+              context,
+              ref,
+              null,
+              ((list.isEmpty ? 0 : list.last.sortOrder) ~/ 10 + 1) * 10,
+            ),
+            icon: Icons.add,
+            label: l10n.commonAdd,
+          ),
+      ],
+    );
+
     return Scaffold(
-      floatingActionButton: canEdit
-          ? FloatingActionButton.extended(
-              onPressed: () => _edit(
-                context,
-                ref,
-                null,
-                ((list.isEmpty ? 0 : list.last.sortOrder) ~/ 10 + 1) * 10,
-              ),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.commonAdd),
-            )
-          : null,
-      body: categories.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : list.isEmpty
-          ? EmptyState(
-              icon: Icons.category_outlined,
-              message: l10n.categoriesEmpty,
-            )
-          : Column(
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.lg,
+              AppSpacing.lg,
+              0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (canEdit)
-                  Padding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    child: Text(l10n.categoryOrderHint),
-                  ),
+                toolbar,
+                const SizedBox(height: AppSpacing.lg),
                 Expanded(
-                  child: ReorderableListView.builder(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.lg,
-                      0,
-                      AppSpacing.lg,
-                      96,
-                    ),
-                    buildDefaultDragHandles: canEdit,
-                    itemCount: list.length,
-                    onReorderItem: (from, to) async {
-                      final ordered = [...list];
-                      final moved = ordered.removeAt(from);
-                      ordered.insert(to, moved);
-                      await ref
-                          .read(catalogAdminProvider)
-                          .reorderCategories(ordered);
-                      ref.invalidate(adminCategoriesProvider);
-                    },
-                    itemBuilder: (context, i) {
-                      final c = list[i];
-                      return Card(
-                        key: ValueKey(c.id),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: _color(c.color),
-                            radius: 10,
+                  child: categories.isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : list.isEmpty
+                      ? Align(
+                          alignment: Alignment.topCenter,
+                          child: adminMessage(
+                            icon: Icons.category_outlined,
+                            message: l10n.categoriesEmpty,
                           ),
-                          title: Text(
-                            c.name,
-                            style: TextStyle(
-                              decoration: c.isActive
-                                  ? null
-                                  : TextDecoration.lineThrough,
-                            ),
-                          ),
-                          subtitle: c.isActive
-                              ? null
-                              : Text(l10n.commonInactive),
-                          onTap: canEdit ? () => _edit(context, ref, c) : null,
+                        )
+                      : ReorderableListView.builder(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                          buildDefaultDragHandles: canEdit,
+                          itemCount: list.length,
+                          onReorderItem: (from, to) async {
+                            final ordered = [...list];
+                            final moved = ordered.removeAt(from);
+                            ordered.insert(to, moved);
+                            await ref
+                                .read(catalogAdminProvider)
+                                .reorderCategories(ordered);
+                            ref.invalidate(adminCategoriesProvider);
+                          },
+                          itemBuilder: (context, i) {
+                            final c = list[i];
+                            return Padding(
+                              key: ValueKey(c.id),
+                              padding: const EdgeInsets.only(
+                                bottom: AppSpacing.sm,
+                              ),
+                              child: GlassCard(
+                                level: GlassLevel.solid,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.sm,
+                                ),
+                                onTap: canEdit
+                                    ? () => _edit(context, ref, c)
+                                    : null,
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: _color(c.color),
+                                    radius: 10,
+                                  ),
+                                  title: Text(
+                                    c.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      decoration: c.isActive
+                                          ? null
+                                          : TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                  trailing: Padding(
+                                    padding: const EdgeInsets.only(
+                                      right: AppSpacing.xl,
+                                    ),
+                                    child: StatusChip(
+                                      label: c.isActive
+                                          ? l10n.commonActive
+                                          : l10n.commonInactive,
+                                      tone: c.isActive
+                                          ? StatusTone.success
+                                          : StatusTone.neutral,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
             ),
+          ),
+        ),
+      ),
     );
   }
 }
