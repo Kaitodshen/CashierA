@@ -96,66 +96,70 @@ class _CustomerDialogState extends ConsumerState<_CustomerDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(
         widget.customer == null ? l10n.sellAddCustomer : l10n.customerEdit,
       ),
-      content: SizedBox(
-        width: 420,
-        child: Form(
-          key: _form,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                key: const Key('admin-customer-name'),
-                controller: _name,
-                decoration: InputDecoration(labelText: l10n.customerName),
-                validator: (v) =>
-                    (v ?? '').trim().isEmpty ? l10n.commonRequired : null,
-              ),
-              TextFormField(
-                key: const Key('admin-customer-phone'),
-                controller: _phone,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(labelText: l10n.customerPhone),
-                validator: (v) {
-                  final d = (v ?? '').replaceAll(RegExp(r'[\s-]'), '');
-                  return d.isEmpty || RegExp(r'^\+?[0-9]{8,15}$').hasMatch(d)
-                      ? null
-                      : l10n.customerPhoneInvalid;
-                },
-              ),
-              TextFormField(
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(labelText: l10n.adminCustomerEmail),
-                validator: (v) {
-                  final t = (v ?? '').trim();
-                  return t.isEmpty ||
-                          RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(t)
-                      ? null
-                      : l10n.adminEmailInvalid;
-                },
-              ),
-              TextFormField(
-                key: const Key('admin-customer-limit'),
-                controller: _limit,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: InputDecoration(
-                  labelText: l10n.adminCustomerLimit,
-                  helperText: l10n.adminCustomerLimitHint,
-                  prefixText: 'Rp ',
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 420,
+          child: Form(
+            key: _form,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  key: const Key('admin-customer-name'),
+                  controller: _name,
+                  decoration: InputDecoration(labelText: l10n.customerName),
+                  validator: (v) =>
+                      (v ?? '').trim().isEmpty ? l10n.commonRequired : null,
                 ),
-              ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                value: _active,
-                onChanged: (v) => setState(() => _active = v),
-                title: Text(l10n.commonActive),
-              ),
-            ],
+                TextFormField(
+                  key: const Key('admin-customer-phone'),
+                  controller: _phone,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(labelText: l10n.customerPhone),
+                  validator: (v) {
+                    final d = (v ?? '').replaceAll(RegExp(r'[\s-]'), '');
+                    return d.isEmpty || RegExp(r'^\+?[0-9]{8,15}$').hasMatch(d)
+                        ? null
+                        : l10n.customerPhoneInvalid;
+                  },
+                ),
+                TextFormField(
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: l10n.adminCustomerEmail,
+                  ),
+                  validator: (v) {
+                    final t = (v ?? '').trim();
+                    return t.isEmpty ||
+                            RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(t)
+                        ? null
+                        : l10n.adminEmailInvalid;
+                  },
+                ),
+                TextFormField(
+                  key: const Key('admin-customer-limit'),
+                  controller: _limit,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    labelText: l10n.adminCustomerLimit,
+                    helperText: l10n.adminCustomerLimitHint,
+                    prefixText: 'Rp ',
+                  ),
+                ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: _active,
+                  onChanged: (v) => setState(() => _active = v),
+                  title: Text(l10n.commonActive),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -311,37 +315,41 @@ class AdminCustomerScreen extends ConsumerWidget {
     final form = GlobalKey<FormState>();
     final ok = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => GlassDialog(
         title: Text(l10n.adminAdjustPoints),
-        content: SizedBox(
-          width: 360,
-          child: Form(
-            key: form,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  key: const Key('adjust-points'),
-                  controller: points,
-                  autofocus: true,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    signed: true,
+        content: SingleChildScrollView(
+          child: SizedBox(
+            width: 360,
+            child: Form(
+              key: form,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    key: const Key('adjust-points'),
+                    controller: points,
+                    autofocus: true,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      signed: true,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: l10n.adminAdjustPointsField,
+                    ),
+                    validator: (v) => (int.tryParse((v ?? '').trim()) ?? 0) == 0
+                        ? l10n.commonRequired
+                        : null,
                   ),
-                  decoration: InputDecoration(
-                    labelText: l10n.adminAdjustPointsField,
+                  TextFormField(
+                    key: const Key('adjust-note'),
+                    controller: note,
+                    decoration: InputDecoration(
+                      labelText: l10n.adminAdjustNote,
+                    ),
+                    validator: (v) =>
+                        (v ?? '').trim().length < 3 ? l10n.reasonShort : null,
                   ),
-                  validator: (v) => (int.tryParse((v ?? '').trim()) ?? 0) == 0
-                      ? l10n.commonRequired
-                      : null,
-                ),
-                TextFormField(
-                  key: const Key('adjust-note'),
-                  controller: note,
-                  decoration: InputDecoration(labelText: l10n.adminAdjustNote),
-                  validator: (v) =>
-                      (v ?? '').trim().length < 3 ? l10n.reasonShort : null,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

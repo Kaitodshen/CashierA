@@ -239,82 +239,84 @@ class _RequestTransferDialogState
       ],
       onChanged: onChanged,
     );
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.transferNew),
-      content: SizedBox(
-        width: 520,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              store(
-                const Key('transfer-from'),
-                l10n.transferFrom,
-                _from,
-                (v) => setState(() => _from = v),
-              ),
-              store(
-                const Key('transfer-to'),
-                l10n.transferTo,
-                _to,
-                (v) => setState(() => _to = v),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              for (final (i, (v, c)) in _lines.indexed)
-                Row(
-                  children: [
-                    Expanded(child: Text([v.name, ?v.sku].join(' · '))),
-                    SizedBox(
-                      width: 90,
-                      child: TextField(
-                        key: Key('transfer-qty-${v.id}'),
-                        controller: c,
-                        textAlign: TextAlign.end,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 520,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                store(
+                  const Key('transfer-from'),
+                  l10n.transferFrom,
+                  _from,
+                  (v) => setState(() => _from = v),
+                ),
+                store(
+                  const Key('transfer-to'),
+                  l10n.transferTo,
+                  _to,
+                  (v) => setState(() => _to = v),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                for (final (i, (v, c)) in _lines.indexed)
+                  Row(
+                    children: [
+                      Expanded(child: Text([v.name, ?v.sku].join(' · '))),
+                      SizedBox(
+                        width: 90,
+                        child: TextField(
+                          key: Key('transfer-qty-${v.id}'),
+                          controller: c,
+                          textAlign: TextAlign.end,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          inputFormatters: qtyInputFormatters,
+                          decoration: InputDecoration(suffixText: v.unit),
                         ),
-                        inputFormatters: qtyInputFormatters,
-                        decoration: InputDecoration(suffixText: v.unit),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () => setState(() {
-                        _lines.removeAt(i).$2.dispose();
-                      }),
-                      icon: const Icon(Icons.delete_outline),
-                    ),
-                  ],
-                ),
-              TextButton.icon(
-                key: const Key('transfer-add-item'),
-                onPressed: () async {
-                  final v = await pickStockVariant(
-                    context,
-                    exclude: {for (final (v, _) in _lines) v.id},
-                  );
-                  if (v != null) {
-                    setState(
-                      () => _lines.add((v, TextEditingController(text: '1'))),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.add),
-                label: Text(l10n.purchaseAddItem),
-              ),
-              TextField(
-                controller: _note,
-                decoration: InputDecoration(labelText: l10n.closeNote),
-              ),
-              if (_error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.sm),
-                  child: Text(
-                    _error!,
-                    style: const TextStyle(color: AppColors.error),
+                      IconButton(
+                        onPressed: () => setState(() {
+                          _lines.removeAt(i).$2.dispose();
+                        }),
+                        icon: const Icon(Icons.delete_outline),
+                      ),
+                    ],
                   ),
+                TextButton.icon(
+                  key: const Key('transfer-add-item'),
+                  onPressed: () async {
+                    final v = await pickStockVariant(
+                      context,
+                      exclude: {for (final (v, _) in _lines) v.id},
+                    );
+                    if (v != null) {
+                      setState(
+                        () => _lines.add((v, TextEditingController(text: '1'))),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.purchaseAddItem),
                 ),
-            ],
+                TextField(
+                  controller: _note,
+                  decoration: InputDecoration(labelText: l10n.closeNote),
+                ),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.sm),
+                    child: Text(
+                      _error!,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -401,13 +403,15 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     final reason = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => GlassDialog(
         title: Text(l10n.transferReject),
-        content: TextField(
-          key: const Key('transfer-reject-reason'),
-          controller: reason,
-          autofocus: true,
-          decoration: InputDecoration(labelText: l10n.transferRejectReason),
+        content: SingleChildScrollView(
+          child: TextField(
+            key: const Key('transfer-reject-reason'),
+            controller: reason,
+            autofocus: true,
+            decoration: InputDecoration(labelText: l10n.transferRejectReason),
+          ),
         ),
         actions: [
           TextButton(

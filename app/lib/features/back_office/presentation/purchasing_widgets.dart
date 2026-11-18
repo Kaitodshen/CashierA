@@ -1,4 +1,5 @@
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
 import 'package:cashiera/features/back_office/data/purchasing_repository.dart';
@@ -57,40 +58,42 @@ class _VariantPickerState extends ConsumerState<_VariantPicker> {
                 (v.sku?.toLowerCase().contains(q) ?? false)))
           v,
     ].take(50).toList();
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.purchaseAddItem),
-      content: SizedBox(
-        width: 460,
-        height: 420,
-        child: Column(
-          children: [
-            TextField(
-              key: const Key('variant-search'),
-              autofocus: true,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                hintText: l10n.purchaseSearchItem,
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 460,
+          height: 420,
+          child: Column(
+            children: [
+              TextField(
+                key: const Key('variant-search'),
+                autofocus: true,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search),
+                  hintText: l10n.purchaseSearchItem,
+                ),
+                onChanged: (v) => setState(() => _query = v),
               ),
-              onChanged: (v) => setState(() => _query = v),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Expanded(
-              child: ListView(
-                children: [
-                  for (final v in list)
-                    ListTile(
-                      key: Key('variant-${v.id}'),
-                      dense: true,
-                      title: Text(v.name),
-                      subtitle: Text(
-                        [?v.sku, v.unit, v.cost.format()].join(' · '),
+              const SizedBox(height: AppSpacing.sm),
+              Expanded(
+                child: ListView(
+                  children: [
+                    for (final v in list)
+                      ListTile(
+                        key: Key('variant-${v.id}'),
+                        dense: true,
+                        title: Text(v.name),
+                        subtitle: Text(
+                          [?v.sku, v.unit, v.cost.format()].join(' · '),
+                        ),
+                        onTap: () => Navigator.pop(context, v),
                       ),
-                      onTap: () => Navigator.pop(context, v),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: [
@@ -207,63 +210,65 @@ class _QuantitiesDialogState extends State<_QuantitiesDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.title),
-      content: SizedBox(
-        width: 480,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (final (id, name, _, max) in widget.lines)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          max == null
-                              ? name
-                              : '$name (${l10n.purchaseMax(max.toPlain())})',
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      SizedBox(
-                        width: 100,
-                        child: TextField(
-                          key: Key('qty-$id'),
-                          controller: _fields[id],
-                          textAlign: TextAlign.end,
-                          keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 480,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final (id, name, _, max) in widget.lines)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            max == null
+                                ? name
+                                : '$name (${l10n.purchaseMax(max.toPlain())})',
                           ),
-                          inputFormatters: qtyInputFormatters,
                         ),
-                      ),
-                      if (_costs[id] case final c?) ...[
                         const SizedBox(width: AppSpacing.sm),
                         SizedBox(
-                          width: 110,
+                          width: 100,
                           child: TextField(
-                            key: Key('cost-$id'),
-                            controller: c,
+                            key: Key('qty-$id'),
+                            controller: _fields[id],
                             textAlign: TextAlign.end,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            decoration: const InputDecoration(
-                              prefixText: 'Rp ',
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
                             ),
+                            inputFormatters: qtyInputFormatters,
                           ),
                         ),
+                        if (_costs[id] case final c?) ...[
+                          const SizedBox(width: AppSpacing.sm),
+                          SizedBox(
+                            width: 110,
+                            child: TextField(
+                              key: Key('cost-$id'),
+                              controller: c,
+                              textAlign: TextAlign.end,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: const InputDecoration(
+                                prefixText: 'Rp ',
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
-                ),
-              if (_error != null)
-                Text(_error!, style: const TextStyle(color: AppColors.error)),
-            ],
+                if (_error != null)
+                  Text(_error!, style: const TextStyle(color: AppColors.error)),
+              ],
+            ),
           ),
         ),
       ),

@@ -943,60 +943,68 @@ class _ScopeDialogState extends State<_ScopeDialog> {
         )
         .toList();
 
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.promoScope),
-      content: SizedBox(
-        width: 480,
-        height: 480,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SwitchListTile(
-              key: const Key('scope-all'),
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.promoScopeAll),
-              value: s.all,
-              onChanged: (v) => setState(() => s.all = v),
-            ),
-            if (!s.all) ...[
-              SegmentedButton<int>(
-                segments: [
-                  ButtonSegment(
-                    value: 0,
-                    label: Text(l10n.promoScopeCategories),
-                  ),
-                  ButtonSegment(value: 1, label: Text(l10n.promoScopeProducts)),
-                  ButtonSegment(value: 2, label: Text(l10n.promoScopeVariants)),
-                ],
-                selected: {_tab},
-                onSelectionChanged: (v) => setState(() => _tab = v.first),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 480,
+          height: 480,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SwitchListTile(
+                key: const Key('scope-all'),
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.promoScopeAll),
+                value: s.all,
+                onChanged: (v) => setState(() => s.all = v),
               ),
-              TextField(
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  hintText: l10n.commonSearch,
-                ),
-                onChanged: (v) => setState(() => _query = v),
-              ),
-              Expanded(
-                child: ListView(
-                  children: [
-                    for (final o in shown)
-                      CheckboxListTile(
-                        value: selected.contains(o.id),
-                        title: Text(o.label),
-                        subtitle: o.detail == null ? null : Text(o.detail!),
-                        onChanged: (on) => setState(
-                          () => on ?? false
-                              ? selected.add(o.id)
-                              : selected.remove(o.id),
-                        ),
-                      ),
+              if (!s.all) ...[
+                SegmentedButton<int>(
+                  segments: [
+                    ButtonSegment(
+                      value: 0,
+                      label: Text(l10n.promoScopeCategories),
+                    ),
+                    ButtonSegment(
+                      value: 1,
+                      label: Text(l10n.promoScopeProducts),
+                    ),
+                    ButtonSegment(
+                      value: 2,
+                      label: Text(l10n.promoScopeVariants),
+                    ),
                   ],
+                  selected: {_tab},
+                  onSelectionChanged: (v) => setState(() => _tab = v.first),
                 ),
-              ),
+                TextField(
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: l10n.commonSearch,
+                  ),
+                  onChanged: (v) => setState(() => _query = v),
+                ),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      for (final o in shown)
+                        CheckboxListTile(
+                          value: selected.contains(o.id),
+                          title: Text(o.label),
+                          subtitle: o.detail == null ? null : Text(o.detail!),
+                          onChanged: (on) => setState(
+                            () => on ?? false
+                                ? selected.add(o.id)
+                                : selected.remove(o.id),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
       actions: [

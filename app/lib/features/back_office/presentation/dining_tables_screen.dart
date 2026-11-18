@@ -203,39 +203,41 @@ class _TableDialogState extends ConsumerState<_TableDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.table == null ? l10n.tableNew : l10n.tableEdit),
-      content: SizedBox(
-        width: 360,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              key: const Key('table-name'),
-              controller: _name,
-              autofocus: true,
-              decoration: InputDecoration(labelText: l10n.tableName),
-            ),
-            TextField(
-              controller: _area,
-              decoration: InputDecoration(labelText: l10n.tableArea),
-            ),
-            TextField(
-              key: const Key('table-capacity'),
-              controller: _capacity,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(labelText: l10n.tableCapacity),
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.commonActive),
-              value: _active,
-              onChanged: (v) => setState(() => _active = v),
-            ),
-            if (_error != null)
-              Text(_error!, style: const TextStyle(color: AppColors.error)),
-          ],
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 360,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                key: const Key('table-name'),
+                controller: _name,
+                autofocus: true,
+                decoration: InputDecoration(labelText: l10n.tableName),
+              ),
+              TextField(
+                controller: _area,
+                decoration: InputDecoration(labelText: l10n.tableArea),
+              ),
+              TextField(
+                key: const Key('table-capacity'),
+                controller: _capacity,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: InputDecoration(labelText: l10n.tableCapacity),
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.commonActive),
+                value: _active,
+                onChanged: (v) => setState(() => _active = v),
+              ),
+              if (_error != null)
+                Text(_error!, style: const TextStyle(color: AppColors.error)),
+            ],
+          ),
         ),
       ),
       actions: [

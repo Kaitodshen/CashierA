@@ -3,6 +3,7 @@ import 'package:cashiera/core/design_system/tokens.dart';
 import 'package:cashiera/core/design_system/widgets/admin.dart';
 import 'package:cashiera/core/design_system/widgets/buttons.dart';
 import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
@@ -151,26 +152,28 @@ class _SupplierDialogState extends State<_SupplierDialog> {
       ),
     );
 
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.supplier == null ? l10n.commonAdd : l10n.commonEdit),
-      content: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              field(_name, l10n.supplierName, required: true),
-              field(_contact, l10n.supplierContact),
-              field(_phone, l10n.supplierPhone),
-              field(_email, l10n.supplierEmail),
-              field(_address, l10n.supplierAddress),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(l10n.commonActive),
-                value: _active,
-                onChanged: (v) => setState(() => _active = v),
-              ),
-            ],
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                field(_name, l10n.supplierName, required: true),
+                field(_contact, l10n.supplierContact),
+                field(_phone, l10n.supplierPhone),
+                field(_email, l10n.supplierEmail),
+                field(_address, l10n.supplierAddress),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.commonActive),
+                  value: _active,
+                  onChanged: (v) => setState(() => _active = v),
+                ),
+              ],
+            ),
           ),
         ),
       ),

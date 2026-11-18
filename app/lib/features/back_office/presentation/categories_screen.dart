@@ -205,37 +205,39 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.category == null ? l10n.commonAdd : l10n.commonEdit),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: _name,
-              autofocus: true,
-              decoration: InputDecoration(labelText: l10n.categoryName),
-              validator: (v) =>
-                  (v?.trim().isEmpty ?? true) ? l10n.commonRequired : null,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            TextFormField(
-              controller: _color,
-              decoration: InputDecoration(labelText: l10n.categoryColor),
-              validator: (v) =>
-                  (v?.trim().isEmpty ?? true) ||
-                      _colorPattern.hasMatch(v!.trim())
-                  ? null
-                  : l10n.categoryColor,
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.commonActive),
-              value: _active,
-              onChanged: (v) => setState(() => _active = v),
-            ),
-          ],
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _name,
+                autofocus: true,
+                decoration: InputDecoration(labelText: l10n.categoryName),
+                validator: (v) =>
+                    (v?.trim().isEmpty ?? true) ? l10n.commonRequired : null,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextFormField(
+                controller: _color,
+                decoration: InputDecoration(labelText: l10n.categoryColor),
+                validator: (v) =>
+                    (v?.trim().isEmpty ?? true) ||
+                        _colorPattern.hasMatch(v!.trim())
+                    ? null
+                    : l10n.categoryColor,
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.commonActive),
+                value: _active,
+                onChanged: (v) => setState(() => _active = v),
+              ),
+            ],
+          ),
         ),
       ),
       actions: [

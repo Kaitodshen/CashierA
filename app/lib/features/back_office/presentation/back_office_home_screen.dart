@@ -216,24 +216,26 @@ class _Stores extends ConsumerWidget {
       if (!context.mounted) return;
       await showDialog<void>(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context) => GlassDialog(
           title: Text(l10n.adminCodeTitle),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SelectableText(
-                code.code,
-                key: const Key('pairing-code-value'),
-                style: Theme.of(context).textTheme.displaySmall
-                    ?.copyWith(fontWeight: FontWeight.w700, letterSpacing: 6),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                l10n.adminCodeBody(
-                  DateFormat.Hm(locale).format(code.expiresAt),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SelectableText(
+                  code.code,
+                  key: const Key('pairing-code-value'),
+                  style: Theme.of(context).textTheme.displaySmall
+                      ?.copyWith(fontWeight: FontWeight.w700, letterSpacing: 6),
                 ),
-              ),
-            ],
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  l10n.adminCodeBody(
+                    DateFormat.Hm(locale).format(code.expiresAt),
+                  ),
+                ),
+              ],
+            ),
           ),
           actions: [
             FilledButton(
@@ -273,16 +275,18 @@ class _DeviceNameDialogState extends State<_DeviceNameDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.adminPairTerminal),
-      content: TextField(
-        controller: _name,
-        autofocus: true,
-        decoration: InputDecoration(
-          labelText: l10n.adminDeviceName,
-          hintText: l10n.adminDeviceNameHint,
+      content: SingleChildScrollView(
+        child: TextField(
+          controller: _name,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: l10n.adminDeviceName,
+            hintText: l10n.adminDeviceNameHint,
+          ),
+          onSubmitted: (_) => _submit(),
         ),
-        onSubmitted: (_) => _submit(),
       ),
       actions: [
         TextButton(

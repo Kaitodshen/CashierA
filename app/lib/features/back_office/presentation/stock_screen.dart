@@ -449,45 +449,47 @@ class _AdjustDialogState extends State<_AdjustDialog> {
       StockReason.expired => l10n.reasonExpired,
       StockReason.lost => l10n.reasonLost,
     };
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.increase ? l10n.stockIn : l10n.stockOut),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(widget.row.displayName),
-            const SizedBox(height: AppSpacing.md),
-            TextFormField(
-              controller: _qty,
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: l10n.stockQuantity,
-                suffixText: widget.row.unitCode,
-              ),
-              validator: (v) =>
-                  parseQtyInput(v ?? '', allowDecimal: true).qty == null
-                  ? l10n.stockInvalidQty
-                  : null,
-            ),
-            if (reasons.length > 1) ...[
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(widget.row.displayName),
               const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<StockReason>(
-                initialValue: _reason,
-                decoration: InputDecoration(labelText: l10n.stockReason),
-                items: [
-                  for (final r in reasons)
-                    DropdownMenuItem(value: r, child: Text(label(r))),
-                ],
-                onChanged: (r) => setState(() => _reason = r ?? _reason),
+              TextFormField(
+                controller: _qty,
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: l10n.stockQuantity,
+                  suffixText: widget.row.unitCode,
+                ),
+                validator: (v) =>
+                    parseQtyInput(v ?? '', allowDecimal: true).qty == null
+                    ? l10n.stockInvalidQty
+                    : null,
+              ),
+              if (reasons.length > 1) ...[
+                const SizedBox(height: AppSpacing.md),
+                DropdownButtonFormField<StockReason>(
+                  initialValue: _reason,
+                  decoration: InputDecoration(labelText: l10n.stockReason),
+                  items: [
+                    for (final r in reasons)
+                      DropdownMenuItem(value: r, child: Text(label(r))),
+                  ],
+                  onChanged: (r) => setState(() => _reason = r ?? _reason),
+                ),
+              ],
+              const SizedBox(height: AppSpacing.md),
+              TextFormField(
+                controller: _note,
+                decoration: InputDecoration(labelText: l10n.stockNote),
               ),
             ],
-            const SizedBox(height: AppSpacing.md),
-            TextFormField(
-              controller: _note,
-              decoration: InputDecoration(labelText: l10n.stockNote),
-            ),
-          ],
+          ),
         ),
       ),
       actions: [
