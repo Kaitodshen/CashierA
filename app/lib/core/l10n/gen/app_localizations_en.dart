@@ -3473,4 +3473,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ordersColTotal => 'Total';
+
+  @override
+  String get auditWho => 'By';
+
+  @override
+  String get auditDetail => 'Detail';
 }

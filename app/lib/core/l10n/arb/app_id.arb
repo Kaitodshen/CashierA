@@ -2474,5 +2474,7 @@
   "ordersColTime": "Waktu",
   "ordersColItems": "Barang",
   "ordersColStatus": "Status",
-  "ordersColTotal": "Total"
+  "ordersColTotal": "Total",
+  "auditWho": "Oleh",
+  "auditDetail": "Detail"
 }

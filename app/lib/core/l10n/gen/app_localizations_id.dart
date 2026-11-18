@@ -3428,4 +3428,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get ordersColTotal => 'Total';
+
+  @override
+  String get auditWho => 'Oleh';
+
+  @override
+  String get auditDetail => 'Detail';
 }

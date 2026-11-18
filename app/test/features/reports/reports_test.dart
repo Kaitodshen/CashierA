@@ -1,6 +1,7 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/theme.dart';
 import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/gen/app_localizations_id.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
@@ -316,6 +317,9 @@ void main() {
     expect(find.text('03/10/2026'), findsOneWidget, reason: 'no gap');
     expect(find.text('Rp 72.000'), findsWidgets);
     expect(find.textContaining('PST · Pusat'), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is GlassTable), findsWidgets);
+    expect(find.byType(DataTable), findsNothing);
+    expect(find.byType(Card), findsNothing);
 
     await tester.tap(find.text('Pembayaran').first);
     await tester.pumpAndSettle();

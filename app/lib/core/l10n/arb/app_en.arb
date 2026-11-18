@@ -962,5 +962,7 @@
   "ordersColTime": "Time",
   "ordersColItems": "Items",
   "ordersColStatus": "Status",
-  "ordersColTotal": "Total"
+  "ordersColTotal": "Total",
+  "auditWho": "By",
+  "auditDetail": "Detail"
 }

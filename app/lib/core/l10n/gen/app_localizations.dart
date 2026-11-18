@@ -5875,6 +5875,18 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Total'**
   String get ordersColTotal;
+
+  /// No description provided for @auditWho.
+  ///
+  /// In id, this message translates to:
+  /// **'Oleh'**
+  String get auditWho;
+
+  /// No description provided for @auditDetail.
+  ///
+  /// In id, this message translates to:
+  /// **'Detail'**
+  String get auditDetail;
 }
 
 class _AppLocalizationsDelegate

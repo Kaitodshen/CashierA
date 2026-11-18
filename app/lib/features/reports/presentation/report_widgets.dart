@@ -1,5 +1,6 @@
 import 'package:cashiera/core/design_system/tokens.dart';
 import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/catalog_files.dart';
@@ -19,7 +20,6 @@ class ReportTableView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     if (table.rows.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -27,35 +27,28 @@ class ReportTableView extends StatelessWidget {
       );
     }
     bool numeric(int i) => cellIsNumber(table.rows.first[i]);
-    DataCell cell(ReportCell c, {bool strong = false}) => DataCell(
-      Text(
-        cellText(c),
-        style: strong ? const TextStyle(fontWeight: FontWeight.w700) : null,
-      ),
-    );
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        headingTextStyle: theme.textTheme.labelLarge?.copyWith(
-          fontWeight: FontWeight.w700,
-        ),
-        columnSpacing: AppSpacing.xl,
-        columns: [
-          for (final (i, c) in table.columns.indexed)
-            DataColumn(label: Text(c), numeric: numeric(i)),
-        ],
-        rows: [
-          for (final row in table.rows)
-            DataRow(cells: [for (final c in row) cell(c)]),
-          if (table.totals != null)
-            DataRow(
-              color: WidgetStatePropertyAll(
-                theme.colorScheme.surfaceContainerHighest,
+    final totals = table.totals;
+    final rows = [
+      for (final r in table.rows) (cells: r, total: false),
+      if (totals != null) (cells: totals, total: true),
+    ];
+    return GlassTable<({List<ReportCell> cells, bool total})>(
+      rows: rows,
+      columns: [
+        for (final (i, c) in table.columns.indexed)
+          GlassColumn(
+            label: c,
+            flex: i == 0 ? 2 : 1,
+            numeric: numeric(i),
+            cell: (r) => Text(
+              cellText(r.cells[i]),
+              style: TextStyle(
+                fontWeight: r.total ? FontWeight.w700 : null,
+                fontFeatures: const [FontFeature.tabularFigures()],
               ),
-              cells: [for (final c in table.totals!) cell(c, strong: true)],
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }
@@ -104,9 +97,9 @@ class _ReportSectionState extends State<ReportSection> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final key = widget.table.title;
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppSpacing.lg),
-      child: Padding(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+      child: GlassCard(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

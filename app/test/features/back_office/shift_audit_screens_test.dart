@@ -1,4 +1,5 @@
 import 'package:cashiera/core/design_system/theme.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
 import 'package:cashiera/features/back_office/data/shift_audit_repository.dart';
@@ -134,6 +135,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Transaksi di-void'), findsWidgets);
+    expect(find.byWidgetPredicate((w) => w is GlassTable), findsOneWidget);
+    expect(find.byType(Card), findsNothing);
     expect(find.text('Laci dibuka tanpa transaksi'), findsWidgets);
     expect(
       find.textContaining('Eko Saputra · disetujui Budi Santoso'),
@@ -173,6 +176,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Kurang Rp 500'), findsOneWidget);
     expect(find.textContaining('Penjualan Rp 14.000'), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is GlassTable), findsOneWidget);
+    expect(find.byType(Card), findsNothing);
 
     await tester.pumpWidget(
       app(fake, const AdminShiftReportScreen(shiftId: 'sh-1')),
@@ -183,5 +188,15 @@ void main() {
     expect(find.text('+Rp 500'), findsOneWidget);
     // WIB times.
     expect(find.text('06/11/2026 08:00 · Eko Saputra'), findsOneWidget);
+  });
+
+  testWidgets('shifts list fits a phone', (tester) async {
+    tester.view
+      ..physicalSize = const Size(390, 844)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(app(FakeShiftAudit(), const AdminShiftsScreen()));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 }
