@@ -1,4 +1,5 @@
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/catalog_files.dart';
@@ -248,8 +249,12 @@ class SummaryTile extends StatelessWidget {
     final theme = Theme.of(context);
     return SizedBox(
       width: 220,
-      child: Card(
-        child: Padding(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          right: AppSpacing.md,
+          bottom: AppSpacing.md,
+        ),
+        child: GlassCard(
           padding: const EdgeInsets.all(AppSpacing.lg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,6 +275,7 @@ class SummaryTile extends StatelessWidget {
                 value,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
               if (detail != null)

@@ -1,6 +1,9 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
@@ -22,24 +25,30 @@ class BackOfficeHomeScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final principal = ref.watch(principalProvider);
 
-    return Scaffold(
-      body: switch (principal) {
-        AsyncData(:final value) when !value.isEmployee => EmptyState(
-          icon: Icons.person_off_outlined,
-          message: l10n.adminNotStaff,
-        ),
-        AsyncData(:final value) => _Stores(principal: value),
-        AsyncError(:final error) => EmptyState(
-          icon: Icons.cloud_off_outlined,
-          message: l10n.commonError('$error'),
-          action: OutlinedButton(
-            onPressed: () => ref.invalidate(principalProvider),
-            child: Text(l10n.commonRetry),
+    return switch (principal) {
+      AsyncData(:final value) when !value.isEmployee => AdminPage(
+        children: [
+          adminMessage(
+            icon: Icons.person_off_outlined,
+            message: l10n.adminNotStaff,
           ),
-        ),
-        _ => const Center(child: CircularProgressIndicator()),
-      },
-    );
+        ],
+      ),
+      AsyncData(:final value) => _Stores(principal: value),
+      AsyncError(:final error) => AdminPage(
+        children: [
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('$error'),
+            action: SecondaryButton(
+              onPressed: () => ref.invalidate(principalProvider),
+              label: l10n.commonRetry,
+            ),
+          ),
+        ],
+      ),
+      _ => const Scaffold(body: Center(child: CircularProgressIndicator())),
+    };
   }
 }
 
@@ -55,19 +64,34 @@ class _Stores extends ConsumerWidget {
     final stores = ref.watch(backOfficeStoresProvider);
     final list = stores.value ?? const <StoreSummary>[];
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    return AdminPage(
       children: [
-        Text(
-          principal.fullName ?? '',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Text(
-          l10n.adminRole(principal.roleName ?? '', principal.storeIds.length),
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+        GlassCard(
+          child: Row(
+            children: [
+              InitialsAvatar(name: principal.fullName ?? '?', size: 56),
+              const SizedBox(width: AppSpacing.lg),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      principal.fullName ?? '',
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                    Text(
+                      l10n.adminRole(
+                        principal.roleName ?? '',
+                        principal.storeIds.length,
+                      ),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         if (principal.can('reports.view')) ...[
@@ -78,12 +102,12 @@ class _Stores extends ConsumerWidget {
         Text(l10n.adminStores, style: theme.textTheme.titleMedium),
         const SizedBox(height: AppSpacing.md),
         if (stores.hasError)
-          EmptyState(
+          adminMessage(
             icon: Icons.cloud_off_outlined,
             message: l10n.commonError('${stores.error}'),
           )
         else if (!stores.isLoading && list.isEmpty)
-          EmptyState(icon: Icons.store_outlined, message: l10n.adminNoStores)
+          adminMessage(icon: Icons.store_outlined, message: l10n.adminNoStores)
         else
           Skeletonizer(
             enabled: stores.isLoading,
@@ -92,21 +116,72 @@ class _Stores extends ConsumerWidget {
                 for (final store in stores.isLoading ? _placeholders : list)
                   Padding(
                     padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                    child: Card(
-                      child: ListTile(
-                        leading: CircleAvatar(child: Text(store.code)),
-                        title: Text(store.name),
-                        subtitle: store.address == null
-                            ? null
-                            : Text(store.address!),
-                        trailing: principal.can('device.manage')
-                            ? OutlinedButton.icon(
-                                onPressed: () =>
-                                    _createCode(context, ref, store),
-                                icon: const Icon(Icons.qr_code_2),
-                                label: Text(l10n.adminPairTerminal),
-                              )
-                            : null,
+                    child: GlassCard(
+                      level: GlassLevel.solid,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.md,
+                      ),
+                      child: Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: AppSpacing.md,
+                        runSpacing: AppSpacing.sm,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 48,
+                                height: 48,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primarySoft,
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.control,
+                                  ),
+                                ),
+                                child: Text(
+                                  store.code,
+                                  style: const TextStyle(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.md),
+                              ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 420,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      store.name,
+                                      style: theme.textTheme.titleMedium,
+                                    ),
+                                    if (store.address case final a?)
+                                      Text(
+                                        a,
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: AppColors.textMuted,
+                                            ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (principal.can('device.manage'))
+                            SecondaryButton(
+                              onPressed: () => _createCode(context, ref, store),
+                              icon: Icons.qr_code_2,
+                              label: l10n.adminPairTerminal,
+                            ),
+                        ],
                       ),
                     ),
                   ),

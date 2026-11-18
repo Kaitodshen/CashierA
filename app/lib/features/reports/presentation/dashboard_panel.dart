@@ -1,5 +1,6 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shifts_screen.dart';
 import 'package:cashiera/features/reports/data/reports_repository.dart';
@@ -148,9 +149,11 @@ class _Body extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
-        Card(
+        GlassCard(
+          level: GlassLevel.solid,
+          padding: const EdgeInsets.all(AppSpacing.lg),
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: EdgeInsets.zero,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -167,9 +170,11 @@ class _Body extends StatelessWidget {
           children: [
             SizedBox(
               width: 420,
-              child: Card(
+              child: GlassCard(
+                level: GlassLevel.solid,
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  padding: EdgeInsets.zero,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -194,9 +199,11 @@ class _Body extends StatelessWidget {
             ),
             SizedBox(
               width: 420,
-              child: Card(
+              child: GlassCard(
+                level: GlassLevel.solid,
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  padding: EdgeInsets.zero,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

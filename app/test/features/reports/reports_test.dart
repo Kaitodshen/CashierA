@@ -1,5 +1,6 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/theme.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/l10n/gen/app_localizations_id.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
@@ -350,5 +351,14 @@ void main() {
     expect(find.text('Kasbon terlambat Rp 7.000'), findsOneWidget);
     expect(find.text('Jus Jeruk 1 L'), findsOneWidget);
     expect(fake.calls, ['dashboard:null']);
+    // Phase 3: the figures and panels sit on glass, no Material cards.
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('dash-sales')),
+        matching: find.byType(GlassCard),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(Card), findsNothing);
   });
 }
