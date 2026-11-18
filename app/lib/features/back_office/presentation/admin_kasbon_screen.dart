@@ -1,6 +1,8 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/customers_admin_repository.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shifts_screen.dart';
@@ -32,84 +34,100 @@ class _AdminKasbonScreenState extends ConsumerState<AdminKasbonScreen> {
     final total = list.fold(Money.zero, (a, r) => a + r.outstanding);
     final overdue = list.fold(Money.zero, (a, r) => a + r.overdue);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          StoreFilter(
+            value: _storeId,
+            onChanged: (v) => setState(() => _storeId = v),
+          ),
+          Text(
+            l10n.adminKasbonTotal(total.format(), overdue.format()),
+            key: const Key('admin-kasbon-total'),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ],
+      ),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Wrap(
-            spacing: AppSpacing.lg,
-            runSpacing: AppSpacing.sm,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              StoreFilter(
-                value: _storeId,
-                onChanged: (v) => setState(() => _storeId = v),
+        if (rows.isLoading && list.isEmpty)
+          const Center(child: CircularProgressIndicator())
+        else if (rows.hasError)
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('${rows.error}'),
+          )
+        else if (list.isEmpty)
+          adminMessage(
+            icon: Icons.request_quote_outlined,
+            message: l10n.adminKasbonEmpty,
+          )
+        else
+          GlassTable<KasbonOverviewRow>(
+            rows: list,
+            onRowTap: (r) => context.go(AppRoutes.adminCustomer(r.customerId)),
+            columns: [
+              GlassColumn(
+                label: l10n.navCustomers,
+                flex: 4,
+                cell: (r) {
+                  final late = r.overdue.rupiah > 0;
+                  final overLimit =
+                      r.kasbonLimit != null &&
+                      r.outstanding.rupiah > r.kasbonLimit!.rupiah;
+                  return Column(
+                    key: Key('admin-kasbon-${r.customerId}'),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          InitialsAvatar(name: r.customerName, size: 32),
+                          const SizedBox(width: AppSpacing.sm),
+                          Flexible(
+                            child: Text(
+                              '${r.customerName} · ${r.storeName}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        [
+                          ?r.customerPhone,
+                          l10n.adminKasbonOldest(_day.format(r.oldestDue)),
+                          if (late) l10n.adminKasbonOverdue(r.overdue.format()),
+                          if (overLimit)
+                            l10n.adminCustomerLimitShort(
+                              r.kasbonLimit!.format(),
+                            ),
+                        ].join(' · '),
+                        style: muted,
+                      ),
+                    ],
+                  );
+                },
               ),
-              Text(
-                l10n.adminKasbonTotal(total.format(), overdue.format()),
-                key: const Key('admin-kasbon-total'),
-                style: Theme.of(context).textTheme.titleMedium,
+              GlassColumn(
+                label: l10n.customerKasbon,
+                numeric: true,
+                flex: 2,
+                cell: (r) {
+                  final bad =
+                      r.overdue.rupiah > 0 ||
+                      (r.kasbonLimit != null &&
+                          r.outstanding.rupiah > r.kasbonLimit!.rupiah);
+                  return StatusChip(
+                    label: r.outstanding.format(),
+                    tone: bad ? StatusTone.error : StatusTone.warning,
+                  );
+                },
               ),
             ],
           ),
-        ),
-        Expanded(
-          child: rows.isLoading && list.isEmpty
-              ? const Center(child: CircularProgressIndicator())
-              : rows.hasError
-              ? Center(child: Text(l10n.commonError('${rows.error}')))
-              : list.isEmpty
-              ? EmptyState(
-                  icon: Icons.request_quote_outlined,
-                  message: l10n.adminKasbonEmpty,
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.lg,
-                    0,
-                    AppSpacing.lg,
-                    AppSpacing.lg,
-                  ),
-                  itemCount: list.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: AppSpacing.sm),
-                  itemBuilder: (context, i) {
-                    final r = list[i];
-                    final late = r.overdue.rupiah > 0;
-                    final overLimit =
-                        r.kasbonLimit != null &&
-                        r.outstanding.rupiah > r.kasbonLimit!.rupiah;
-                    return Card(
-                      child: ListTile(
-                        key: Key('admin-kasbon-${r.customerId}'),
-                        title: Text('${r.customerName} · ${r.storeName}'),
-                        subtitle: Text(
-                          [
-                            ?r.customerPhone,
-                            l10n.adminKasbonOldest(_day.format(r.oldestDue)),
-                            if (late)
-                              l10n.adminKasbonOverdue(r.overdue.format()),
-                            if (overLimit)
-                              l10n.adminCustomerLimitShort(
-                                r.kasbonLimit!.format(),
-                              ),
-                          ].join(' · '),
-                        ),
-                        trailing: Text(
-                          r.outstanding.format(),
-                          style: TextStyle(
-                            color: late || overLimit ? AppColors.error : null,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        onTap: () =>
-                            context.go(AppRoutes.adminCustomer(r.customerId)),
-                      ),
-                    );
-                  },
-                ),
-        ),
       ],
     );
   }
