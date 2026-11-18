@@ -3682,4 +3682,32 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get staffErrorInviteFailed =>
       'Undangan gagal dikirim. Coba lagi nanti.';
+
+  @override
+  String get setPasswordTitle => 'Buat password';
+
+  @override
+  String get setPasswordBody => 'Password ini untuk masuk ke back office.';
+
+  @override
+  String get setPasswordNew => 'Password baru';
+
+  @override
+  String get setPasswordAgain => 'Ulangi password';
+
+  @override
+  String get setPasswordSave => 'Simpan dan masuk';
+
+  @override
+  String get setPasswordTooShort => 'Password minimal 8 karakter.';
+
+  @override
+  String get setPasswordMismatch => 'Password tidak sama.';
+
+  @override
+  String get setPasswordLinkExpired =>
+      'Link undangan sudah tidak berlaku. Minta owner mengirim undangan baru.';
+
+  @override
+  String get setPasswordToSignIn => 'Ke halaman login';
 }

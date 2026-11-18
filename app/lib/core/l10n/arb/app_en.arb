@@ -1043,5 +1043,14 @@
   "staffErrorInvalidEmail": "Not a valid email.",
   "staffErrorAlreadyLinked": "This person already has a login.",
   "staffErrorLastOwner": "At least one active owner is needed.",
-  "staffErrorInviteFailed": "The invitation could not be sent. Try again later."
+  "staffErrorInviteFailed": "The invitation could not be sent. Try again later.",
+  "setPasswordTitle": "Set your password",
+  "setPasswordBody": "You will use this password to sign in to the back office.",
+  "setPasswordNew": "New password",
+  "setPasswordAgain": "Repeat the password",
+  "setPasswordSave": "Save and sign in",
+  "setPasswordTooShort": "Use at least 8 characters.",
+  "setPasswordMismatch": "The passwords do not match.",
+  "setPasswordLinkExpired": "This invitation link no longer works. Ask the owner to send a new one.",
+  "setPasswordToSignIn": "Go to sign-in"
 }

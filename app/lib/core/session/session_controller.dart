@@ -112,6 +112,10 @@ class SessionController extends _$SessionController {
     state = const AsyncData(SessionState(AppMode.backOffice));
   }
 
+  /// After signing in some other way (an invitation link).
+  void enterBackOffice() =>
+      state = const AsyncData(SessionState(AppMode.backOffice));
+
   Future<void> signOut() async {
     await ref.read(backOfficeBackendProvider).signOut();
     state = const AsyncData(SessionState(AppMode.signedOut));

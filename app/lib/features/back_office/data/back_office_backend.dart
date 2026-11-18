@@ -33,6 +33,12 @@ abstract interface class BackOfficeBackend {
   Future<Principal> currentPrincipal();
   Future<List<StoreSummary>> listStores();
   Future<PairingCode> createPairingCode(String storeId, String deviceName);
+
+  /// Signs in with the token from an invitation email.
+  Future<void> acceptInvite(String tokenHash);
+
+  /// Sets the signed-in person's password.
+  Future<void> setPassword(String password);
 }
 
 class SupabaseBackOfficeBackend implements BackOfficeBackend {
@@ -51,6 +57,15 @@ class SupabaseBackOfficeBackend implements BackOfficeBackend {
       _guard(
         () => _client.auth.signInWithPassword(email: email, password: password),
       );
+
+  @override
+  Future<void> acceptInvite(String tokenHash) => _guard(
+    () => _client.auth.verifyOTP(type: OtpType.invite, tokenHash: tokenHash),
+  );
+
+  @override
+  Future<void> setPassword(String password) =>
+      _guard(() => _client.auth.updateUser(UserAttributes(password: password)));
 
   @override
   Future<void> signOut() => _guard(_client.auth.signOut);

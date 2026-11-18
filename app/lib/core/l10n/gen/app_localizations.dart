@@ -6361,6 +6361,60 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Undangan gagal dikirim. Coba lagi nanti.'**
   String get staffErrorInviteFailed;
+
+  /// No description provided for @setPasswordTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Buat password'**
+  String get setPasswordTitle;
+
+  /// No description provided for @setPasswordBody.
+  ///
+  /// In id, this message translates to:
+  /// **'Password ini untuk masuk ke back office.'**
+  String get setPasswordBody;
+
+  /// No description provided for @setPasswordNew.
+  ///
+  /// In id, this message translates to:
+  /// **'Password baru'**
+  String get setPasswordNew;
+
+  /// No description provided for @setPasswordAgain.
+  ///
+  /// In id, this message translates to:
+  /// **'Ulangi password'**
+  String get setPasswordAgain;
+
+  /// No description provided for @setPasswordSave.
+  ///
+  /// In id, this message translates to:
+  /// **'Simpan dan masuk'**
+  String get setPasswordSave;
+
+  /// No description provided for @setPasswordTooShort.
+  ///
+  /// In id, this message translates to:
+  /// **'Password minimal 8 karakter.'**
+  String get setPasswordTooShort;
+
+  /// No description provided for @setPasswordMismatch.
+  ///
+  /// In id, this message translates to:
+  /// **'Password tidak sama.'**
+  String get setPasswordMismatch;
+
+  /// No description provided for @setPasswordLinkExpired.
+  ///
+  /// In id, this message translates to:
+  /// **'Link undangan sudah tidak berlaku. Minta owner mengirim undangan baru.'**
+  String get setPasswordLinkExpired;
+
+  /// No description provided for @setPasswordToSignIn.
+  ///
+  /// In id, this message translates to:
+  /// **'Ke halaman login'**
+  String get setPasswordToSignIn;
 }
 
 class _AppLocalizationsDelegate

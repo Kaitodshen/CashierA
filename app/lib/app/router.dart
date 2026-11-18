@@ -17,6 +17,7 @@ import 'package:cashiera/features/back_office/presentation/products_screen.dart'
 import 'package:cashiera/features/back_office/presentation/promotion_editor_screen.dart';
 import 'package:cashiera/features/back_office/presentation/promotions_screen.dart';
 import 'package:cashiera/features/back_office/presentation/purchase_orders_screen.dart';
+import 'package:cashiera/features/back_office/presentation/set_password_screen.dart';
 import 'package:cashiera/features/back_office/presentation/sign_in_screen.dart';
 import 'package:cashiera/features/back_office/presentation/staff_admin_screen.dart';
 import 'package:cashiera/features/back_office/presentation/stock_screen.dart';
@@ -158,6 +159,14 @@ GoRouter router(Ref ref) {
           ),
           GoRoute(path: AppRoutes.sync, builder: (_, _) => const SyncScreen()),
         ],
+      ),
+      GoRoute(
+        path: AppRoutes.adminSetPassword,
+        // The invitation link carries the token in the query, before the
+        // hash route: /?token_hash=…&type=invite#/admin/set-password.
+        builder: (_, _) => SetPasswordScreen(
+          tokenHash: Uri.base.queryParameters['token_hash'],
+        ),
       ),
       GoRoute(
         path: AppRoutes.adminSignIn,

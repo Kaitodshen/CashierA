@@ -2583,5 +2583,14 @@
   "staffErrorInvalidEmail": "Email tidak valid.",
   "staffErrorAlreadyLinked": "Staf ini sudah punya login.",
   "staffErrorLastOwner": "Harus ada minimal satu owner aktif.",
-  "staffErrorInviteFailed": "Undangan gagal dikirim. Coba lagi nanti."
+  "staffErrorInviteFailed": "Undangan gagal dikirim. Coba lagi nanti.",
+  "setPasswordTitle": "Buat password",
+  "setPasswordBody": "Password ini untuk masuk ke back office.",
+  "setPasswordNew": "Password baru",
+  "setPasswordAgain": "Ulangi password",
+  "setPasswordSave": "Simpan dan masuk",
+  "setPasswordTooShort": "Password minimal 8 karakter.",
+  "setPasswordMismatch": "Password tidak sama.",
+  "setPasswordLinkExpired": "Link undangan sudah tidak berlaku. Minta owner mengirim undangan baru.",
+  "setPasswordToSignIn": "Ke halaman login"
 }

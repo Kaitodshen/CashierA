@@ -81,6 +81,9 @@ abstract final class AppRoutes {
   static const adminTables = '/admin/tables';
   static const adminStores = '/admin/stores';
   static const adminStaff = '/admin/staff';
+
+  /// Opened from an invitation email; needs no sign-in.
+  static const adminSetPassword = '/admin/set-password';
   static const adminGatewayPayments = '/admin/qris-payments';
 
   /// Purchase order detail or editor; `new` creates one.
@@ -113,6 +116,7 @@ String? redirectFor(AppMode mode, String location, {required bool isWeb}) {
     case AppMode.setupRequired:
       return to(AppRoutes.setup);
     case AppMode.signedOut:
+      if (location == AppRoutes.adminSetPassword) return null;
       if (isWeb) return to(AppRoutes.adminSignIn);
       const allowed = {
         AppRoutes.welcome,

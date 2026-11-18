@@ -39,7 +39,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'bca88d81e853f684d01ea505a85d9a763c57e3ef';
+String _$sessionControllerHash() => r'bf0e082fbfdf7dd125c610d06380f7ca99b77aa6';
 
 /// Decides the app mode at startup and owns the transitions: pair, unlock,
 /// lock, sign in, sign out.

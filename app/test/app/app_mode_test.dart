@@ -97,4 +97,20 @@ void main() {
       expect(r.values.toSet(), {AppRoutes.adminSignIn}, reason: '$mode');
     }
   });
+
+  test('the set-password page opens without signing in, on the web', () {
+    expect(
+      redirectFor(AppMode.signedOut, AppRoutes.adminSetPassword, isWeb: true),
+      isNull,
+    );
+    expect(
+      redirectFor(AppMode.backOffice, AppRoutes.adminSetPassword, isWeb: true),
+      isNull,
+    );
+    expect(
+      redirectFor(AppMode.signedOut, AppRoutes.admin, isWeb: true),
+      AppRoutes.adminSignIn,
+      reason: 'other pages still need a sign-in',
+    );
+  });
 }

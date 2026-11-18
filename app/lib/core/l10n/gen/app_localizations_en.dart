@@ -3727,4 +3727,33 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get staffErrorInviteFailed =>
       'The invitation could not be sent. Try again later.';
+
+  @override
+  String get setPasswordTitle => 'Set your password';
+
+  @override
+  String get setPasswordBody =>
+      'You will use this password to sign in to the back office.';
+
+  @override
+  String get setPasswordNew => 'New password';
+
+  @override
+  String get setPasswordAgain => 'Repeat the password';
+
+  @override
+  String get setPasswordSave => 'Save and sign in';
+
+  @override
+  String get setPasswordTooShort => 'Use at least 8 characters.';
+
+  @override
+  String get setPasswordMismatch => 'The passwords do not match.';
+
+  @override
+  String get setPasswordLinkExpired =>
+      'This invitation link no longer works. Ask the owner to send a new one.';
+
+  @override
+  String get setPasswordToSignIn => 'Go to sign-in';
 }
