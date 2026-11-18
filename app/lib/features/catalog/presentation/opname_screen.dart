@@ -57,9 +57,11 @@ class _OpnameScreenState extends ConsumerState<OpnameScreen> {
     final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => GlassDialog(
         title: Text(l10n.opnameTitle),
-        content: Text(l10n.opnameConfirm(_counts.length)),
+        content: SingleChildScrollView(
+          child: Text(l10n.opnameConfirm(_counts.length)),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),

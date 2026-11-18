@@ -70,10 +70,12 @@ class _CloseShiftScreenState extends ConsumerState<CloseShiftScreen> {
     }
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => GlassDialog(
         title: Text(l10n.closeConfirmTitle),
-        content: Text(
-          l10n.closeConfirmBody(counted.format(), expected.format()),
+        content: SingleChildScrollView(
+          child: Text(
+            l10n.closeConfirmBody(counted.format(), expected.format()),
+          ),
         ),
         actions: [
           TextButton(

@@ -269,16 +269,18 @@ class _GuestsDialogState extends State<_GuestsDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.tableGuestsTitle(widget.table.name)),
-      content: TextField(
-        key: const Key('table-guests'),
-        controller: _field,
-        autofocus: true,
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(labelText: l10n.tableGuests),
-        onSubmitted: (_) => _submit(),
+      content: SingleChildScrollView(
+        child: TextField(
+          key: const Key('table-guests'),
+          controller: _field,
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(labelText: l10n.tableGuests),
+          onSubmitted: (_) => _submit(),
+        ),
       ),
       actions: [
         TextButton(

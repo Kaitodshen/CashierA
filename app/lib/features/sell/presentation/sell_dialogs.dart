@@ -4,6 +4,7 @@ import 'package:cashiera/core/catalog/catalog_item.dart';
 import 'package:cashiera/core/catalog/qty_input.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/pin_pad.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/cart.dart';
@@ -68,44 +69,46 @@ class _DiscountDialogState extends State<_DiscountDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.title),
-      content: Form(
-        key: _form,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SegmentedButton<bool>(
-              segments: [
-                ButtonSegment(value: true, label: Text(l10n.discountPercent)),
-                ButtonSegment(value: false, label: Text(l10n.discountAmount)),
-              ],
-              selected: {_percent},
-              onSelectionChanged: (s) => setState(() => _percent = s.first),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            TextFormField(
-              key: const Key('discount-value'),
-              controller: _value,
-              autofocus: true,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
+      content: SingleChildScrollView(
+        child: Form(
+          key: _form,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SegmentedButton<bool>(
+                segments: [
+                  ButtonSegment(value: true, label: Text(l10n.discountPercent)),
+                  ButtonSegment(value: false, label: Text(l10n.discountAmount)),
+                ],
+                selected: {_percent},
+                onSelectionChanged: (s) => setState(() => _percent = s.first),
               ),
-              decoration: InputDecoration(
-                labelText: l10n.discountValue,
-                prefixText: _percent ? null : 'Rp ',
-                suffixText: _percent ? '%' : null,
+              const SizedBox(height: AppSpacing.lg),
+              TextFormField(
+                key: const Key('discount-value'),
+                controller: _value,
+                autofocus: true,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                decoration: InputDecoration(
+                  labelText: l10n.discountValue,
+                  prefixText: _percent ? null : 'Rp ',
+                  suffixText: _percent ? '%' : null,
+                ),
+                validator: (v) =>
+                    (_percent
+                        ? parsePercentBps(v ?? '') == null
+                        : (parseRupiah(v ?? '') ?? 0) <= 0)
+                    ? l10n.discountInvalid
+                    : null,
+                onFieldSubmitted: (_) => _save(),
               ),
-              validator: (v) =>
-                  (_percent
-                      ? parsePercentBps(v ?? '') == null
-                      : (parseRupiah(v ?? '') ?? 0) <= 0)
-                  ? l10n.discountInvalid
-                  : null,
-              onFieldSubmitted: (_) => _save(),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: [
@@ -148,21 +151,23 @@ Future<String?> showTextDialog(
       }
     }
 
-    return AlertDialog(
+    return GlassDialog(
       title: Text(title),
-      content: Form(
-        key: form,
-        child: TextFormField(
-          key: const Key('text-dialog-field'),
-          controller: controller,
-          autofocus: true,
-          textCapitalization: upperCase
-              ? TextCapitalization.characters
-              : TextCapitalization.sentences,
-          decoration: InputDecoration(labelText: label),
-          validator: (v) =>
-              (v ?? '').trim().length < minLength ? tooShort : null,
-          onFieldSubmitted: (_) => save(),
+      content: SingleChildScrollView(
+        child: Form(
+          key: form,
+          child: TextFormField(
+            key: const Key('text-dialog-field'),
+            controller: controller,
+            autofocus: true,
+            textCapitalization: upperCase
+                ? TextCapitalization.characters
+                : TextCapitalization.sentences,
+            decoration: InputDecoration(labelText: label),
+            validator: (v) =>
+                (v ?? '').trim().length < minLength ? tooShort : null,
+            onFieldSubmitted: (_) => save(),
+          ),
         ),
       ),
       actions: [
@@ -201,28 +206,32 @@ Future<Qty?> showQuantityDialog(
           .pop(parseQtyInput(controller.text, allowDecimal: allowDecimal).qty);
     }
 
-    return AlertDialog(
+    return GlassDialog(
       title: Text(itemName),
-      content: Form(
-        key: form,
-        child: TextFormField(
-          key: const Key('quantity-field'),
-          controller: controller,
-          autofocus: true,
-          keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
-          decoration: InputDecoration(
-            labelText: l10n.stockQuantity,
-            suffixText: unitCode,
+      content: SingleChildScrollView(
+        child: Form(
+          key: form,
+          child: TextFormField(
+            key: const Key('quantity-field'),
+            controller: controller,
+            autofocus: true,
+            keyboardType: TextInputType.numberWithOptions(
+              decimal: allowDecimal,
+            ),
+            decoration: InputDecoration(
+              labelText: l10n.stockQuantity,
+              suffixText: unitCode,
+            ),
+            validator: (v) => switch (parseQtyInput(
+              v ?? '',
+              allowDecimal: allowDecimal,
+            ).error) {
+              null => null,
+              QtyInputError.notWhole => l10n.stockWholeOnly,
+              QtyInputError.invalid => l10n.stockInvalidQty,
+            },
+            onFieldSubmitted: (_) => save(),
           ),
-          validator: (v) => switch (parseQtyInput(
-            v ?? '',
-            allowDecimal: allowDecimal,
-          ).error) {
-            null => null,
-            QtyInputError.notWhole => l10n.stockWholeOnly,
-            QtyInputError.invalid => l10n.stockInvalidQty,
-          },
-          onFieldSubmitted: (_) => save(),
         ),
       ),
       actions: [
@@ -292,44 +301,46 @@ class _ApprovalDialogState extends ConsumerState<_ApprovalDialog> {
     final approvers = (ref.watch(rosterProvider).value ?? const [])
         .where((s) => s.can(widget.permission))
         .toList();
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.approvalTitle),
-      content: SizedBox(
-        width: 360,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(widget.reason),
-            const SizedBox(height: AppSpacing.md),
-            if (approvers.isEmpty)
-              Text(l10n.approvalNobody)
-            else if (_approver == null)
-              for (final s in approvers)
-                ListTile(
-                  key: Key('approver-${s.employeeId}'),
-                  leading: const Icon(Icons.verified_user_outlined),
-                  title: Text(s.fullName),
-                  subtitle: Text(s.roleCode),
-                  onTap: () => setState(() => _approver = s),
-                )
-            else ...[
-              Text(
-                l10n.approvalEnterPin(_approver!.fullName),
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              if (_error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.sm),
-                  child: Text(
-                    _error!,
-                    style: const TextStyle(color: AppColors.error),
-                  ),
-                ),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 360,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(widget.reason),
               const SizedBox(height: AppSpacing.md),
-              PinPad(onSubmitted: _check, enabled: !_busy),
+              if (approvers.isEmpty)
+                Text(l10n.approvalNobody)
+              else if (_approver == null)
+                for (final s in approvers)
+                  ListTile(
+                    key: Key('approver-${s.employeeId}'),
+                    leading: const Icon(Icons.verified_user_outlined),
+                    title: Text(s.fullName),
+                    subtitle: Text(s.roleCode),
+                    onTap: () => setState(() => _approver = s),
+                  )
+              else ...[
+                Text(
+                  l10n.approvalEnterPin(_approver!.fullName),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.sm),
+                    child: Text(
+                      _error!,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                  ),
+                const SizedBox(height: AppSpacing.md),
+                PinPad(onSubmitted: _check, enabled: !_busy),
+              ],
             ],
-          ],
+          ),
         ),
       ),
       actions: [
@@ -355,9 +366,8 @@ Future<List<CartModifier>?> showModifierSheet(
   BuildContext context, {
   required CatalogItem item,
   required List<ModifierGroupOption> groups,
-}) => showModalBottomSheet<List<CartModifier>>(
-  context: context,
-  isScrollControlled: true,
+}) => showGlassSheet<List<CartModifier>>(
+  context,
   builder: (_) => _ModifierSheet(item: item, groups: groups),
 );
 
@@ -472,9 +482,8 @@ class _ModifierSheetState extends State<_ModifierSheet> {
 /// Finds a customer by name or phone, or adds one. Returns the choice, or
 /// null on cancel.
 Future<CartCustomer?> showCustomerPicker(BuildContext context) =>
-    showModalBottomSheet<CartCustomer>(
-      context: context,
-      isScrollControlled: true,
+    showGlassSheet<CartCustomer>(
+      context,
       builder: (_) => const _CustomerPicker(),
     );
 

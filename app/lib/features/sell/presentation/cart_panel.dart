@@ -80,8 +80,8 @@ class CartPanel extends ConsumerWidget {
     final l10n = context.l10n;
     final controller = ref.read(cartControllerProvider.notifier);
     final staff = ref.read(sessionControllerProvider).value?.staff;
-    final action = await showModalBottomSheet<String>(
-      context: context,
+    final action = await showGlassSheet<String>(
+      context,
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -240,10 +240,12 @@ class CartPanel extends ConsumerWidget {
     }
     final ok = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => GlassDialog(
         title: Text(l10n.sellClearTitle),
-        content: Text(
-          cart.version > 0 ? l10n.sellClearHeldHint : l10n.sellClearHint,
+        content: SingleChildScrollView(
+          child: Text(
+            cart.version > 0 ? l10n.sellClearHeldHint : l10n.sellClearHint,
+          ),
         ),
         actions: [
           TextButton(

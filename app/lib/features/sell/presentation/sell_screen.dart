@@ -443,11 +443,10 @@ class _CartBar extends ConsumerWidget {
               Expanded(
                 child: TextButton.icon(
                   key: const Key('sell-open-cart'),
-                  onPressed: () => showModalBottomSheet<void>(
-                    context: context,
+                  onPressed: () => showGlassSheet<void>(
+                    context,
                     // Over the shell's bottom bar, not inside it.
                     useRootNavigator: true,
-                    isScrollControlled: true,
                     builder: (_) => SizedBox(
                       height: MediaQuery.sizeOf(context).height * 0.9,
                       child: const CartPanel(inSheet: true),

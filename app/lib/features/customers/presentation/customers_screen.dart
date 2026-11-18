@@ -51,39 +51,41 @@ Future<(String, String)?> showCustomerForm(
       }
     }
 
-    return AlertDialog(
+    return GlassDialog(
       title: Text(name.isEmpty ? l10n.sellAddCustomer : l10n.customerEdit),
-      content: SizedBox(
-        width: 360,
-        child: Form(
-          key: form,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                key: const Key('customer-name'),
-                controller: nameField,
-                autofocus: true,
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(labelText: l10n.customerName),
-                validator: (v) =>
-                    (v ?? '').trim().isEmpty ? l10n.commonRequired : null,
-              ),
-              TextFormField(
-                key: const Key('customer-phone'),
-                controller: phoneField,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(labelText: l10n.customerPhone),
-                validator: (v) {
-                  final digits = (v ?? '').replaceAll(RegExp(r'[\s-]'), '');
-                  return digits.isEmpty ||
-                          CustomerService.phonePattern.hasMatch(digits)
-                      ? null
-                      : l10n.customerPhoneInvalid;
-                },
-                onFieldSubmitted: (_) => save(),
-              ),
-            ],
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 360,
+          child: Form(
+            key: form,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  key: const Key('customer-name'),
+                  controller: nameField,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: InputDecoration(labelText: l10n.customerName),
+                  validator: (v) =>
+                      (v ?? '').trim().isEmpty ? l10n.commonRequired : null,
+                ),
+                TextFormField(
+                  key: const Key('customer-phone'),
+                  controller: phoneField,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(labelText: l10n.customerPhone),
+                  validator: (v) {
+                    final digits = (v ?? '').replaceAll(RegExp(r'[\s-]'), '');
+                    return digits.isEmpty ||
+                            CustomerService.phonePattern.hasMatch(digits)
+                        ? null
+                        : l10n.customerPhoneInvalid;
+                  },
+                  onFieldSubmitted: (_) => save(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -742,61 +744,63 @@ class _RepayDialogState extends State<_RepayDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.repayTitle(widget.name)),
-      content: SizedBox(
-        width: 380,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.repayOwed(widget.owed.format())),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    key: const Key('repay-amount'),
-                    controller: _amount,
-                    autofocus: true,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: rupiahInputFormatters,
-                    decoration: InputDecoration(
-                      labelText: l10n.repayAmount,
-                      prefixText: 'Rp ',
-                      errorText: _error,
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 380,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.repayOwed(widget.owed.format())),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      key: const Key('repay-amount'),
+                      controller: _amount,
+                      autofocus: true,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: rupiahInputFormatters,
+                      decoration: InputDecoration(
+                        labelText: l10n.repayAmount,
+                        prefixText: 'Rp ',
+                        errorText: _error,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                TextButton(
-                  key: const Key('repay-all'),
-                  onPressed: () => _amount.text = '${widget.owed.rupiah}',
-                  child: Text(l10n.repayAll),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(l10n.repayMethod),
-            Wrap(
-              spacing: AppSpacing.sm,
-              children: [
-                for (final m in _types)
-                  ChoiceChip(
-                    key: Key('repay-method-$m'),
-                    label: Text(refundMethodLabel(l10n, m)),
-                    selected: m == _method,
-                    onSelected: (_) => setState(() => _method = m),
+                  const SizedBox(width: AppSpacing.sm),
+                  TextButton(
+                    key: const Key('repay-all'),
+                    onPressed: () => _amount.text = '${widget.owed.rupiah}',
+                    child: Text(l10n.repayAll),
                   ),
-              ],
-            ),
-            if (_method != 'cash')
-              TextField(
-                key: const Key('repay-reference'),
-                controller: _reference,
-                decoration: InputDecoration(labelText: l10n.repayReference),
+                ],
               ),
-          ],
+              const SizedBox(height: AppSpacing.md),
+              Text(l10n.repayMethod),
+              Wrap(
+                spacing: AppSpacing.sm,
+                children: [
+                  for (final m in _types)
+                    ChoiceChip(
+                      key: Key('repay-method-$m'),
+                      label: Text(refundMethodLabel(l10n, m)),
+                      selected: m == _method,
+                      onSelected: (_) => setState(() => _method = m),
+                    ),
+                ],
+              ),
+              if (_method != 'cash')
+                TextField(
+                  key: const Key('repay-reference'),
+                  controller: _reference,
+                  decoration: InputDecoration(labelText: l10n.repayReference),
+                ),
+            ],
+          ),
         ),
       ),
       actions: [

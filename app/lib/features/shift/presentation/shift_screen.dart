@@ -63,41 +63,43 @@ class _CashMovementDialogState extends State<_CashMovementDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.isIn ? l10n.shiftCashIn : l10n.shiftCashOut),
-      content: SizedBox(
-        width: 360,
-        child: Form(
-          key: _form,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                key: const Key('cash-amount'),
-                controller: _amount,
-                autofocus: true,
-                keyboardType: TextInputType.number,
-                inputFormatters: rupiahInputFormatters,
-                decoration: InputDecoration(
-                  labelText: l10n.shiftMovementAmount,
-                  prefixText: 'Rp ',
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 360,
+          child: Form(
+            key: _form,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  key: const Key('cash-amount'),
+                  controller: _amount,
+                  autofocus: true,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: rupiahInputFormatters,
+                  decoration: InputDecoration(
+                    labelText: l10n.shiftMovementAmount,
+                    prefixText: 'Rp ',
+                  ),
+                  validator: (v) => (parseRupiah(v ?? '') ?? 0) > 0
+                      ? null
+                      : l10n.commonRequired,
                 ),
-                validator: (v) => (parseRupiah(v ?? '') ?? 0) > 0
-                    ? null
-                    : l10n.commonRequired,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextFormField(
-                key: const Key('cash-reason'),
-                controller: _reason,
-                decoration: InputDecoration(
-                  labelText: l10n.shiftMovementReason,
+                const SizedBox(height: AppSpacing.md),
+                TextFormField(
+                  key: const Key('cash-reason'),
+                  controller: _reason,
+                  decoration: InputDecoration(
+                    labelText: l10n.shiftMovementReason,
+                  ),
+                  validator: (v) =>
+                      (v ?? '').trim().length >= 3 ? null : l10n.reasonShort,
+                  onFieldSubmitted: (_) => _submit(),
                 ),
-                validator: (v) =>
-                    (v ?? '').trim().length >= 3 ? null : l10n.reasonShort,
-                onFieldSubmitted: (_) => _submit(),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

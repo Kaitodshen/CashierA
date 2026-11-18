@@ -266,11 +266,15 @@ class GlassDialog extends StatelessWidget {
 Future<T?> showGlassSheet<T>(
   BuildContext context, {
   required WidgetBuilder builder,
+  bool useRootNavigator = false,
+  bool showDragHandle = false,
 }) {
   const radius = BorderRadius.vertical(top: Radius.circular(AppRadius.card));
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
+    useRootNavigator: useRootNavigator,
+    showDragHandle: showDragHandle,
     backgroundColor: Colors.transparent,
     elevation: 0,
     builder: (context) => GlassBlur(

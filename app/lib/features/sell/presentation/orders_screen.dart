@@ -32,9 +32,9 @@ class OrdersScreen extends ConsumerWidget {
     if (!current.isEmpty && current.orderId != order.id) {
       final replace = await showDialog<bool>(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context) => GlassDialog(
           title: Text(l10n.ordersResumeTitle),
-          content: Text(l10n.ordersResumeReplace),
+          content: SingleChildScrollView(child: Text(l10n.ordersResumeReplace)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),

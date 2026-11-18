@@ -59,8 +59,8 @@ class _CatalogBrowserScreenState extends ConsumerState<CatalogBrowserScreen> {
     await _openItem(item);
   }
 
-  Future<void> _openItem(CatalogItem item) => showModalBottomSheet<void>(
-    context: context,
+  Future<void> _openItem(CatalogItem item) => showGlassSheet<void>(
+    context,
     showDragHandle: true,
     builder: (_) => _ItemSheet(item: item),
   );
