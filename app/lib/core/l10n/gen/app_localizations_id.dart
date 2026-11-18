@@ -3446,4 +3446,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get adminColReorder => 'Stok minimum';
+
+  @override
+  String get productSectionBasics => 'Data produk';
 }

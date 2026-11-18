@@ -968,5 +968,6 @@
   "adminColVariants": "Variants",
   "adminColStatus": "Status",
   "adminColOnHand": "On hand",
-  "adminColReorder": "Reorder point"
+  "adminColReorder": "Reorder point",
+  "productSectionBasics": "Product details"
 }

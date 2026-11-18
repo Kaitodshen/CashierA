@@ -3491,4 +3491,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminColReorder => 'Reorder point';
+
+  @override
+  String get productSectionBasics => 'Product details';
 }

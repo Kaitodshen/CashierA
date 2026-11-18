@@ -3,6 +3,10 @@ import 'dart:typed_data';
 
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/catalog_files.dart';
@@ -120,40 +124,52 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
         ref.watch(principalProvider).value?.can('catalog.manage') ?? false;
     final result = _result;
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    return AdminPage(
       children: [
-        Text(l10n.importTitle, style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: AppSpacing.sm),
-        Text(l10n.importHelp),
-        const SizedBox(height: AppSpacing.lg),
-        Wrap(
-          spacing: AppSpacing.md,
-          runSpacing: AppSpacing.md,
-          children: [
-            OutlinedButton.icon(
-              onPressed: _busy ? null : _downloadTemplate,
-              icon: const Icon(Icons.description_outlined),
-              label: Text(l10n.importDownloadTemplate),
-            ),
-            OutlinedButton.icon(
-              onPressed: _busy ? null : () => _export(xlsx: false),
-              icon: const Icon(Icons.download_outlined),
-              label: Text(l10n.importExportCsv),
-            ),
-            OutlinedButton.icon(
-              onPressed: _busy ? null : () => _export(xlsx: true),
-              icon: const Icon(Icons.grid_on_outlined),
-              label: Text(l10n.importExportXlsx),
-            ),
-            if (canImport)
-              FilledButton.icon(
-                key: const Key('import-pick'),
-                onPressed: _busy ? null : _pick,
-                icon: const Icon(Icons.upload_file),
-                label: Text(l10n.importPick),
+        GlassCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.importTitle,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-          ],
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                l10n.importHelp,
+                style: const TextStyle(color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Wrap(
+                spacing: AppSpacing.md,
+                runSpacing: AppSpacing.md,
+                children: [
+                  SecondaryButton(
+                    onPressed: _busy ? null : _downloadTemplate,
+                    icon: Icons.description_outlined,
+                    label: l10n.importDownloadTemplate,
+                  ),
+                  SecondaryButton(
+                    onPressed: _busy ? null : () => _export(xlsx: false),
+                    icon: Icons.download_outlined,
+                    label: l10n.importExportCsv,
+                  ),
+                  SecondaryButton(
+                    onPressed: _busy ? null : () => _export(xlsx: true),
+                    icon: Icons.grid_on_outlined,
+                    label: l10n.importExportXlsx,
+                  ),
+                  if (canImport)
+                    PrimaryButton(
+                      key: const Key('import-pick'),
+                      onPressed: _busy ? null : _pick,
+                      icon: Icons.upload_file,
+                      label: l10n.importPick,
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
         if (_busy) ...[
           const SizedBox(height: AppSpacing.lg),
@@ -189,9 +205,10 @@ class ImportPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    return Card(
+    return GlassCard(
+      level: GlassLevel.solid,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -214,45 +231,46 @@ class ImportPreview extends StatelessWidget {
             ],
             if (result.rows.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.md),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: [
-                    DataColumn(label: Text(l10n.productName)),
-                    DataColumn(label: Text(l10n.variantName)),
-                    DataColumn(label: Text(l10n.variantSku)),
-                    DataColumn(label: Text(l10n.productCategory)),
-                    DataColumn(label: Text(l10n.variantPrice), numeric: true),
-                    DataColumn(label: Text(l10n.navStock)),
-                  ],
-                  rows: [
-                    for (final r in result.rows.take(20))
-                      DataRow(
-                        cells: [
-                          DataCell(Text(r.productName)),
-                          DataCell(Text(r.variantName)),
-                          DataCell(Text(r.sku)),
-                          DataCell(Text(r.category)),
-                          DataCell(Text(Money(r.price).format())),
-                          DataCell(
-                            Text(
-                              r.stock.entries
-                                  .map((e) => '${e.key} ${e.value.toPlain()}')
-                                  .join(', '),
-                            ),
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
+              GlassTable<CatalogImportRow>(
+                rows: result.rows.take(20).toList(),
+                columns: [
+                  GlassColumn(
+                    label: l10n.productName,
+                    flex: 2,
+                    cell: (r) => Text(r.productName),
+                  ),
+                  GlassColumn(
+                    label: l10n.variantName,
+                    cell: (r) => Text(r.variantName),
+                  ),
+                  GlassColumn(label: l10n.variantSku, cell: (r) => Text(r.sku)),
+                  GlassColumn(
+                    label: l10n.productCategory,
+                    cell: (r) => Text(r.category),
+                  ),
+                  GlassColumn(
+                    label: l10n.variantPrice,
+                    numeric: true,
+                    cell: (r) => Text(Money(r.price).format()),
+                  ),
+                  GlassColumn(
+                    label: l10n.navStock,
+                    flex: 2,
+                    cell: (r) => Text(
+                      r.stock.entries
+                          .map((e) => '${e.key} ${e.value.toPlain()}')
+                          .join(', '),
+                    ),
+                  ),
+                ],
               ),
             ],
             const SizedBox(height: AppSpacing.lg),
-            FilledButton.icon(
+            PrimaryButton(
               key: const Key('import-run'),
               onPressed: onImport,
-              icon: const Icon(Icons.cloud_upload_outlined),
-              label: Text(l10n.importRun(result.rows.length)),
+              icon: Icons.cloud_upload_outlined,
+              label: l10n.importRun(result.rows.length),
             ),
           ],
         ),

@@ -5911,6 +5911,12 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Stok minimum'**
   String get adminColReorder;
+
+  /// No description provided for @productSectionBasics.
+  ///
+  /// In id, this message translates to:
+  /// **'Data produk'**
+  String get productSectionBasics;
 }
 
 class _AppLocalizationsDelegate
