@@ -1,7 +1,11 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/database/app_database.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
@@ -134,133 +138,175 @@ class _CloseShiftScreenState extends ConsumerState<CloseShiftScreen> {
         ? null
         : counted - expected;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.shift)),
-        title: Text(l10n.closeTitle),
-      ),
-      body: open.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : shift == null
-          ? EmptyState(
-              icon: Icons.lock_clock_outlined,
-              message: l10n.shiftNoneOpen,
-            )
-          : Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 640),
-                child: ListView(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  children: [
-                    if (held > 0)
-                      _Notice(
-                        icon: Icons.pause_circle_outline,
-                        text: l10n.closeHeldWarning(held),
-                      ),
-                    if (pending > 0)
-                      _Notice(
-                        icon: Icons.cloud_upload_outlined,
-                        text: l10n.closePending(pending),
-                      ),
-                    SegmentedButton<bool>(
-                      segments: [
-                        ButtonSegment(
-                          value: true,
-                          label: Text(l10n.closeCountByNotes),
-                        ),
-                        ButtonSegment(
-                          value: false,
-                          label: Text(l10n.closeEnterTotal),
-                        ),
-                      ],
-                      selected: {_byNotes},
-                      onSelectionChanged: (v) =>
-                          setState(() => _byNotes = v.single),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    if (_byNotes)
-                      Card(
-                        child: Column(
-                          children: [
-                            for (final d in CashCount.denominations)
-                              _DenominationRow(
-                                key: Key('denomination-$d'),
-                                denomination: d,
-                                count: _pieces[d] ?? 0,
-                                onChanged: (n) => _setPieces(d, n),
-                              ),
-                          ],
-                        ),
-                      )
-                    else
-                      TextField(
-                        key: const Key('close-total'),
-                        controller: _total,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: rupiahInputFormatters,
-                        decoration: InputDecoration(
-                          labelText: l10n.closeCounted,
-                          prefixText: 'Rp ',
-                        ),
-                        onChanged: (_) => setState(() {}),
-                      ),
-                    const SizedBox(height: AppSpacing.lg),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppSpacing.lg),
-                        child: Column(
-                          children: [
-                            _Line(
-                              l10n.closeExpected,
-                              expected?.format() ?? '…',
-                            ),
-                            _Line(
-                              l10n.closeCounted,
-                              counted?.format() ?? '-',
-                              valueKey: const Key('close-counted'),
-                            ),
-                            const Divider(),
-                            _Line(
-                              l10n.closeDifference,
-                              difference == null
-                                  ? '-'
-                                  : differenceText(l10n, difference),
-                              valueKey: const Key('close-difference'),
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                color: differenceColor(difference),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    TextField(
-                      key: const Key('close-note'),
-                      controller: _note,
-                      decoration: InputDecoration(
-                        labelText: l10n.closeNote,
-                        helperText: difference != null && difference.rupiah != 0
-                            ? l10n.closeNoteRequired
-                            : null,
-                      ),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    FilledButton.icon(
-                      key: const Key('close-submit'),
-                      onPressed: _busy || expected == null || counted == null
-                          ? null
-                          : () => _close(shift, expected, counted),
-                      icon: const Icon(Icons.lock_outline),
-                      label: Text(l10n.shiftClose),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+    final header = FlowHeader(
+      title: l10n.closeTitle,
+      onBack: () => context.go(AppRoutes.shift),
+      backKey: const Key('close-back'),
     );
+    Widget page(List<Widget> children) => Scaffold(
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            children: [
+              header,
+              const SizedBox(height: AppSpacing.lg),
+              ...children,
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (open.isLoading) {
+      return page([const Center(child: CircularProgressIndicator())]);
+    }
+    if (shift == null) {
+      return page([
+        GlassCard(
+          child: EmptyState(
+            icon: Icons.lock_clock_outlined,
+            message: l10n.shiftNoneOpen,
+          ),
+        ),
+      ]);
+    }
+
+    final count = GlassCard(
+      level: GlassLevel.solid,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SegmentedButton<bool>(
+            segments: [
+              ButtonSegment(value: true, label: Text(l10n.closeCountByNotes)),
+              ButtonSegment(value: false, label: Text(l10n.closeEnterTotal)),
+            ],
+            selected: {_byNotes},
+            onSelectionChanged: (v) => setState(() => _byNotes = v.single),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (_byNotes)
+            for (final d in CashCount.denominations)
+              _DenominationRow(
+                key: Key('denomination-$d'),
+                denomination: d,
+                count: _pieces[d] ?? 0,
+                onChanged: (n) => _setPieces(d, n),
+              )
+          else
+            TextField(
+              key: const Key('close-total'),
+              controller: _total,
+              keyboardType: TextInputType.number,
+              inputFormatters: rupiahInputFormatters,
+              decoration: InputDecoration(
+                labelText: l10n.closeCounted,
+                prefixText: 'Rp ',
+              ),
+              onChanged: (_) => setState(() {}),
+            ),
+        ],
+      ),
+    );
+
+    final tone = switch (difference?.rupiah) {
+      null => StatusTone.neutral,
+      0 => StatusTone.success,
+      final d when d > 0 => StatusTone.warning,
+      _ => StatusTone.error,
+    };
+    final summary = GlassCard(
+      level: GlassLevel.solid,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _Line(l10n.closeExpected, expected?.format() ?? '…'),
+          _Line(
+            l10n.closeCounted,
+            counted?.format() ?? '-',
+            valueKey: const Key('close-counted'),
+          ),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.closeDifference,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ),
+                StatusChip(
+                  label: difference == null
+                      ? '-'
+                      : differenceText(l10n, difference),
+                  tone: tone,
+                  textKey: const Key('close-difference'),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          TextField(
+            key: const Key('close-note'),
+            controller: _note,
+            decoration: InputDecoration(
+              labelText: l10n.closeNote,
+              helperText: difference != null && difference.rupiah != 0
+                  ? l10n.closeNoteRequired
+                  : null,
+            ),
+            maxLines: 2,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          PrimaryButton(
+            key: const Key('close-submit'),
+            expand: true,
+            onPressed: _busy || expected == null || counted == null
+                ? null
+                : () => _close(shift, expected, counted),
+            icon: Icons.lock_outline,
+            label: l10n.shiftClose,
+          ),
+        ],
+      ),
+    );
+
+    return page([
+      if (held > 0)
+        _Notice(
+          icon: Icons.pause_circle_outline,
+          text: l10n.closeHeldWarning(held),
+        ),
+      if (pending > 0)
+        _Notice(
+          icon: Icons.cloud_upload_outlined,
+          text: l10n.closePending(pending),
+        ),
+      LayoutBuilder(
+        builder: (context, c) => c.maxWidth >= 900
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: count),
+                  const SizedBox(width: AppSpacing.lg),
+                  Expanded(child: summary),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  count,
+                  const SizedBox(height: AppSpacing.md),
+                  summary,
+                ],
+              ),
+      ),
+    ]);
   }
 }
 
@@ -270,22 +316,26 @@ class _Notice extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) => Card(
-    color: AppColors.warning.withValues(alpha: 0.15),
-    margin: const EdgeInsets.only(bottom: AppSpacing.md),
-    child: ListTile(
-      leading: Icon(icon, color: AppColors.warning),
-      title: Text(text),
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: AppSpacing.md),
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.warningSoft,
+        borderRadius: BorderRadius.circular(AppRadius.control),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: AppColors.warningText),
+        title: Text(text, style: const TextStyle(color: AppColors.warningText)),
+      ),
     ),
   );
 }
 
 class _Line extends StatelessWidget {
-  const new(this.label, this.value, {this.valueKey, this.style});
+  const new(this.label, this.value, {this.valueKey});
   final String label;
   final String value;
   final Key? valueKey;
-  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -293,7 +343,7 @@ class _Line extends StatelessWidget {
     child: Row(
       children: [
         Expanded(child: Text(label)),
-        Text(value, key: valueKey, style: style),
+        Text(value, key: valueKey),
       ],
     ),
   );
@@ -346,13 +396,10 @@ class _DenominationRowState extends State<_DenominationRow> {
   Widget build(BuildContext context) {
     final value = Money(widget.denomination);
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
       child: Row(
         children: [
-          SizedBox(width: 110, child: Text(value.format())),
+          SizedBox(width: 96, child: Text(value.format())),
           IconButton(
             key: const Key('denomination-minus'),
             onPressed: widget.count > 0 ? () => _step(-1) : null,

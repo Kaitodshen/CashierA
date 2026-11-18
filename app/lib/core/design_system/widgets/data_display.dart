@@ -86,10 +86,18 @@ enum StatusTone {
 
 /// A small pill: Paid, Held, Low stock, QRIS, …
 class StatusChip extends StatelessWidget {
-  const new({required this.label, this.tone = StatusTone.neutral, super.key});
+  const new({
+    required this.label,
+    this.tone = StatusTone.neutral,
+    this.textKey,
+    super.key,
+  });
 
   final String label;
   final StatusTone tone;
+
+  /// Key of the label text, for tests that read it.
+  final Key? textKey;
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +110,7 @@ class StatusChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: Text(
           label,
+          key: textKey,
           style: TextStyle(
             fontFamily: AppFonts.label,
             fontWeight: FontWeight.w600,

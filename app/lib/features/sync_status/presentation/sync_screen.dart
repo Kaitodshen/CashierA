@@ -1,7 +1,11 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/database/tables.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
@@ -37,28 +41,51 @@ class SyncScreen extends ConsumerWidget {
     final list = items.value ?? const <SyncItem>[];
 
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
-        title: Text(l10n.syncTitle),
-        actions: [
-          IconButton(
-            key: const Key('sync-now'),
-            tooltip: l10n.syncNow,
-            onPressed: () => _syncNow(context, ref),
-            icon: const Icon(Icons.sync),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            children: [
+              FlowHeader(
+                title: l10n.syncTitle,
+                onBack: () => context.go(AppRoutes.pos),
+                backKey: const Key('sync-back'),
+                status: Text(
+                  l10n.statusPending(
+                    list.where((i) => i.status != SyncStatus.done).length,
+                  ),
+                ),
+                actions: [
+                  PrimaryButton(
+                    key: const Key('sync-now'),
+                    onPressed: () => _syncNow(context, ref),
+                    icon: Icons.sync,
+                    label: l10n.syncNow,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              if (items.isLoading)
+                const Skeletonizer(child: _PlaceholderList())
+              else if (list.isEmpty)
+                GlassCard(
+                  child: EmptyState(
+                    icon: Icons.cloud_done_outlined,
+                    message: l10n.syncEmpty,
+                  ),
+                )
+              else
+                for (final item in list)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: _SyncItemTile(item: item),
+                  ),
+            ],
           ),
-        ],
+        ),
       ),
-      body: items.isLoading
-          ? const Skeletonizer(child: _PlaceholderList())
-          : list.isEmpty
-          ? EmptyState(icon: Icons.cloud_done_outlined, message: l10n.syncEmpty)
-          : ListView.separated(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              itemCount: list.length,
-              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (context, i) => _SyncItemTile(item: list[i]),
-            ),
     );
   }
 }
@@ -72,41 +99,64 @@ class _SyncItemTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final (label, color) = switch (item.status) {
-      SyncStatus.pending => (l10n.syncStatusPending, AppColors.warning),
-      SyncStatus.syncing => (l10n.syncStatusSyncing, AppColors.primary),
-      SyncStatus.failed => (l10n.syncStatusFailed, AppColors.error),
-      SyncStatus.done => (l10n.syncStatusDone, AppColors.success),
+    final (label, tone) = switch (item.status) {
+      SyncStatus.pending => (l10n.syncStatusPending, StatusTone.warning),
+      SyncStatus.syncing => (l10n.syncStatusSyncing, StatusTone.primary),
+      SyncStatus.failed => (l10n.syncStatusFailed, StatusTone.error),
+      SyncStatus.done => (l10n.syncStatusDone, StatusTone.success),
     };
-    final subtitle = [
-      DateFormat.yMMMd(locale).add_Hms().format(item.createdAt.toLocal()),
-      if (item.retryCount > 0) l10n.syncAttempts(item.retryCount),
-      if (item.lastError != null) item.lastError!,
-    ].join('\n');
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
 
-    return Card(
-      child: ListTile(
-        isThreeLine: item.lastError != null,
-        title: Text(
-          item.label,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        subtitle: Text(subtitle),
-        leading: Icon(Icons.circle, size: 12, color: color),
-        trailing: item.status == SyncStatus.failed
-            ? TextButton(
-                onPressed: () async {
-                  await ref
-                      .read(appDatabaseProvider)
-                      .syncQueueDao
-                      .retryFailed(item.id);
-                  if (context.mounted) {
-                    AppToast.info(context, l10n.syncRetried);
-                  }
-                },
-                child: Text(l10n.commonRetry),
-              )
-            : Text(label, style: TextStyle(color: color)),
+    return GlassCard(
+      level: GlassLevel.solid,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.label,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  [
+                    DateFormat.yMMMd(locale)
+                        .add_Hms()
+                        .format(item.createdAt.toLocal()),
+                    if (item.retryCount > 0) l10n.syncAttempts(item.retryCount),
+                  ].join(' · '),
+                  style: muted,
+                ),
+                if (item.lastError != null)
+                  Text(
+                    item.lastError!,
+                    style: muted?.copyWith(color: AppColors.error),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          if (item.status == SyncStatus.failed)
+            SecondaryButton(
+              onPressed: () async {
+                await ref
+                    .read(appDatabaseProvider)
+                    .syncQueueDao
+                    .retryFailed(item.id);
+                if (context.mounted) AppToast.info(context, l10n.syncRetried);
+              },
+              icon: Icons.refresh,
+              label: l10n.commonRetry,
+            )
+          else
+            StatusChip(label: label, tone: tone),
+        ],
       ),
     );
   }
@@ -117,8 +167,7 @@ class _PlaceholderList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    return Column(
       children: List.generate(
         5,
         (_) => const Card(
