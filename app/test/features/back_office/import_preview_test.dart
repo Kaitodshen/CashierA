@@ -1,3 +1,4 @@
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/presentation/import_issue_text.dart';
 import 'package:cashiera/features/back_office/presentation/import_screen.dart';
@@ -88,6 +89,8 @@ void main() {
       expect(find.text('2 baris · 2 produk'), findsOneWidget);
       expect(find.text('Rp 42.000'), findsOneWidget);
       expect(find.text('PST 12.5'), findsOneWidget);
+      expect(find.byWidgetPredicate((w) => w is GlassTable), findsOneWidget);
+      expect(find.byType(DataTable), findsNothing);
       expect(find.text('Impor 2 baris'), findsOneWidget);
     });
 

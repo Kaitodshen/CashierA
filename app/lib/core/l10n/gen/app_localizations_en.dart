@@ -3254,4 +3254,247 @@ class AppLocalizationsEn extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get navRegister => 'Register & Checkout';
+
+  @override
+  String get navRegisterShort => 'Register';
+
+  @override
+  String get sectionOverview => 'Overview';
+
+  @override
+  String get sectionCatalog => 'Catalog';
+
+  @override
+  String get sectionSales => 'Sales';
+
+  @override
+  String get sectionMembers => 'Members';
+
+  @override
+  String get sectionSettings => 'Settings';
+
+  @override
+  String get shellRetailPos => 'Retail POS';
+
+  @override
+  String get shellTagline => 'Retail Point of Sale';
+
+  @override
+  String get shellHeldOrders => 'Held orders';
+
+  @override
+  String get shellKitchen => 'Kitchen';
+
+  @override
+  String get shellLock => 'Lock';
+
+  @override
+  String get shellCollapse => 'Collapse menu';
+
+  @override
+  String get shellExpand => 'Expand menu';
+
+  @override
+  String get shellMore => 'More';
+
+  @override
+  String get shellSearchHint => 'Scan barcode or search SKU / item';
+
+  @override
+  String get sellItemsTitle => 'Merchandise items';
+
+  @override
+  String sellItemsCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String sellStockBadge(String qty) {
+    return '$qty in stock';
+  }
+
+  @override
+  String get sellPriceLabel => 'Price';
+
+  @override
+  String get sellAddTooltip => 'Add to bill';
+
+  @override
+  String get cartTitle => 'Active ticket';
+
+  @override
+  String get cartWalkIn => 'Walk-in customer';
+
+  @override
+  String get cartTotalDue => 'Total due';
+
+  @override
+  String get cartQuickCash => 'Quick cash:';
+
+  @override
+  String get cartExact => 'Exact';
+
+  @override
+  String get cartPaymentMethod => 'Payment method';
+
+  @override
+  String get cartChange => 'Change';
+
+  @override
+  String get commonRemove => 'Remove';
+
+  @override
+  String get overviewGross => 'Gross sales';
+
+  @override
+  String get overviewTransactions => 'Transactions';
+
+  @override
+  String get overviewCashInDrawer => 'Cash in drawer';
+
+  @override
+  String get overviewNonCash => 'Non-cash total';
+
+  @override
+  String overviewFloat(String amount) {
+    return 'Float $amount';
+  }
+
+  @override
+  String overviewAverage(String amount) {
+    return 'Avg. basket $amount';
+  }
+
+  @override
+  String overviewOrders(int count) {
+    return '$count orders';
+  }
+
+  @override
+  String get overviewRecent => 'Recent orders';
+
+  @override
+  String get overviewPayments => 'Payment breakdown';
+
+  @override
+  String get overviewNoOrders => 'No sales in this shift yet.';
+
+  @override
+  String get overviewSubtitle => 'Shift dashboard';
+
+  @override
+  String catalogHeaderCount(int count, int low) {
+    return '$count SKUs • $low low stock';
+  }
+
+  @override
+  String get stockFilterAll => 'All stock';
+
+  @override
+  String get stockFilterLow => 'Low';
+
+  @override
+  String get stockFilterOut => 'Out';
+
+  @override
+  String get catalogColProduct => 'Product';
+
+  @override
+  String get catalogColSku => 'SKU / Barcode';
+
+  @override
+  String get catalogColCategory => 'Category';
+
+  @override
+  String get catalogColStock => 'Stock';
+
+  @override
+  String get catalogColPrice => 'Price';
+
+  @override
+  String get membersTitle => 'Members';
+
+  @override
+  String get membersSubtitle => 'Points, kasbon and purchase history';
+
+  @override
+  String get membersCount => 'Members';
+
+  @override
+  String get membersPoints => 'Points outstanding';
+
+  @override
+  String get membersOwed => 'Kasbon owed';
+
+  @override
+  String get commonBack => 'Back';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsStoreProfile => 'Store profile';
+
+  @override
+  String get settingsTerminal => 'Terminal & sync';
+
+  @override
+  String get settingsOpenSync => 'Open sync';
+
+  @override
+  String get settingsVisualEffects => 'Visual effects';
+
+  @override
+  String get settingsVisualEffectsHint =>
+      'Frosted blur on the top bar and dialogs. Turn off on slow tablets.';
+
+  @override
+  String settingsPaper(int mm) {
+    return 'Receipt paper $mm mm';
+  }
+
+  @override
+  String get settingsTaxOff => 'Not charged';
+
+  @override
+  String get ordersColNumber => 'Order no.';
+
+  @override
+  String get ordersColTime => 'Time';
+
+  @override
+  String get ordersColItems => 'Items';
+
+  @override
+  String get ordersColStatus => 'Status';
+
+  @override
+  String get ordersColTotal => 'Total';
+
+  @override
+  String get auditWho => 'By';
+
+  @override
+  String get auditDetail => 'Detail';
+
+  @override
+  String get adminColVariants => 'Variants';
+
+  @override
+  String get adminColStatus => 'Status';
+
+  @override
+  String get adminColOnHand => 'On hand';
+
+  @override
+  String get adminColReorder => 'Reorder point';
+
+  @override
+  String get productSectionBasics => 'Product details';
+
+  @override
+  String get adminColUsed => 'Used';
 }

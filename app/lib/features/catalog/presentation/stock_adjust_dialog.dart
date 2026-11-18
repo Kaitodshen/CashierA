@@ -2,6 +2,7 @@ import 'package:cashiera/core/catalog/catalog_item.dart';
 import 'package:cashiera/core/catalog/qty_input.dart';
 import 'package:cashiera/core/catalog/stock_service.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/providers.dart';
@@ -90,68 +91,70 @@ class _StockAdjustDialogState extends ConsumerState<StockAdjustDialog> {
     final reasons = StockReason.values
         .where((r) => r.increases == widget.increase)
         .toList();
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.increase ? l10n.stockIn : l10n.stockOut),
-      content: Form(
-        key: _formKey,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 320),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                widget.item.displayName,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              Text(
-                l10n.catalogStock(
-                  widget.item.stock.toPlain(),
-                  widget.item.unitCode,
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 320),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  widget.item.displayName,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              TextFormField(
-                key: const Key('stock-qty'),
-                controller: _qty,
-                autofocus: true,
-                keyboardType: TextInputType.numberWithOptions(
-                  decimal: widget.item.allowDecimal,
+                Text(
+                  l10n.catalogStock(
+                    widget.item.stock.toPlain(),
+                    widget.item.unitCode,
+                  ),
                 ),
-                decoration: InputDecoration(
-                  labelText: l10n.stockQuantity,
-                  suffixText: widget.item.unitCode,
+                const SizedBox(height: AppSpacing.lg),
+                TextFormField(
+                  key: const Key('stock-qty'),
+                  controller: _qty,
+                  autofocus: true,
+                  keyboardType: TextInputType.numberWithOptions(
+                    decimal: widget.item.allowDecimal,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.stockQuantity,
+                    suffixText: widget.item.unitCode,
+                  ),
+                  validator: (v) => switch (parseQtyInput(
+                    v ?? '',
+                    allowDecimal: widget.item.allowDecimal,
+                  ).error) {
+                    null => null,
+                    QtyInputError.notWhole => l10n.stockWholeOnly,
+                    QtyInputError.invalid => l10n.stockInvalidQty,
+                  },
                 ),
-                validator: (v) => switch (parseQtyInput(
-                  v ?? '',
-                  allowDecimal: widget.item.allowDecimal,
-                ).error) {
-                  null => null,
-                  QtyInputError.notWhole => l10n.stockWholeOnly,
-                  QtyInputError.invalid => l10n.stockInvalidQty,
-                },
-              ),
-              if (reasons.length > 1) ...[
+                if (reasons.length > 1) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  DropdownButtonFormField<StockReason>(
+                    initialValue: _reason,
+                    decoration: InputDecoration(labelText: l10n.stockReason),
+                    items: [
+                      for (final r in reasons)
+                        DropdownMenuItem(
+                          value: r,
+                          child: Text(_reasonLabel(l10n, r)),
+                        ),
+                    ],
+                    onChanged: (r) => setState(() => _reason = r ?? _reason),
+                  ),
+                ],
                 const SizedBox(height: AppSpacing.md),
-                DropdownButtonFormField<StockReason>(
-                  initialValue: _reason,
-                  decoration: InputDecoration(labelText: l10n.stockReason),
-                  items: [
-                    for (final r in reasons)
-                      DropdownMenuItem(
-                        value: r,
-                        child: Text(_reasonLabel(l10n, r)),
-                      ),
-                  ],
-                  onChanged: (r) => setState(() => _reason = r ?? _reason),
+                TextFormField(
+                  controller: _note,
+                  decoration: InputDecoration(labelText: l10n.stockNote),
                 ),
               ],
-              const SizedBox(height: AppSpacing.md),
-              TextFormField(
-                controller: _note,
-                decoration: InputDecoration(labelText: l10n.stockNote),
-              ),
-            ],
+            ),
           ),
         ),
       ),

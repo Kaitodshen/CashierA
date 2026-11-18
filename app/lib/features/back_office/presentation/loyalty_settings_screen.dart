@@ -1,4 +1,7 @@
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/customers_admin_repository.dart';
@@ -23,8 +26,13 @@ class LoyaltySettingsScreen extends ConsumerWidget {
         settings: value,
         canEdit: owner,
       ),
-      AsyncError(:final error) => Center(
-        child: Text(l10n.commonError('$error')),
+      AsyncError(:final error) => AdminPage(
+        children: [
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('$error'),
+          ),
+        ],
       ),
       _ => const Center(child: CircularProgressIndicator()),
     };
@@ -116,64 +124,73 @@ class _FormState extends ConsumerState<_Form> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 520),
-        child: Form(
-          key: _form,
-          child: ListView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            children: [
-              if (!widget.canEdit)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: Text(l10n.loyaltyOwnerOnly),
-                ),
-              SwitchListTile(
-                key: const Key('loyalty-enabled'),
-                contentPadding: EdgeInsets.zero,
-                value: _enabled,
-                onChanged: widget.canEdit
-                    ? (v) => setState(() => _enabled = v)
-                    : null,
-                title: Text(l10n.loyaltyEnabled),
-              ),
-              _number(
-                'loyalty-earn',
-                _earn,
-                l10n.loyaltyEarn,
-                min: 1,
-                prefix: 'Rp ',
-              ),
-              _number(
-                'loyalty-value',
-                _value,
-                l10n.loyaltyValue,
-                min: 1,
-                prefix: 'Rp ',
-              ),
-              _number('loyalty-min', _min, l10n.loyaltyMin, min: 0),
-              _number(
-                'loyalty-days',
-                _days,
-                l10n.loyaltyDueDays,
-                min: 1,
-                max: 365,
-              ),
+    return Form(
+      key: _form,
+      child: AdminPage(
+        maxWidth: 640,
+        toolbar: AdminToolbar(
+          filters: [
+            if (!widget.canEdit)
               Text(
-                l10n.loyaltyHint,
-                style: Theme.of(context).textTheme.bodySmall,
+                l10n.loyaltyOwnerOnly,
+                style: const TextStyle(color: AppColors.textMuted),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              if (widget.canEdit)
-                FilledButton(
-                  key: const Key('loyalty-save'),
-                  onPressed: _busy ? null : _save,
-                  child: Text(l10n.commonSave),
-                ),
-            ],
-          ),
+          ],
+          actions: [
+            if (widget.canEdit)
+              PrimaryButton(
+                key: const Key('loyalty-save'),
+                onPressed: _busy ? null : _save,
+                icon: Icons.save_outlined,
+                label: l10n.commonSave,
+              ),
+          ],
         ),
+        children: [
+          GlassCard(
+            level: GlassLevel.solid,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SwitchListTile(
+                  key: const Key('loyalty-enabled'),
+                  contentPadding: EdgeInsets.zero,
+                  value: _enabled,
+                  onChanged: widget.canEdit
+                      ? (v) => setState(() => _enabled = v)
+                      : null,
+                  title: Text(l10n.loyaltyEnabled),
+                ),
+                _number(
+                  'loyalty-earn',
+                  _earn,
+                  l10n.loyaltyEarn,
+                  min: 1,
+                  prefix: 'Rp ',
+                ),
+                _number(
+                  'loyalty-value',
+                  _value,
+                  l10n.loyaltyValue,
+                  min: 1,
+                  prefix: 'Rp ',
+                ),
+                _number('loyalty-min', _min, l10n.loyaltyMin, min: 0),
+                _number(
+                  'loyalty-days',
+                  _days,
+                  l10n.loyaltyDueDays,
+                  min: 1,
+                  max: 365,
+                ),
+                Text(
+                  l10n.loyaltyHint,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

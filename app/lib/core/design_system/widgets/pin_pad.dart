@@ -198,7 +198,12 @@ class _PadKey extends StatelessWidget {
             .copyWith(
               minimumSize: const WidgetStatePropertyAll(Size(80, 64)),
               textStyle: const WidgetStatePropertyAll(
-                TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                TextStyle(
+                  fontFamily: AppFonts.body,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                ),
               ),
             );
     return FilledButton(onPressed: onPressed, style: style, child: child);

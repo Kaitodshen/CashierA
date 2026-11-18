@@ -133,7 +133,7 @@ Widget app(
   ],
   child: ToastificationWrapper(
     child: MaterialApp(
-      theme: AppTheme.backOffice(),
+      theme: AppTheme.light(),
       locale: const Locale('id'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -159,6 +159,7 @@ void main() {
     expect(find.text('Kasbon Rp 20.000'), findsOneWidget);
     expect(find.textContaining('PST-T1-261107-0010 · Dicicil'), findsOneWidget);
     expect(find.text('Poin didapat'), findsOneWidget);
+    expect(find.byType(Card), findsNothing);
 
     await tester.tap(find.byKey(const Key('admin-adjust-points')));
     await tester.pumpAndSettle();
@@ -202,6 +203,7 @@ void main() {
     );
     expect(find.textContaining('Terlambat Rp 7.000'), findsOneWidget);
     expect(find.textContaining('Batas Rp 20.000'), findsOneWidget);
+    expect(find.byType(Card), findsNothing);
   });
 
   testWidgets('loyalty settings: the owner saves, others only read', (

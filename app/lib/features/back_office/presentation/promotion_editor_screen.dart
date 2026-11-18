@@ -1,6 +1,9 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
@@ -359,9 +362,10 @@ class _PromotionEditorScreenState extends ConsumerState<PromotionEditorScreen> {
       });
     }
 
-    Widget section(String title, List<Widget> children) => Card(
+    Widget section(String title, List<Widget> children) => GlassCard(
+      level: GlassLevel.solid,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -577,195 +581,190 @@ class _PromotionEditorScreenState extends ConsumerState<PromotionEditorScreen> {
       ],
     };
 
-    return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          AppSpacing.lg,
-          AppSpacing.lg,
-          96,
-        ),
-        children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => context.go(AppRoutes.adminPromotions),
-                icon: const Icon(Icons.arrow_back),
-              ),
-              Expanded(
-                child: Text(
-                  d.isNew ? l10n.promoNew : d.name,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-            ],
+    return AdminPage(
+      maxWidth: 960,
+      toolbar: AdminToolbar(
+        filters: [
+          SecondaryButton(
+            key: const Key('promo-back'),
+            onPressed: () => context.go(AppRoutes.adminPromotions),
+            icon: Icons.arrow_back,
+            label: l10n.commonBack,
           ),
-          section(l10n.promoGeneral, [
-            TextFormField(
-              key: const Key('promo-name'),
-              initialValue: d.name,
-              decoration: InputDecoration(labelText: l10n.promoName),
-              onChanged: (v) => d.name = v,
-            ),
-            TextFormField(
-              initialValue: d.description,
-              decoration: InputDecoration(labelText: l10n.promoDescription),
-              onChanged: (v) => d.description = v,
-            ),
-            DropdownButtonFormField<PromoType>(
-              key: const Key('promo-type'),
-              initialValue: d.type,
-              decoration: InputDecoration(labelText: l10n.promoType),
-              items: [
-                for (final t in PromoType.values)
-                  DropdownMenuItem(
-                    value: t,
-                    child: Text(promoTypeLabel(l10n, t)),
-                  ),
-              ],
-              onChanged: d.isNew ? (t) => setState(() => d.type = t!) : null,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 140,
-                  child: intField(
-                    l10n.promoPriority,
-                    d.priority,
-                    (v) => d.priority = v ?? 100,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(child: Text(l10n.promoPriorityHint)),
-              ],
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.promoStackable),
-              subtitle: Text(l10n.promoStackableHint),
-              value: d.isStackable,
-              onChanged: (v) => setState(() => d.isStackable = v),
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.commonActive),
-              value: d.isActive,
-              onChanged: (v) => setState(() => d.isActive = v),
-            ),
-          ]),
-          const SizedBox(height: AppSpacing.md),
-          section(l10n.promoRules, rules),
-          const SizedBox(height: AppSpacing.md),
-          section(l10n.promoWhen, [
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: [
-                ActionChip(
-                  avatar: const Icon(Icons.event, size: 18),
-                  label: Text(
-                    d.startsAt == null
-                        ? l10n.promoStartsAnytime
-                        : l10n.promoStarts(date.format(d.startsAt!.toLocal())),
-                  ),
-                  onPressed: () => pickDate(start: true),
-                ),
-                ActionChip(
-                  avatar: const Icon(Icons.event_busy, size: 18),
-                  label: Text(
-                    d.endsAt == null
-                        ? l10n.promoEndsNever
-                        : l10n.promoEnds(
-                            date.format(
-                              d.endsAt!.toLocal().subtract(
-                                const Duration(days: 1),
-                              ),
-                            ),
-                          ),
-                  ),
-                  onPressed: () => pickDate(start: false),
-                ),
-                if (d.startsAt != null || d.endsAt != null)
-                  TextButton(
-                    onPressed: () => setState(() {
-                      d
-                        ..startsAt = null
-                        ..endsAt = null;
-                    }),
-                    child: Text(l10n.promoClearPeriod),
-                  ),
-              ],
-            ),
-            Text(l10n.promoDays),
-            Wrap(
-              spacing: AppSpacing.xs,
-              children: [
-                for (var day = 1; day <= 7; day++)
-                  FilterChip(
-                    label: Text(
-                      DateFormat.E().format(DateTime(2026, 11, 1 + day)),
-                    ),
-                    selected: d.days.contains(day),
-                    onSelected: (on) => setState(
-                      () => on ? d.days.add(day) : d.days.remove(day),
-                    ),
-                  ),
-              ],
-            ),
-            Text(d.days.isEmpty ? l10n.promoEveryDay : ''),
-            Wrap(
-              spacing: AppSpacing.sm,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Text(l10n.promoHours),
-                ActionChip(
-                  key: const Key('promo-start-time'),
-                  label: Text(minuteText(d.startMinute)),
-                  onPressed: () => pickTime(start: true),
-                ),
-                const Text('–'),
-                ActionChip(
-                  key: const Key('promo-end-time'),
-                  label: Text(minuteText(d.endMinute)),
-                  onPressed: () => pickTime(start: false),
-                ),
-                if (d.startMinute != null || d.endMinute != null)
-                  TextButton(
-                    onPressed: () => setState(() {
-                      d
-                        ..startMinute = null
-                        ..endMinute = null;
-                    }),
-                    child: Text(l10n.promoAllDay),
-                  ),
-              ],
-            ),
-          ]),
-          const SizedBox(height: AppSpacing.md),
-          section(l10n.promoStores, [
-            Text(d.storeIds.isEmpty ? l10n.promoAllStores : ''),
-            Wrap(
-              spacing: AppSpacing.sm,
-              children: [
-                for (final s in stores)
-                  FilterChip(
-                    label: Text('${s.code} · ${s.name}'),
-                    selected: d.storeIds.contains(s.id),
-                    onSelected: (on) => setState(
-                      () => on ? d.storeIds.add(s.id) : d.storeIds.remove(s.id),
-                    ),
-                  ),
-              ],
-            ),
-          ]),
+          Text(
+            d.isNew ? l10n.promoNew : d.name,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ],
+        actions: [
+          PrimaryButton(
+            key: const Key('promo-save'),
+            onPressed: _saving ? null : _save,
+            icon: Icons.save_outlined,
+            label: l10n.commonSave,
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        key: const Key('promo-save'),
-        onPressed: _saving ? null : _save,
-        icon: const Icon(Icons.save_outlined),
-        label: Text(l10n.commonSave),
-      ),
+      children: [
+        section(l10n.promoGeneral, [
+          TextFormField(
+            key: const Key('promo-name'),
+            initialValue: d.name,
+            decoration: InputDecoration(labelText: l10n.promoName),
+            onChanged: (v) => d.name = v,
+          ),
+          TextFormField(
+            initialValue: d.description,
+            decoration: InputDecoration(labelText: l10n.promoDescription),
+            onChanged: (v) => d.description = v,
+          ),
+          DropdownButtonFormField<PromoType>(
+            key: const Key('promo-type'),
+            isExpanded: true,
+            initialValue: d.type,
+            decoration: InputDecoration(labelText: l10n.promoType),
+            items: [
+              for (final t in PromoType.values)
+                DropdownMenuItem(
+                  value: t,
+                  child: Text(promoTypeLabel(l10n, t)),
+                ),
+            ],
+            onChanged: d.isNew ? (t) => setState(() => d.type = t!) : null,
+          ),
+          Row(
+            children: [
+              SizedBox(
+                width: 140,
+                child: intField(
+                  l10n.promoPriority,
+                  d.priority,
+                  (v) => d.priority = v ?? 100,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: Text(l10n.promoPriorityHint)),
+            ],
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.promoStackable),
+            subtitle: Text(l10n.promoStackableHint),
+            value: d.isStackable,
+            onChanged: (v) => setState(() => d.isStackable = v),
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.commonActive),
+            value: d.isActive,
+            onChanged: (v) => setState(() => d.isActive = v),
+          ),
+        ]),
+        const SizedBox(height: AppSpacing.md),
+        section(l10n.promoRules, rules),
+        const SizedBox(height: AppSpacing.md),
+        section(l10n.promoWhen, [
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
+            children: [
+              ActionChip(
+                avatar: const Icon(Icons.event, size: 18),
+                label: Text(
+                  d.startsAt == null
+                      ? l10n.promoStartsAnytime
+                      : l10n.promoStarts(date.format(d.startsAt!.toLocal())),
+                ),
+                onPressed: () => pickDate(start: true),
+              ),
+              ActionChip(
+                avatar: const Icon(Icons.event_busy, size: 18),
+                label: Text(
+                  d.endsAt == null
+                      ? l10n.promoEndsNever
+                      : l10n.promoEnds(
+                          date.format(
+                            d.endsAt!.toLocal().subtract(
+                              const Duration(days: 1),
+                            ),
+                          ),
+                        ),
+                ),
+                onPressed: () => pickDate(start: false),
+              ),
+              if (d.startsAt != null || d.endsAt != null)
+                TextButton(
+                  onPressed: () => setState(() {
+                    d
+                      ..startsAt = null
+                      ..endsAt = null;
+                  }),
+                  child: Text(l10n.promoClearPeriod),
+                ),
+            ],
+          ),
+          Text(l10n.promoDays),
+          Wrap(
+            spacing: AppSpacing.xs,
+            children: [
+              for (var day = 1; day <= 7; day++)
+                FilterChip(
+                  label: Text(
+                    DateFormat.E().format(DateTime(2026, 11, 1 + day)),
+                  ),
+                  selected: d.days.contains(day),
+                  onSelected: (on) =>
+                      setState(() => on ? d.days.add(day) : d.days.remove(day)),
+                ),
+            ],
+          ),
+          Text(d.days.isEmpty ? l10n.promoEveryDay : ''),
+          Wrap(
+            spacing: AppSpacing.sm,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(l10n.promoHours),
+              ActionChip(
+                key: const Key('promo-start-time'),
+                label: Text(minuteText(d.startMinute)),
+                onPressed: () => pickTime(start: true),
+              ),
+              const Text('–'),
+              ActionChip(
+                key: const Key('promo-end-time'),
+                label: Text(minuteText(d.endMinute)),
+                onPressed: () => pickTime(start: false),
+              ),
+              if (d.startMinute != null || d.endMinute != null)
+                TextButton(
+                  onPressed: () => setState(() {
+                    d
+                      ..startMinute = null
+                      ..endMinute = null;
+                  }),
+                  child: Text(l10n.promoAllDay),
+                ),
+            ],
+          ),
+        ]),
+        const SizedBox(height: AppSpacing.md),
+        section(l10n.promoStores, [
+          Text(d.storeIds.isEmpty ? l10n.promoAllStores : ''),
+          Wrap(
+            spacing: AppSpacing.sm,
+            children: [
+              for (final s in stores)
+                FilterChip(
+                  label: Text('${s.code} · ${s.name}'),
+                  selected: d.storeIds.contains(s.id),
+                  onSelected: (on) => setState(
+                    () => on ? d.storeIds.add(s.id) : d.storeIds.remove(s.id),
+                  ),
+                ),
+            ],
+          ),
+        ]),
+      ],
     );
   }
 }
@@ -944,60 +943,68 @@ class _ScopeDialogState extends State<_ScopeDialog> {
         )
         .toList();
 
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.promoScope),
-      content: SizedBox(
-        width: 480,
-        height: 480,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SwitchListTile(
-              key: const Key('scope-all'),
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.promoScopeAll),
-              value: s.all,
-              onChanged: (v) => setState(() => s.all = v),
-            ),
-            if (!s.all) ...[
-              SegmentedButton<int>(
-                segments: [
-                  ButtonSegment(
-                    value: 0,
-                    label: Text(l10n.promoScopeCategories),
-                  ),
-                  ButtonSegment(value: 1, label: Text(l10n.promoScopeProducts)),
-                  ButtonSegment(value: 2, label: Text(l10n.promoScopeVariants)),
-                ],
-                selected: {_tab},
-                onSelectionChanged: (v) => setState(() => _tab = v.first),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 480,
+          height: 480,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SwitchListTile(
+                key: const Key('scope-all'),
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.promoScopeAll),
+                value: s.all,
+                onChanged: (v) => setState(() => s.all = v),
               ),
-              TextField(
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  hintText: l10n.commonSearch,
-                ),
-                onChanged: (v) => setState(() => _query = v),
-              ),
-              Expanded(
-                child: ListView(
-                  children: [
-                    for (final o in shown)
-                      CheckboxListTile(
-                        value: selected.contains(o.id),
-                        title: Text(o.label),
-                        subtitle: o.detail == null ? null : Text(o.detail!),
-                        onChanged: (on) => setState(
-                          () => on ?? false
-                              ? selected.add(o.id)
-                              : selected.remove(o.id),
-                        ),
-                      ),
+              if (!s.all) ...[
+                SegmentedButton<int>(
+                  segments: [
+                    ButtonSegment(
+                      value: 0,
+                      label: Text(l10n.promoScopeCategories),
+                    ),
+                    ButtonSegment(
+                      value: 1,
+                      label: Text(l10n.promoScopeProducts),
+                    ),
+                    ButtonSegment(
+                      value: 2,
+                      label: Text(l10n.promoScopeVariants),
+                    ),
                   ],
+                  selected: {_tab},
+                  onSelectionChanged: (v) => setState(() => _tab = v.first),
                 ),
-              ),
+                TextField(
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: l10n.commonSearch,
+                  ),
+                  onChanged: (v) => setState(() => _query = v),
+                ),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      for (final o in shown)
+                        CheckboxListTile(
+                          value: selected.contains(o.id),
+                          title: Text(o.label),
+                          subtitle: o.detail == null ? null : Text(o.detail!),
+                          onChanged: (on) => setState(
+                            () => on ?? false
+                                ? selected.add(o.id)
+                                : selected.remove(o.id),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
       actions: [

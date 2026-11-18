@@ -4,7 +4,9 @@ import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/catalog/qty_input.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
@@ -88,9 +90,13 @@ class _ProductEditorScreenState extends ConsumerState<ProductEditorScreen> {
     final draft = _draft;
 
     if (_loadError != null) {
-      return EmptyState(
-        icon: Icons.cloud_off_outlined,
-        message: l10n.commonError('$_loadError'),
+      return AdminPage(
+        children: [
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('$_loadError'),
+          ),
+        ],
       );
     }
     if (draft == null) return const Center(child: CircularProgressIndicator());
@@ -99,162 +105,138 @@ class _ProductEditorScreenState extends ConsumerState<ProductEditorScreen> {
     final units = ref.watch(adminUnitsProvider).value ?? const [];
     final stores = ref.watch(backOfficeStoresProvider).value ?? const [];
 
-    return Scaffold(
-      floatingActionButton: canEdit
-          ? FloatingActionButton.extended(
-              key: const Key('product-save'),
-              onPressed: _saving ? null : _save,
-              icon: _saving
-                  ? const SizedBox.square(
-                      dimension: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.save_outlined),
-              label: Text(l10n.commonSave),
-            )
-          : null,
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            AppSpacing.lg,
-            AppSpacing.lg,
-            96,
-          ),
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () => context.go(AppRoutes.adminProducts),
-                  icon: const Icon(Icons.arrow_back),
-                ),
-                Text(
-                  _isNew ? l10n.productNewTitle : l10n.productEditTitle,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ],
+    return Form(
+      key: _formKey,
+      child: AdminPage(
+        toolbar: AdminToolbar(
+          filters: [
+            SecondaryButton(
+              key: const Key('product-editor-back'),
+              onPressed: () => context.go(AppRoutes.adminProducts),
+              icon: Icons.arrow_back,
+              label: l10n.commonBack,
             ),
-            if (!canEdit) Text(l10n.productsReadOnly),
-            const SizedBox(height: AppSpacing.lg),
-            _Section(
-              children: [
-                TextFormField(
-                  key: const Key('product-name'),
-                  initialValue: draft.name,
-                  enabled: canEdit,
-                  decoration: InputDecoration(labelText: l10n.productName),
-                  validator: (v) =>
-                      (v?.trim().isEmpty ?? true) ? l10n.commonRequired : null,
-                  onChanged: (v) => draft.name = v,
-                ),
-                Wrap(
-                  spacing: AppSpacing.md,
-                  runSpacing: AppSpacing.md,
-                  children: [
-                    SizedBox(
-                      width: 280,
-                      child: DropdownButtonFormField<String?>(
-                        initialValue: draft.categoryId,
-                        decoration: InputDecoration(
-                          labelText: l10n.productCategory,
-                        ),
-                        items: [
-                          DropdownMenuItem(child: Text(l10n.commonNone)),
-                          for (final c in categories)
-                            DropdownMenuItem(value: c.id, child: Text(c.name)),
-                        ],
-                        onChanged: canEdit
-                            ? (v) => setState(() => draft.categoryId = v)
-                            : null,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 200,
-                      child: DropdownButtonFormField<String>(
-                        initialValue: draft.unitId,
-                        decoration: InputDecoration(
-                          labelText: l10n.productUnit,
-                        ),
-                        items: [
-                          for (final u in units)
-                            DropdownMenuItem(
-                              value: u.id,
-                              child: Text('${u.name} (${u.code})'),
-                            ),
-                        ],
-                        onChanged: canEdit
-                            ? (v) => setState(
-                                () => draft.unitId = v ?? draft.unitId,
-                              )
-                            : null,
-                      ),
-                    ),
-                  ],
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.productTaxable),
-                  subtitle: Text(l10n.productTaxableHint),
-                  value: draft.isTaxable,
-                  onChanged: canEdit
-                      ? (v) => setState(() => draft.isTaxable = v)
-                      : null,
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.productTrackStock),
-                  value: draft.trackStock,
-                  onChanged: canEdit
-                      ? (v) => setState(() => draft.trackStock = v)
-                      : null,
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.commonActive),
-                  value: draft.isActive,
-                  onChanged: canEdit
-                      ? (v) => setState(() => draft.isActive = v)
-                      : null,
-                ),
-              ],
+            Text(
+              _isNew ? l10n.productNewTitle : l10n.productEditTitle,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: AppSpacing.xl),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    l10n.productVariants,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-                if (canEdit)
-                  TextButton.icon(
-                    onPressed: () => setState(
-                      () => draft.variants.add(
-                        ref.read(catalogAdminProvider).newVariant(),
-                      ),
-                    ),
-                    icon: const Icon(Icons.add),
-                    label: Text(l10n.productAddVariant),
-                  ),
-              ],
-            ),
-            for (final variant in draft.variants.where((v) => v.isActive))
-              Padding(
-                key: ValueKey(variant.id),
-                padding: const EdgeInsets.only(top: AppSpacing.md),
-                child: _VariantCard(
-                  variant: variant,
-                  draft: draft,
-                  stores: stores,
-                  canEdit: canEdit,
-                  canRemove: draft.variants.where((v) => v.isActive).length > 1,
-                  onRemove: () => setState(() => variant.isActive = false),
-                ),
+            if (!canEdit)
+              Text(
+                l10n.productsReadOnly,
+                style: const TextStyle(color: AppColors.textMuted),
+              ),
+          ],
+          actions: [
+            if (canEdit)
+              PrimaryButton(
+                key: const Key('product-save'),
+                onPressed: _saving ? null : _save,
+                icon: Icons.save_outlined,
+                label: l10n.commonSave,
               ),
           ],
         ),
+        children: [
+          FormSection(
+            title: l10n.productSectionBasics,
+            children: [
+              TextFormField(
+                key: const Key('product-name'),
+                initialValue: draft.name,
+                enabled: canEdit,
+                decoration: InputDecoration(labelText: l10n.productName),
+                validator: (v) =>
+                    (v?.trim().isEmpty ?? true) ? l10n.commonRequired : null,
+                onChanged: (v) => draft.name = v,
+              ),
+              DropdownButtonFormField<String?>(
+                initialValue: draft.categoryId,
+                decoration: InputDecoration(labelText: l10n.productCategory),
+                items: [
+                  DropdownMenuItem(child: Text(l10n.commonNone)),
+                  for (final c in categories)
+                    DropdownMenuItem(value: c.id, child: Text(c.name)),
+                ],
+                onChanged: canEdit
+                    ? (v) => setState(() => draft.categoryId = v)
+                    : null,
+              ),
+              DropdownButtonFormField<String>(
+                initialValue: draft.unitId,
+                decoration: InputDecoration(labelText: l10n.productUnit),
+                items: [
+                  for (final u in units)
+                    DropdownMenuItem(
+                      value: u.id,
+                      child: Text('${u.name} (${u.code})'),
+                    ),
+                ],
+                onChanged: canEdit
+                    ? (v) => setState(() => draft.unitId = v ?? draft.unitId)
+                    : null,
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.productTaxable),
+                subtitle: Text(l10n.productTaxableHint),
+                value: draft.isTaxable,
+                onChanged: canEdit
+                    ? (v) => setState(() => draft.isTaxable = v)
+                    : null,
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.productTrackStock),
+                value: draft.trackStock,
+                onChanged: canEdit
+                    ? (v) => setState(() => draft.trackStock = v)
+                    : null,
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.commonActive),
+                value: draft.isActive,
+                onChanged: canEdit
+                    ? (v) => setState(() => draft.isActive = v)
+                    : null,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.productVariants,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              if (canEdit)
+                TextButton.icon(
+                  onPressed: () => setState(
+                    () => draft.variants.add(
+                      ref.read(catalogAdminProvider).newVariant(),
+                    ),
+                  ),
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.productAddVariant),
+                ),
+            ],
+          ),
+          for (final variant in draft.variants.where((v) => v.isActive))
+            Padding(
+              key: ValueKey(variant.id),
+              padding: const EdgeInsets.only(top: AppSpacing.md),
+              child: _VariantCard(
+                variant: variant,
+                draft: draft,
+                stores: stores,
+                canEdit: canEdit,
+                canRemove: draft.variants.where((v) => v.isActive).length > 1,
+                onRemove: () => setState(() => variant.isActive = false),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -267,18 +249,16 @@ class _Section extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            for (final (i, child) in children.indexed) ...[
-              if (i > 0) const SizedBox(height: AppSpacing.md),
-              child,
-            ],
+    return GlassCard(
+      level: GlassLevel.solid,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (i, child) in children.indexed) ...[
+            if (i > 0) const SizedBox(height: AppSpacing.md),
+            child,
           ],
-        ),
+        ],
       ),
     );
   }

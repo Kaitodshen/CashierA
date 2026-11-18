@@ -1,6 +1,10 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
@@ -92,66 +96,70 @@ class _CustomerDialogState extends ConsumerState<_CustomerDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(
         widget.customer == null ? l10n.sellAddCustomer : l10n.customerEdit,
       ),
-      content: SizedBox(
-        width: 420,
-        child: Form(
-          key: _form,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                key: const Key('admin-customer-name'),
-                controller: _name,
-                decoration: InputDecoration(labelText: l10n.customerName),
-                validator: (v) =>
-                    (v ?? '').trim().isEmpty ? l10n.commonRequired : null,
-              ),
-              TextFormField(
-                key: const Key('admin-customer-phone'),
-                controller: _phone,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(labelText: l10n.customerPhone),
-                validator: (v) {
-                  final d = (v ?? '').replaceAll(RegExp(r'[\s-]'), '');
-                  return d.isEmpty || RegExp(r'^\+?[0-9]{8,15}$').hasMatch(d)
-                      ? null
-                      : l10n.customerPhoneInvalid;
-                },
-              ),
-              TextFormField(
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(labelText: l10n.adminCustomerEmail),
-                validator: (v) {
-                  final t = (v ?? '').trim();
-                  return t.isEmpty ||
-                          RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(t)
-                      ? null
-                      : l10n.adminEmailInvalid;
-                },
-              ),
-              TextFormField(
-                key: const Key('admin-customer-limit'),
-                controller: _limit,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: InputDecoration(
-                  labelText: l10n.adminCustomerLimit,
-                  helperText: l10n.adminCustomerLimitHint,
-                  prefixText: 'Rp ',
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 420,
+          child: Form(
+            key: _form,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  key: const Key('admin-customer-name'),
+                  controller: _name,
+                  decoration: InputDecoration(labelText: l10n.customerName),
+                  validator: (v) =>
+                      (v ?? '').trim().isEmpty ? l10n.commonRequired : null,
                 ),
-              ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                value: _active,
-                onChanged: (v) => setState(() => _active = v),
-                title: Text(l10n.commonActive),
-              ),
-            ],
+                TextFormField(
+                  key: const Key('admin-customer-phone'),
+                  controller: _phone,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(labelText: l10n.customerPhone),
+                  validator: (v) {
+                    final d = (v ?? '').replaceAll(RegExp(r'[\s-]'), '');
+                    return d.isEmpty || RegExp(r'^\+?[0-9]{8,15}$').hasMatch(d)
+                        ? null
+                        : l10n.customerPhoneInvalid;
+                  },
+                ),
+                TextFormField(
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: l10n.adminCustomerEmail,
+                  ),
+                  validator: (v) {
+                    final t = (v ?? '').trim();
+                    return t.isEmpty ||
+                            RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(t)
+                        ? null
+                        : l10n.adminEmailInvalid;
+                  },
+                ),
+                TextFormField(
+                  key: const Key('admin-customer-limit'),
+                  controller: _limit,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    labelText: l10n.adminCustomerLimit,
+                    helperText: l10n.adminCustomerLimitHint,
+                    prefixText: 'Rp ',
+                  ),
+                ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: _active,
+                  onChanged: (v) => setState(() => _active = v),
+                  title: Text(l10n.commonActive),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -189,23 +197,13 @@ class _AdminCustomersScreenState extends ConsumerState<AdminCustomersScreen> {
         ref.watch(principalProvider).value?.can('customer.manage') ?? false;
     final list = customers.value ?? const <AdminCustomer>[];
 
-    return Scaffold(
-      floatingActionButton: canEdit
-          ? FloatingActionButton.extended(
-              key: const Key('admin-customer-add'),
-              onPressed: () async {
-                if (await showAdminCustomerDialog(context, ref)) {
-                  ref.invalidate(adminCustomersProvider);
-                }
-              },
-              icon: const Icon(Icons.person_add_alt),
-              label: Text(l10n.commonAdd),
-            )
-          : null,
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          SizedBox(
+            width: 360,
             child: TextField(
               key: const Key('admin-customer-search'),
               decoration: InputDecoration(
@@ -215,33 +213,54 @@ class _AdminCustomersScreenState extends ConsumerState<AdminCustomersScreen> {
               onSubmitted: (v) => setState(() => _query = v),
             ),
           ),
-          Expanded(
-            child: customers.isLoading && list.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : customers.hasError
-                ? Center(child: Text(l10n.commonError('${customers.error}')))
-                : list.isEmpty
-                ? EmptyState(
-                    icon: Icons.people_outline,
-                    message: l10n.customersEmpty,
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.lg,
-                      0,
-                      AppSpacing.lg,
-                      96,
-                    ),
-                    itemCount: list.length,
-                    separatorBuilder: (_, _) =>
-                        const SizedBox(height: AppSpacing.sm),
-                    itemBuilder: (context, i) {
-                      final c = list[i];
-                      return Card(
-                        child: ListTile(
-                          key: Key('admin-customer-${c.id}'),
-                          title: Text(c.name),
-                          subtitle: Text(
+        ],
+        actions: [
+          if (canEdit)
+            PrimaryButton(
+              key: const Key('admin-customer-add'),
+              onPressed: () async {
+                if (await showAdminCustomerDialog(context, ref)) {
+                  ref.invalidate(adminCustomersProvider);
+                }
+              },
+              icon: Icons.person_add_alt,
+              label: l10n.commonAdd,
+            ),
+        ],
+      ),
+      children: [
+        if (customers.isLoading && list.isEmpty)
+          const Center(child: CircularProgressIndicator())
+        else if (customers.hasError)
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('${customers.error}'),
+          )
+        else if (list.isEmpty)
+          adminMessage(icon: Icons.people_outline, message: l10n.customersEmpty)
+        else
+          GlassTable<AdminCustomer>(
+            rows: list,
+            onRowTap: (c) => context.go(AppRoutes.adminCustomer(c.id)),
+            columns: [
+              GlassColumn(
+                label: l10n.navCustomers,
+                flex: 4,
+                cell: (c) => Row(
+                  key: Key('admin-customer-${c.id}'),
+                  children: [
+                    InitialsAvatar(name: c.name, size: 40),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            c.name,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
                             [
                               ?c.code,
                               ?c.phone,
@@ -249,24 +268,41 @@ class _AdminCustomersScreenState extends ConsumerState<AdminCustomersScreen> {
                                 l10n.adminCustomerLimitShort(
                                   c.kasbonLimit!.format(),
                                 ),
-                              if (!c.isActive) l10n.commonInactive,
                             ].join(' · '),
+                            style: muted,
                           ),
-                          trailing: Text(l10n.customersPoints(c.pointsBalance)),
-                          onTap: () =>
-                              context.go(AppRoutes.adminCustomer(c.id)),
-                        ),
-                      );
-                    },
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              GlassColumn(
+                label: l10n.membersPoints,
+                numeric: true,
+                flex: 2,
+                cell: (c) => Text(
+                  l10n.customersPoints(c.pointsBalance),
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
                   ),
+                ),
+              ),
+              GlassColumn(
+                label: l10n.adminColStatus,
+                cell: (c) => StatusChip(
+                  label: c.isActive ? l10n.commonActive : l10n.commonInactive,
+                  tone: c.isActive ? StatusTone.success : StatusTone.neutral,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+      ],
     );
   }
 }
 
-/// A customer's points history and kasbon across the caller's stores.
 class AdminCustomerScreen extends ConsumerWidget {
   const new({required this.customerId, super.key});
 
@@ -279,37 +315,41 @@ class AdminCustomerScreen extends ConsumerWidget {
     final form = GlobalKey<FormState>();
     final ok = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => GlassDialog(
         title: Text(l10n.adminAdjustPoints),
-        content: SizedBox(
-          width: 360,
-          child: Form(
-            key: form,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  key: const Key('adjust-points'),
-                  controller: points,
-                  autofocus: true,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    signed: true,
+        content: SingleChildScrollView(
+          child: SizedBox(
+            width: 360,
+            child: Form(
+              key: form,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    key: const Key('adjust-points'),
+                    controller: points,
+                    autofocus: true,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      signed: true,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: l10n.adminAdjustPointsField,
+                    ),
+                    validator: (v) => (int.tryParse((v ?? '').trim()) ?? 0) == 0
+                        ? l10n.commonRequired
+                        : null,
                   ),
-                  decoration: InputDecoration(
-                    labelText: l10n.adminAdjustPointsField,
+                  TextFormField(
+                    key: const Key('adjust-note'),
+                    controller: note,
+                    decoration: InputDecoration(
+                      labelText: l10n.adminAdjustNote,
+                    ),
+                    validator: (v) =>
+                        (v ?? '').trim().length < 3 ? l10n.reasonShort : null,
                   ),
-                  validator: (v) => (int.tryParse((v ?? '').trim()) ?? 0) == 0
-                      ? l10n.commonRequired
-                      : null,
-                ),
-                TextFormField(
-                  key: const Key('adjust-note'),
-                  controller: note,
-                  decoration: InputDecoration(labelText: l10n.adminAdjustNote),
-                  validator: (v) =>
-                      (v ?? '').trim().length < 3 ? l10n.reasonShort : null,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -350,99 +390,129 @@ class AdminCustomerScreen extends ConsumerWidget {
     final principal = ref.watch(principalProvider).value;
 
     return switch (statement) {
-      AsyncData(value: final s) => ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+      AsyncData(value: final s) => AdminPage(
+        maxWidth: 960,
         children: [
-          Row(
-            children: [
-              IconButton(
-                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                onPressed: () => context.go(AppRoutes.adminCustomers),
-                icon: const Icon(Icons.arrow_back),
-              ),
-              Expanded(
-                child: Text(s.customer.name, style: theme.textTheme.titleLarge),
-              ),
-              if (principal?.can('customer.manage') ?? false)
-                IconButton(
-                  key: const Key('admin-customer-edit'),
-                  tooltip: l10n.customerEdit,
-                  onPressed: () async {
-                    if (await showAdminCustomerDialog(
-                      context,
-                      ref,
-                      customer: s.customer,
-                    )) {
-                      ref
-                        ..invalidate(adminCustomerStatementProvider(customerId))
-                        ..invalidate(adminCustomersProvider);
-                    }
-                  },
-                  icon: const Icon(Icons.edit_outlined),
-                ),
-            ],
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SecondaryButton(
+              key: const Key('admin-customer-back'),
+              onPressed: () => context.go(AppRoutes.adminCustomers),
+              icon: Icons.arrow_back,
+              label: l10n.commonBack,
+            ),
           ),
-          Wrap(
-            spacing: AppSpacing.lg,
-            runSpacing: AppSpacing.sm,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text(
-                l10n.customersPoints(s.customer.pointsBalance),
-                key: const Key('admin-customer-points'),
-                style: theme.textTheme.titleMedium,
-              ),
-              Text(
-                l10n.customerTotalOwed(s.outstanding.format()),
-                style: theme.textTheme.titleMedium,
-              ),
-              if (principal?.can('loyalty.adjust') ?? false)
-                OutlinedButton.icon(
-                  key: const Key('admin-adjust-points'),
-                  onPressed: () => _adjust(context, ref),
-                  icon: const Icon(Icons.tune),
-                  label: Text(l10n.adminAdjustPoints),
+          const SizedBox(height: AppSpacing.md),
+          GlassCard(
+            level: GlassLevel.solid,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    InitialsAvatar(name: s.customer.name, size: 56),
+                    const SizedBox(width: AppSpacing.lg),
+                    Expanded(
+                      child: Text(
+                        s.customer.name,
+                        style: theme.textTheme.titleLarge,
+                      ),
+                    ),
+                    if (principal?.can('customer.manage') ?? false)
+                      IconButton(
+                        key: const Key('admin-customer-edit'),
+                        tooltip: l10n.customerEdit,
+                        onPressed: () async {
+                          if (await showAdminCustomerDialog(
+                            context,
+                            ref,
+                            customer: s.customer,
+                          )) {
+                            ref
+                              ..invalidate(
+                                adminCustomerStatementProvider(customerId),
+                              )
+                              ..invalidate(adminCustomersProvider);
+                          }
+                        },
+                        icon: const Icon(Icons.edit_outlined),
+                      ),
+                  ],
                 ),
-            ],
+                Wrap(
+                  spacing: AppSpacing.lg,
+                  runSpacing: AppSpacing.sm,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      l10n.customersPoints(s.customer.pointsBalance),
+                      key: const Key('admin-customer-points'),
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    Text(
+                      l10n.customerTotalOwed(s.outstanding.format()),
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    if (principal?.can('loyalty.adjust') ?? false)
+                      SecondaryButton(
+                        key: const Key('admin-adjust-points'),
+                        onPressed: () => _adjust(context, ref),
+                        icon: Icons.tune,
+                        label: l10n.adminAdjustPoints,
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(l10n.customerKasbon, style: theme.textTheme.titleMedium),
           if (s.kasbon.isEmpty) Text(l10n.customerNoKasbon),
           for (final k in s.kasbon)
-            Card(
-              child: ExpansionTile(
-                title: Text(
-                  '${k.orderNumber} · ${kasbonStatusText(l10n, k.status)}',
-                ),
-                subtitle: Text(
-                  [
-                    k.storeName,
-                    l10n.adminKasbonPaidLine(
-                      k.paid.format(),
-                      k.amount.format(),
-                    ),
-                    l10n.customerDue(_day.format(k.dueDate)),
-                  ].join(' · '),
-                ),
-                children: [
-                  for (final p in k.payments)
-                    ListTile(
-                      dense: true,
-                      title: Text(p.amount.format()),
-                      subtitle: Text(
-                        [
-                          _time.format(p.paidAt.toLocal()),
-                          refundMethodLabel(l10n, p.methodType),
-                          ?p.employeeName,
-                        ].join(' · '),
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.sm),
+              child: GlassCard(
+                level: GlassLevel.solid,
+                padding: EdgeInsets.zero,
+                child: ExpansionTile(
+                  shape: const RoundedRectangleBorder(),
+                  collapsedShape: const RoundedRectangleBorder(),
+                  title: Text(
+                    '${k.orderNumber} · ${kasbonStatusText(l10n, k.status)}',
+                  ),
+                  subtitle: Text(
+                    [
+                      k.storeName,
+                      l10n.adminKasbonPaidLine(
+                        k.paid.format(),
+                        k.amount.format(),
                       ),
-                    ),
-                ],
+                      l10n.customerDue(_day.format(k.dueDate)),
+                    ].join(' · '),
+                  ),
+                  children: [
+                    for (final p in k.payments)
+                      ListTile(
+                        dense: true,
+                        title: Text(p.amount.format()),
+                        subtitle: Text(
+                          [
+                            _time.format(p.paidAt.toLocal()),
+                            refundMethodLabel(l10n, p.methodType),
+                            ?p.employeeName,
+                          ].join(' · '),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           const SizedBox(height: AppSpacing.lg),
           Text(l10n.adminPointsHistory, style: theme.textTheme.titleMedium),
-          Card(
+          const SizedBox(height: AppSpacing.sm),
+          GlassCard(
+            level: GlassLevel.solid,
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Column(
               children: [
                 for (final e in s.ledger)
@@ -473,8 +543,13 @@ class AdminCustomerScreen extends ConsumerWidget {
           ),
         ],
       ),
-      AsyncError(:final error) => Center(
-        child: Text(l10n.commonError('$error')),
+      AsyncError(:final error) => AdminPage(
+        children: [
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('$error'),
+          ),
+        ],
       ),
       _ => const Center(child: CircularProgressIndicator()),
     };

@@ -1,6 +1,9 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
 import 'package:cashiera/features/back_office/presentation/back_office_providers.dart';
@@ -59,55 +62,95 @@ class PromotionsScreen extends ConsumerWidget {
     final promotions = ref.watch(adminPromotionsProvider);
     final list = promotions.value ?? const <Promotion>[];
 
-    return Scaffold(
-      floatingActionButton: canEdit
-          ? FloatingActionButton.extended(
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    return AdminPage(
+      toolbar: AdminToolbar(
+        actions: [
+          if (canEdit)
+            PrimaryButton(
               key: const Key('promo-add'),
               onPressed: () => context.go(AppRoutes.adminPromotion('new')),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.commonAdd),
-            )
-          : null,
-      body: promotions.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : promotions.hasError
-          ? Center(child: Text(l10n.commonError('${promotions.error}')))
-          : list.isEmpty
-          ? EmptyState(icon: Icons.sell_outlined, message: l10n.promosEmpty)
-          : ListView.separated(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.lg,
-                AppSpacing.lg,
-                96,
-              ),
-              itemCount: list.length,
-              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (context, i) {
-                final p = list[i];
-                return Card(
-                  child: ListTile(
-                    key: Key('promo-${p.id}'),
-                    leading: CircleAvatar(child: Text('${p.priority}')),
-                    title: Text(p.name),
-                    subtitle: Text(
-                      [
-                        promoTypeLabel(l10n, p.type),
-                        promoSummary(l10n, p),
-                        if (p.storeIds.isNotEmpty)
-                          l10n.promoStoreCount(p.storeIds.length),
-                        if (p.isStackable) l10n.promoStackable,
-                        if (!p.isActive) l10n.commonInactive,
-                      ].join(' · '),
-                    ),
-                    trailing: canEdit ? const Icon(Icons.chevron_right) : null,
-                    onTap: canEdit
-                        ? () => context.go(AppRoutes.adminPromotion(p.id))
-                        : null,
-                  ),
-                );
-              },
+              icon: Icons.add,
+              label: l10n.commonAdd,
             ),
+        ],
+      ),
+      children: [
+        if (promotions.isLoading)
+          const Center(child: CircularProgressIndicator())
+        else if (promotions.hasError)
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('${promotions.error}'),
+          )
+        else if (list.isEmpty)
+          adminMessage(icon: Icons.sell_outlined, message: l10n.promosEmpty)
+        else
+          GlassTable<Promotion>(
+            rows: list,
+            onRowTap: canEdit
+                ? (p) => context.go(AppRoutes.adminPromotion(p.id))
+                : null,
+            columns: [
+              GlassColumn(
+                label: l10n.promoGeneral,
+                flex: 5,
+                cell: (p) => Row(
+                  key: Key('promo-${p.id}'),
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: AppColors.primarySoft,
+                        borderRadius: BorderRadius.circular(AppRadius.control),
+                      ),
+                      child: Text(
+                        '${p.priority}',
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            p.name,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            [
+                              promoTypeLabel(l10n, p.type),
+                              promoSummary(l10n, p),
+                              if (p.storeIds.isNotEmpty)
+                                l10n.promoStoreCount(p.storeIds.length),
+                              if (p.isStackable) l10n.promoStackable,
+                            ].join(' · '),
+                            style: muted,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              GlassColumn(
+                label: l10n.adminColStatus,
+                cell: (p) => StatusChip(
+                  label: p.isActive ? l10n.commonActive : l10n.commonInactive,
+                  tone: p.isActive ? StatusTone.success : StatusTone.neutral,
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }

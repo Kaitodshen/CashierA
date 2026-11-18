@@ -2354,5 +2354,133 @@
         "type": "String"
       }
     }
-  }
+  },
+  "navRegister": "Kasir & Pembayaran",
+  "navRegisterShort": "Kasir",
+  "sectionOverview": "Ringkasan",
+  "sectionCatalog": "Katalog",
+  "sectionSales": "Penjualan",
+  "sectionMembers": "Member",
+  "sectionSettings": "Pengaturan",
+  "shellRetailPos": "POS Ritel",
+  "shellTagline": "Kasir Ritel",
+  "shellHeldOrders": "Pesanan ditahan",
+  "shellKitchen": "Dapur",
+  "shellLock": "Kunci",
+  "shellCollapse": "Ciutkan menu",
+  "shellExpand": "Lebarkan menu",
+  "shellMore": "Lainnya",
+  "shellSearchHint": "Pindai barcode atau cari SKU / barang",
+  "sellItemsTitle": "Barang dagangan",
+  "sellItemsCount": "{count} barang",
+  "@sellItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sellStockBadge": "Stok {qty}",
+  "@sellStockBadge": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "sellPriceLabel": "Harga",
+  "sellAddTooltip": "Tambah ke tagihan",
+  "cartTitle": "Tiket aktif",
+  "cartWalkIn": "Pelanggan umum",
+  "cartTotalDue": "Total tagihan",
+  "cartQuickCash": "Uang cepat:",
+  "cartExact": "Uang pas",
+  "cartPaymentMethod": "Metode pembayaran",
+  "cartChange": "Ganti",
+  "commonRemove": "Hapus",
+  "overviewGross": "Penjualan kotor",
+  "overviewTransactions": "Transaksi",
+  "overviewCashInDrawer": "Uang di laci",
+  "overviewNonCash": "Total non-tunai",
+  "overviewFloat": "Modal {amount}",
+  "@overviewFloat": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "overviewAverage": "Rata-rata {amount}",
+  "@overviewAverage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "overviewOrders": "{count} pesanan",
+  "@overviewOrders": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overviewRecent": "Pesanan terakhir",
+  "overviewPayments": "Rincian pembayaran",
+  "overviewNoOrders": "Belum ada penjualan di shift ini.",
+  "overviewSubtitle": "Dasbor shift",
+  "catalogHeaderCount": "{count} SKU • {low} stok menipis",
+  "@catalogHeaderCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "low": {
+        "type": "int"
+      }
+    }
+  },
+  "stockFilterAll": "Semua stok",
+  "stockFilterLow": "Menipis",
+  "stockFilterOut": "Habis",
+  "catalogColProduct": "Produk",
+  "catalogColSku": "SKU / Barcode",
+  "catalogColCategory": "Kategori",
+  "catalogColStock": "Stok",
+  "catalogColPrice": "Harga",
+  "membersTitle": "Member",
+  "membersSubtitle": "Poin, kasbon dan riwayat belanja",
+  "membersCount": "Member",
+  "membersPoints": "Poin beredar",
+  "membersOwed": "Kasbon belum lunas",
+  "commonBack": "Kembali",
+  "settingsTitle": "Pengaturan",
+  "settingsStoreProfile": "Profil toko",
+  "settingsTerminal": "Terminal & sinkronisasi",
+  "settingsOpenSync": "Buka sinkronisasi",
+  "settingsVisualEffects": "Efek visual",
+  "settingsVisualEffectsHint": "Blur kaca di bar atas dan dialog. Matikan di tablet yang lambat.",
+  "settingsPaper": "Kertas struk {mm} mm",
+  "@settingsPaper": {
+    "placeholders": {
+      "mm": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsTaxOff": "Tidak dipungut",
+  "ordersColNumber": "No. pesanan",
+  "ordersColTime": "Waktu",
+  "ordersColItems": "Barang",
+  "ordersColStatus": "Status",
+  "ordersColTotal": "Total",
+  "auditWho": "Oleh",
+  "auditDetail": "Detail",
+  "adminColVariants": "Varian",
+  "adminColStatus": "Status",
+  "adminColOnHand": "Stok",
+  "adminColReorder": "Stok minimum",
+  "productSectionBasics": "Data produk",
+  "adminColUsed": "Dipakai"
 }

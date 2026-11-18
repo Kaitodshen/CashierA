@@ -1,5 +1,7 @@
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/presentation/back_office_providers.dart';
@@ -44,23 +46,9 @@ class _DiningTablesScreenState extends ConsumerState<DiningTablesScreen> {
         : ref.watch(diningTablesProvider(storeId));
     final list = tables?.value ?? const <Map<String, dynamic>>[];
 
-    return Scaffold(
-      floatingActionButton: canEdit && storeId != null
-          ? FloatingActionButton.extended(
-              key: const Key('table-new'),
-              onPressed: () => _edit(storeId),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.tableNew),
-            )
-          : null,
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          AppSpacing.lg,
-          AppSpacing.lg,
-          96,
-        ),
-        children: [
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
           DropdownButton<String>(
             key: const Key('tables-store'),
             value: storeId,
@@ -73,8 +61,23 @@ class _DiningTablesScreenState extends ConsumerState<DiningTablesScreen> {
             ],
             onChanged: (v) => setState(() => _storeId = v),
           ),
-          if (storeId != null)
-            SwitchListTile(
+        ],
+        actions: [
+          if (canEdit && storeId != null)
+            PrimaryButton(
+              key: const Key('table-new'),
+              onPressed: () => _edit(storeId),
+              icon: Icons.add,
+              label: l10n.tableNew,
+            ),
+        ],
+      ),
+      children: [
+        if (storeId != null)
+          GlassCard(
+            level: GlassLevel.solid,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+            child: SwitchListTile(
               key: const Key('fnb-switch'),
               title: Text(l10n.fnbMode),
               subtitle: Text(
@@ -96,46 +99,49 @@ class _DiningTablesScreenState extends ConsumerState<DiningTablesScreen> {
                       }
                     },
             ),
-          const Divider(),
-          if (tables?.isLoading ?? false)
-            const Center(child: CircularProgressIndicator())
-          else if (list.isEmpty)
-            EmptyState(icon: Icons.table_restaurant, message: l10n.tablesEmpty)
-          else
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: [
-                for (final t in list)
-                  SizedBox(
-                    width: 180,
-                    child: Card(
-                      child: ListTile(
-                        key: Key('table-${t['name']}'),
-                        leading: Icon(
-                          Icons.table_restaurant,
-                          color: t['is_active'] as bool
-                              ? (t['status'] == 'available'
-                                    ? AppColors.success
-                                    : AppColors.warning)
-                              : AppColors.error,
-                        ),
-                        title: Text(t['name'] as String),
-                        subtitle: Text(
-                          [
-                            ?t['area'] as String?,
-                            l10n.tableSeats(t['capacity'] as int),
-                            if (!(t['is_active'] as bool)) l10n.commonInactive,
-                          ].join(' · '),
-                        ),
-                        onTap: canEdit ? () => _edit(storeId!, t) : null,
+          ),
+        const SizedBox(height: AppSpacing.lg),
+        if (tables?.isLoading ?? false)
+          const Center(child: CircularProgressIndicator())
+        else if (list.isEmpty)
+          adminMessage(icon: Icons.table_restaurant, message: l10n.tablesEmpty)
+        else
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
+            children: [
+              for (final t in list)
+                SizedBox(
+                  width: 200,
+                  child: GlassCard(
+                    level: GlassLevel.solid,
+                    padding: EdgeInsets.zero,
+                    radius: AppRadius.tile,
+                    child: ListTile(
+                      key: Key('table-${t['name']}'),
+                      leading: Icon(
+                        Icons.table_restaurant,
+                        color: t['is_active'] as bool
+                            ? (t['status'] == 'available'
+                                  ? AppColors.success
+                                  : AppColors.warning)
+                            : AppColors.error,
                       ),
+                      title: Text(t['name'] as String),
+                      subtitle: Text(
+                        [
+                          ?t['area'] as String?,
+                          l10n.tableSeats(t['capacity'] as int),
+                          if (!(t['is_active'] as bool)) l10n.commonInactive,
+                        ].join(' · '),
+                      ),
+                      onTap: canEdit ? () => _edit(storeId!, t) : null,
                     ),
                   ),
-              ],
-            ),
-        ],
-      ),
+                ),
+            ],
+          ),
+      ],
     );
   }
 }
@@ -197,39 +203,41 @@ class _TableDialogState extends ConsumerState<_TableDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.table == null ? l10n.tableNew : l10n.tableEdit),
-      content: SizedBox(
-        width: 360,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              key: const Key('table-name'),
-              controller: _name,
-              autofocus: true,
-              decoration: InputDecoration(labelText: l10n.tableName),
-            ),
-            TextField(
-              controller: _area,
-              decoration: InputDecoration(labelText: l10n.tableArea),
-            ),
-            TextField(
-              key: const Key('table-capacity'),
-              controller: _capacity,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(labelText: l10n.tableCapacity),
-            ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.commonActive),
-              value: _active,
-              onChanged: (v) => setState(() => _active = v),
-            ),
-            if (_error != null)
-              Text(_error!, style: const TextStyle(color: AppColors.error)),
-          ],
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 360,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                key: const Key('table-name'),
+                controller: _name,
+                autofocus: true,
+                decoration: InputDecoration(labelText: l10n.tableName),
+              ),
+              TextField(
+                controller: _area,
+                decoration: InputDecoration(labelText: l10n.tableArea),
+              ),
+              TextField(
+                key: const Key('table-capacity'),
+                controller: _capacity,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: InputDecoration(labelText: l10n.tableCapacity),
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.commonActive),
+                value: _active,
+                onChanged: (v) => setState(() => _active = v),
+              ),
+              if (_error != null)
+                Text(_error!, style: const TextStyle(color: AppColors.error)),
+            ],
+          ),
         ),
       ),
       actions: [

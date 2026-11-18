@@ -5467,6 +5467,462 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'{status, select, pending{Menunggu} paid{Dibayar} failed{Gagal} expired{Kedaluwarsa} cancelled{Dibatalkan} other{{status}}}'**
   String gatewayStatus(String status);
+
+  /// No description provided for @navRegister.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasir & Pembayaran'**
+  String get navRegister;
+
+  /// No description provided for @navRegisterShort.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasir'**
+  String get navRegisterShort;
+
+  /// No description provided for @sectionOverview.
+  ///
+  /// In id, this message translates to:
+  /// **'Ringkasan'**
+  String get sectionOverview;
+
+  /// No description provided for @sectionCatalog.
+  ///
+  /// In id, this message translates to:
+  /// **'Katalog'**
+  String get sectionCatalog;
+
+  /// No description provided for @sectionSales.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan'**
+  String get sectionSales;
+
+  /// No description provided for @sectionMembers.
+  ///
+  /// In id, this message translates to:
+  /// **'Member'**
+  String get sectionMembers;
+
+  /// No description provided for @sectionSettings.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengaturan'**
+  String get sectionSettings;
+
+  /// No description provided for @shellRetailPos.
+  ///
+  /// In id, this message translates to:
+  /// **'POS Ritel'**
+  String get shellRetailPos;
+
+  /// No description provided for @shellTagline.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasir Ritel'**
+  String get shellTagline;
+
+  /// No description provided for @shellHeldOrders.
+  ///
+  /// In id, this message translates to:
+  /// **'Pesanan ditahan'**
+  String get shellHeldOrders;
+
+  /// No description provided for @shellKitchen.
+  ///
+  /// In id, this message translates to:
+  /// **'Dapur'**
+  String get shellKitchen;
+
+  /// No description provided for @shellLock.
+  ///
+  /// In id, this message translates to:
+  /// **'Kunci'**
+  String get shellLock;
+
+  /// No description provided for @shellCollapse.
+  ///
+  /// In id, this message translates to:
+  /// **'Ciutkan menu'**
+  String get shellCollapse;
+
+  /// No description provided for @shellExpand.
+  ///
+  /// In id, this message translates to:
+  /// **'Lebarkan menu'**
+  String get shellExpand;
+
+  /// No description provided for @shellMore.
+  ///
+  /// In id, this message translates to:
+  /// **'Lainnya'**
+  String get shellMore;
+
+  /// No description provided for @shellSearchHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Pindai barcode atau cari SKU / barang'**
+  String get shellSearchHint;
+
+  /// No description provided for @sellItemsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Barang dagangan'**
+  String get sellItemsTitle;
+
+  /// No description provided for @sellItemsCount.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} barang'**
+  String sellItemsCount(int count);
+
+  /// No description provided for @sellStockBadge.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok {qty}'**
+  String sellStockBadge(String qty);
+
+  /// No description provided for @sellPriceLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Harga'**
+  String get sellPriceLabel;
+
+  /// No description provided for @sellAddTooltip.
+  ///
+  /// In id, this message translates to:
+  /// **'Tambah ke tagihan'**
+  String get sellAddTooltip;
+
+  /// No description provided for @cartTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Tiket aktif'**
+  String get cartTitle;
+
+  /// No description provided for @cartWalkIn.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelanggan umum'**
+  String get cartWalkIn;
+
+  /// No description provided for @cartTotalDue.
+  ///
+  /// In id, this message translates to:
+  /// **'Total tagihan'**
+  String get cartTotalDue;
+
+  /// No description provided for @cartQuickCash.
+  ///
+  /// In id, this message translates to:
+  /// **'Uang cepat:'**
+  String get cartQuickCash;
+
+  /// No description provided for @cartExact.
+  ///
+  /// In id, this message translates to:
+  /// **'Uang pas'**
+  String get cartExact;
+
+  /// No description provided for @cartPaymentMethod.
+  ///
+  /// In id, this message translates to:
+  /// **'Metode pembayaran'**
+  String get cartPaymentMethod;
+
+  /// No description provided for @cartChange.
+  ///
+  /// In id, this message translates to:
+  /// **'Ganti'**
+  String get cartChange;
+
+  /// No description provided for @commonRemove.
+  ///
+  /// In id, this message translates to:
+  /// **'Hapus'**
+  String get commonRemove;
+
+  /// No description provided for @overviewGross.
+  ///
+  /// In id, this message translates to:
+  /// **'Penjualan kotor'**
+  String get overviewGross;
+
+  /// No description provided for @overviewTransactions.
+  ///
+  /// In id, this message translates to:
+  /// **'Transaksi'**
+  String get overviewTransactions;
+
+  /// No description provided for @overviewCashInDrawer.
+  ///
+  /// In id, this message translates to:
+  /// **'Uang di laci'**
+  String get overviewCashInDrawer;
+
+  /// No description provided for @overviewNonCash.
+  ///
+  /// In id, this message translates to:
+  /// **'Total non-tunai'**
+  String get overviewNonCash;
+
+  /// No description provided for @overviewFloat.
+  ///
+  /// In id, this message translates to:
+  /// **'Modal {amount}'**
+  String overviewFloat(String amount);
+
+  /// No description provided for @overviewAverage.
+  ///
+  /// In id, this message translates to:
+  /// **'Rata-rata {amount}'**
+  String overviewAverage(String amount);
+
+  /// No description provided for @overviewOrders.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} pesanan'**
+  String overviewOrders(int count);
+
+  /// No description provided for @overviewRecent.
+  ///
+  /// In id, this message translates to:
+  /// **'Pesanan terakhir'**
+  String get overviewRecent;
+
+  /// No description provided for @overviewPayments.
+  ///
+  /// In id, this message translates to:
+  /// **'Rincian pembayaran'**
+  String get overviewPayments;
+
+  /// No description provided for @overviewNoOrders.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada penjualan di shift ini.'**
+  String get overviewNoOrders;
+
+  /// No description provided for @overviewSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Dasbor shift'**
+  String get overviewSubtitle;
+
+  /// No description provided for @catalogHeaderCount.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} SKU • {low} stok menipis'**
+  String catalogHeaderCount(int count, int low);
+
+  /// No description provided for @stockFilterAll.
+  ///
+  /// In id, this message translates to:
+  /// **'Semua stok'**
+  String get stockFilterAll;
+
+  /// No description provided for @stockFilterLow.
+  ///
+  /// In id, this message translates to:
+  /// **'Menipis'**
+  String get stockFilterLow;
+
+  /// No description provided for @stockFilterOut.
+  ///
+  /// In id, this message translates to:
+  /// **'Habis'**
+  String get stockFilterOut;
+
+  /// No description provided for @catalogColProduct.
+  ///
+  /// In id, this message translates to:
+  /// **'Produk'**
+  String get catalogColProduct;
+
+  /// No description provided for @catalogColSku.
+  ///
+  /// In id, this message translates to:
+  /// **'SKU / Barcode'**
+  String get catalogColSku;
+
+  /// No description provided for @catalogColCategory.
+  ///
+  /// In id, this message translates to:
+  /// **'Kategori'**
+  String get catalogColCategory;
+
+  /// No description provided for @catalogColStock.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok'**
+  String get catalogColStock;
+
+  /// No description provided for @catalogColPrice.
+  ///
+  /// In id, this message translates to:
+  /// **'Harga'**
+  String get catalogColPrice;
+
+  /// No description provided for @membersTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Member'**
+  String get membersTitle;
+
+  /// No description provided for @membersSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Poin, kasbon dan riwayat belanja'**
+  String get membersSubtitle;
+
+  /// No description provided for @membersCount.
+  ///
+  /// In id, this message translates to:
+  /// **'Member'**
+  String get membersCount;
+
+  /// No description provided for @membersPoints.
+  ///
+  /// In id, this message translates to:
+  /// **'Poin beredar'**
+  String get membersPoints;
+
+  /// No description provided for @membersOwed.
+  ///
+  /// In id, this message translates to:
+  /// **'Kasbon belum lunas'**
+  String get membersOwed;
+
+  /// No description provided for @commonBack.
+  ///
+  /// In id, this message translates to:
+  /// **'Kembali'**
+  String get commonBack;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengaturan'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsStoreProfile.
+  ///
+  /// In id, this message translates to:
+  /// **'Profil toko'**
+  String get settingsStoreProfile;
+
+  /// No description provided for @settingsTerminal.
+  ///
+  /// In id, this message translates to:
+  /// **'Terminal & sinkronisasi'**
+  String get settingsTerminal;
+
+  /// No description provided for @settingsOpenSync.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka sinkronisasi'**
+  String get settingsOpenSync;
+
+  /// No description provided for @settingsVisualEffects.
+  ///
+  /// In id, this message translates to:
+  /// **'Efek visual'**
+  String get settingsVisualEffects;
+
+  /// No description provided for @settingsVisualEffectsHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Blur kaca di bar atas dan dialog. Matikan di tablet yang lambat.'**
+  String get settingsVisualEffectsHint;
+
+  /// No description provided for @settingsPaper.
+  ///
+  /// In id, this message translates to:
+  /// **'Kertas struk {mm} mm'**
+  String settingsPaper(int mm);
+
+  /// No description provided for @settingsTaxOff.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak dipungut'**
+  String get settingsTaxOff;
+
+  /// No description provided for @ordersColNumber.
+  ///
+  /// In id, this message translates to:
+  /// **'No. pesanan'**
+  String get ordersColNumber;
+
+  /// No description provided for @ordersColTime.
+  ///
+  /// In id, this message translates to:
+  /// **'Waktu'**
+  String get ordersColTime;
+
+  /// No description provided for @ordersColItems.
+  ///
+  /// In id, this message translates to:
+  /// **'Barang'**
+  String get ordersColItems;
+
+  /// No description provided for @ordersColStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'Status'**
+  String get ordersColStatus;
+
+  /// No description provided for @ordersColTotal.
+  ///
+  /// In id, this message translates to:
+  /// **'Total'**
+  String get ordersColTotal;
+
+  /// No description provided for @auditWho.
+  ///
+  /// In id, this message translates to:
+  /// **'Oleh'**
+  String get auditWho;
+
+  /// No description provided for @auditDetail.
+  ///
+  /// In id, this message translates to:
+  /// **'Detail'**
+  String get auditDetail;
+
+  /// No description provided for @adminColVariants.
+  ///
+  /// In id, this message translates to:
+  /// **'Varian'**
+  String get adminColVariants;
+
+  /// No description provided for @adminColStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'Status'**
+  String get adminColStatus;
+
+  /// No description provided for @adminColOnHand.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok'**
+  String get adminColOnHand;
+
+  /// No description provided for @adminColReorder.
+  ///
+  /// In id, this message translates to:
+  /// **'Stok minimum'**
+  String get adminColReorder;
+
+  /// No description provided for @productSectionBasics.
+  ///
+  /// In id, this message translates to:
+  /// **'Data produk'**
+  String get productSectionBasics;
+
+  /// No description provided for @adminColUsed.
+  ///
+  /// In id, this message translates to:
+  /// **'Dipakai'**
+  String get adminColUsed;
 }
 
 class _AppLocalizationsDelegate

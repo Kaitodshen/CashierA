@@ -1,5 +1,6 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shifts_screen.dart';
 import 'package:cashiera/features/reports/data/reports_repository.dart';
@@ -39,16 +40,18 @@ class _DashboardPanelState extends ConsumerState<DashboardPanel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
+        // Wraps on phones so the heading keeps its width.
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
           children: [
-            Expanded(
-              child: Text(l10n.dashTitle, style: theme.textTheme.titleMedium),
-            ),
+            Text(l10n.dashTitle, style: theme.textTheme.titleMedium),
             StoreFilter(
               value: _storeId,
               onChanged: (v) => setState(() => _storeId = v),
             ),
-            const SizedBox(width: AppSpacing.sm),
             TextButton.icon(
               key: const Key('dash-reports'),
               onPressed: () => context.go(AppRoutes.adminReports),
@@ -148,9 +151,11 @@ class _Body extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
-        Card(
+        GlassCard(
+          level: GlassLevel.solid,
+          padding: const EdgeInsets.all(AppSpacing.lg),
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: EdgeInsets.zero,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -167,9 +172,11 @@ class _Body extends StatelessWidget {
           children: [
             SizedBox(
               width: 420,
-              child: Card(
+              child: GlassCard(
+                level: GlassLevel.solid,
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  padding: EdgeInsets.zero,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -194,9 +201,11 @@ class _Body extends StatelessWidget {
             ),
             SizedBox(
               width: 420,
-              child: Card(
+              child: GlassCard(
+                level: GlassLevel.solid,
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  padding: EdgeInsets.zero,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

@@ -1,5 +1,8 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
@@ -29,23 +32,28 @@ class _StoreSettingsScreenState extends ConsumerState<StoreSettingsScreen> {
     final canEdit =
         ref.watch(principalProvider).value?.can('settings.manage') ?? false;
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          SizedBox(
+            width: 320,
+            child: DropdownButtonFormField<String>(
+              key: const Key('settings-store'),
+              initialValue: storeId,
+              decoration: InputDecoration(labelText: l10n.stockStore),
+              items: [
+                for (final s in stores)
+                  DropdownMenuItem(
+                    value: s.id,
+                    child: Text('${s.code} · ${s.name}'),
+                  ),
+              ],
+              onChanged: (id) => setState(() => _storeId = id),
+            ),
+          ),
+        ],
+      ),
       children: [
-        DropdownButtonFormField<String>(
-          key: const Key('settings-store'),
-          initialValue: storeId,
-          decoration: InputDecoration(labelText: l10n.stockStore),
-          items: [
-            for (final s in stores)
-              DropdownMenuItem(
-                value: s.id,
-                child: Text('${s.code} · ${s.name}'),
-              ),
-          ],
-          onChanged: (id) => setState(() => _storeId = id),
-        ),
-        const SizedBox(height: AppSpacing.lg),
         if (storeId != null) ...[
           _SettingsForm(
             key: ValueKey('settings-$storeId'),
@@ -107,22 +115,8 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
         ? l10n.settingsPercentInvalid
         : null;
 
-    Widget section(String title, List<Widget> children) => Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(title, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: AppSpacing.sm),
-            for (final (i, c) in children.indexed) ...[
-              if (i > 0) const SizedBox(height: AppSpacing.md),
-              c,
-            ],
-          ],
-        ),
-      ),
-    );
+    Widget section(String title, List<Widget> children) =>
+        FormSection(title: title, children: children);
 
     return Form(
       key: _form,
@@ -328,11 +322,11 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
             const SizedBox(height: AppSpacing.lg),
             Align(
               alignment: Alignment.centerRight,
-              child: FilledButton.icon(
+              child: PrimaryButton(
                 key: const Key('settings-save'),
                 onPressed: _saving ? null : _save,
-                icon: const Icon(Icons.save_outlined),
-                label: Text(l10n.commonSave),
+                icon: Icons.save_outlined,
+                label: l10n.commonSave,
               ),
             ),
           ],
@@ -352,9 +346,10 @@ class _PaymentMethods extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final methods = ref.watch(adminPaymentMethodsProvider(storeId));
-    return Card(
+    return GlassCard(
+      level: GlassLevel.solid,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/catalog/qty_input.dart';
 import 'package:cashiera/core/catalog/stock_service.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_models.dart';
@@ -55,66 +60,59 @@ class _StockScreenState extends ConsumerState<StockScreen> {
             ..invalidate(stockOverviewProvider(storeId))
             ..invalidate(storeAlertsProvider(storeId));
         },
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          children: [
-            Wrap(
-              spacing: AppSpacing.md,
-              runSpacing: AppSpacing.md,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                SizedBox(
-                  width: 240,
-                  child: DropdownButtonFormField<String>(
-                    initialValue: storeId,
-                    decoration: InputDecoration(labelText: l10n.stockStore),
-                    items: [
-                      for (final s in stores)
-                        DropdownMenuItem(value: s.id, child: Text(s.name)),
-                    ],
-                    onChanged: (v) => setState(() => _storeId = v),
+        child: AdminPage(
+          toolbar: AdminToolbar(
+            filters: [
+              SizedBox(
+                width: 240,
+                child: DropdownButtonFormField<String>(
+                  initialValue: storeId,
+                  decoration: InputDecoration(labelText: l10n.stockStore),
+                  items: [
+                    for (final s in stores)
+                      DropdownMenuItem(value: s.id, child: Text(s.name)),
+                  ],
+                  onChanged: (v) => setState(() => _storeId = v),
+                ),
+              ),
+              SizedBox(
+                width: 280,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: l10n.catalogSearchHint,
+                    prefixIcon: const Icon(Icons.search),
                   ),
+                  onChanged: (v) => setState(() => _search = v),
                 ),
-                SizedBox(
-                  width: 280,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: l10n.catalogSearchHint,
-                      prefixIcon: const Icon(Icons.search),
-                    ),
-                    onChanged: (v) => setState(() => _search = v),
-                  ),
-                ),
-                FilterChip(
-                  label: Text(l10n.stockLowOnly),
-                  selected: _lowOnly,
-                  onSelected: (v) => setState(() => _lowOnly = v),
-                ),
-              ],
-            ),
-            if (alerts.isNotEmpty) ...[
-              const SizedBox(height: AppSpacing.lg),
-              _AlertsCard(alerts: alerts, storeId: storeId),
+              ),
+              FilterChip(
+                label: Text(l10n.stockLowOnly),
+                selected: _lowOnly,
+                onSelected: (v) => setState(() => _lowOnly = v),
+              ),
             ],
-            const SizedBox(height: AppSpacing.lg),
+          ),
+          children: [
+            if (alerts.isNotEmpty) ...[
+              _AlertsCard(alerts: alerts, storeId: storeId),
+              const SizedBox(height: AppSpacing.lg),
+            ],
             if (stock.hasError)
-              EmptyState(
+              adminMessage(
                 icon: Icons.cloud_off_outlined,
                 message: l10n.commonError('${stock.error}'),
               )
             else if (!stock.isLoading && rows.isEmpty)
-              EmptyState(
+              adminMessage(
                 icon: Icons.warehouse_outlined,
                 message: l10n.stockEmpty,
               )
             else
               Skeletonizer(
                 enabled: stock.isLoading,
-                child: Column(
-                  children: [
-                    for (final row in stock.isLoading ? _placeholders : rows)
-                      _StockTile(row: row, storeId: storeId),
-                  ],
+                child: _StockTable(
+                  rows: stock.isLoading ? _placeholders : rows,
+                  storeId: storeId,
                 ),
               ),
           ],
@@ -148,9 +146,14 @@ class _AlertsCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final principal = ref.watch(principalProvider).value;
-    return Card(
-      color: AppColors.warning.withValues(alpha: 0.08),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.warningSoft,
+        borderRadius: BorderRadius.circular(AppRadius.control),
+      ),
       child: ExpansionTile(
+        shape: const RoundedRectangleBorder(),
+        collapsedShape: const RoundedRectangleBorder(),
         leading: const Icon(Icons.warning_amber, color: AppColors.warning),
         title: Text(l10n.stockAlerts(alerts.length)),
         children: [
@@ -189,45 +192,88 @@ class _AlertsCard extends ConsumerWidget {
   }
 }
 
-class _StockTile extends ConsumerWidget {
-  const new({required this.row, required this.storeId});
+double _stockFraction(StockRow r) {
+  final reorder = r.reorderPoint?.milli ?? 0;
+  if (reorder <= 0) return r.quantity.milli > 0 ? 1 : 0;
+  return r.quantity.milli / (reorder * 3);
+}
 
-  final StockRow row;
+StatusTone _stockTone(StockRow r) => r.quantity.milli <= 0
+    ? StatusTone.error
+    : r.isLow
+    ? StatusTone.warning
+    : StatusTone.success;
+
+class _StockTable extends StatelessWidget {
+  const new({required this.rows, required this.storeId});
+
+  final List<StockRow> rows;
   final String storeId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Card(
-      child: ListTile(
-        onTap: row.variantId.length < 4
-            ? null
-            : () => showModalBottomSheet<void>(
-                context: context,
-                showDragHandle: true,
-                isScrollControlled: true,
-                builder: (_) => _MovementsSheet(row: row, storeId: storeId),
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    return GlassTable<StockRow>(
+      rows: rows,
+      onRowTap: (row) {
+        if (row.variantId.length < 4) return;
+        unawaited(
+          showGlassSheet<void>(
+            context,
+            showDragHandle: true,
+            builder: (_) => _MovementsSheet(row: row, storeId: storeId),
+          ),
+        );
+      },
+      columns: [
+        GlassColumn(
+          label: l10n.catalogColProduct,
+          flex: 4,
+          cell: (r) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                r.displayName,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
-        title: Text(
-          row.displayName,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        subtitle: Text(
-          [
-            row.sku,
-            row.categoryName,
-            if (row.reorderPoint != null)
-              l10n.stockReorder(row.reorderPoint!.toPlain()),
-          ].nonNulls.join(' · '),
-        ),
-        trailing: Text(
-          '${row.quantity.toPlain()} ${row.unitCode}',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            color: row.isLow ? AppColors.warning : null,
+              Text([r.sku, r.categoryName].nonNulls.join(' · '), style: muted),
+            ],
           ),
         ),
-      ),
+        GlassColumn(
+          label: l10n.adminColOnHand,
+          flex: 2,
+          cell: (r) => SizedBox(
+            width: 140,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${r.quantity.toPlain()} ${r.unitCode}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: _stockTone(r).text,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                StockBar(fraction: _stockFraction(r), tone: _stockTone(r)),
+              ],
+            ),
+          ),
+        ),
+        GlassColumn(
+          label: l10n.adminColReorder,
+          flex: 2,
+          numeric: true,
+          cell: (r) => Text(r.reorderPoint?.toPlain() ?? '—'),
+        ),
+      ],
     );
   }
 }
@@ -403,45 +449,47 @@ class _AdjustDialogState extends State<_AdjustDialog> {
       StockReason.expired => l10n.reasonExpired,
       StockReason.lost => l10n.reasonLost,
     };
-    return AlertDialog(
+    return GlassDialog(
       title: Text(widget.increase ? l10n.stockIn : l10n.stockOut),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(widget.row.displayName),
-            const SizedBox(height: AppSpacing.md),
-            TextFormField(
-              controller: _qty,
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: l10n.stockQuantity,
-                suffixText: widget.row.unitCode,
-              ),
-              validator: (v) =>
-                  parseQtyInput(v ?? '', allowDecimal: true).qty == null
-                  ? l10n.stockInvalidQty
-                  : null,
-            ),
-            if (reasons.length > 1) ...[
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(widget.row.displayName),
               const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<StockReason>(
-                initialValue: _reason,
-                decoration: InputDecoration(labelText: l10n.stockReason),
-                items: [
-                  for (final r in reasons)
-                    DropdownMenuItem(value: r, child: Text(label(r))),
-                ],
-                onChanged: (r) => setState(() => _reason = r ?? _reason),
+              TextFormField(
+                controller: _qty,
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: l10n.stockQuantity,
+                  suffixText: widget.row.unitCode,
+                ),
+                validator: (v) =>
+                    parseQtyInput(v ?? '', allowDecimal: true).qty == null
+                    ? l10n.stockInvalidQty
+                    : null,
+              ),
+              if (reasons.length > 1) ...[
+                const SizedBox(height: AppSpacing.md),
+                DropdownButtonFormField<StockReason>(
+                  initialValue: _reason,
+                  decoration: InputDecoration(labelText: l10n.stockReason),
+                  items: [
+                    for (final r in reasons)
+                      DropdownMenuItem(value: r, child: Text(label(r))),
+                  ],
+                  onChanged: (r) => setState(() => _reason = r ?? _reason),
+                ),
+              ],
+              const SizedBox(height: AppSpacing.md),
+              TextFormField(
+                controller: _note,
+                decoration: InputDecoration(labelText: l10n.stockNote),
               ),
             ],
-            const SizedBox(height: AppSpacing.md),
-            TextFormField(
-              controller: _note,
-              decoration: InputDecoration(labelText: l10n.stockNote),
-            ),
-          ],
+          ),
         ),
       ),
       actions: [

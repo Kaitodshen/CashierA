@@ -2,7 +2,11 @@ import 'dart:async';
 
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/pos_services.dart';
@@ -141,25 +145,28 @@ class _KitchenScreenState extends ConsumerState<KitchenScreen> {
           t,
     ];
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
-        title: Text(l10n.kitchenTitle),
-        actions: [
-          IconButton(
-            key: const Key('kitchen-refresh'),
-            tooltip: l10n.kitchenRefresh,
-            onPressed: () => unawaited(_refresh()),
-            icon: const Icon(Icons.refresh),
-          ),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
+        padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
-          Padding(
+          FlowHeader(
+            title: l10n.kitchenTitle,
+            onBack: () => context.go(AppRoutes.pos),
+            backKey: const Key('kitchen-back'),
+            actions: [
+              SecondaryButton(
+                key: const Key('kitchen-refresh'),
+                onPressed: () => unawaited(_refresh()),
+                icon: Icons.refresh,
+                label: l10n.kitchenRefresh,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          GlassCard(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Wrap(
               spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
               children: [
                 for (final s in const [null, 'kitchen', 'bar'])
                   ChoiceChip(
@@ -168,6 +175,7 @@ class _KitchenScreenState extends ConsumerState<KitchenScreen> {
                       s == null ? l10n.auditAll : stationLabel(l10n, s),
                     ),
                     selected: _station == s,
+                    showCheckmark: false,
                     onSelected: (_) {
                       setState(() => _station = s);
                       unawaited(_refresh());
@@ -176,48 +184,70 @@ class _KitchenScreenState extends ConsumerState<KitchenScreen> {
               ],
             ),
           ),
-          if (_offline)
-            MaterialBanner(
-              content: Text(l10n.kitchenOffline),
-              leading: const Icon(Icons.cloud_off, color: AppColors.warning),
-              actions: [
-                TextButton(
+          if (_offline) ...[
+            const SizedBox(height: AppSpacing.md),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: AppColors.warningSoft,
+                borderRadius: BorderRadius.circular(AppRadius.control),
+              ),
+              child: ListTile(
+                leading: const Icon(
+                  Icons.cloud_off,
+                  color: AppColors.warningText,
+                ),
+                title: Text(l10n.kitchenOffline),
+                trailing: TextButton(
                   onPressed: () => unawaited(_refresh()),
                   child: Text(l10n.kitchenRefresh),
                 ),
-              ],
+              ),
             ),
-          Expanded(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : visible.isEmpty
-                ? EmptyState(
-                    icon: Icons.soup_kitchen_outlined,
-                    message: l10n.kitchenEmpty,
-                  )
-                : GridView.extent(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    maxCrossAxisExtent: 320,
-                    mainAxisSpacing: AppSpacing.md,
-                    crossAxisSpacing: AppSpacing.md,
-                    childAspectRatio: 0.8,
-                    children: [
-                      for (final t in visible)
-                        _TicketCard(
+          ],
+          const SizedBox(height: AppSpacing.lg),
+          if (_loading)
+            const Center(child: CircularProgressIndicator())
+          else if (visible.isEmpty)
+            GlassCard(
+              child: EmptyState(
+                icon: Icons.soup_kitchen_outlined,
+                message: l10n.kitchenEmpty,
+              ),
+            )
+          else
+            LayoutBuilder(
+              builder: (context, c) {
+                final width = c.maxWidth < 320 ? c.maxWidth : 320.0;
+                return Wrap(
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.md,
+                  children: [
+                    for (final t in visible)
+                      SizedBox(
+                        width: width,
+                        child: _TicketCard(
                           key: Key('ticket-${t.orderNumber}-${t.station}'),
                           ticket: t,
                           status: _statusOf(t),
                           age: now.difference(t.createdAt),
                           onAdvance: () => _advance(t),
                         ),
-                    ],
-                  ),
-          ),
+                      ),
+                  ],
+                );
+              },
+            ),
         ],
       ),
     );
   }
 }
+
+StatusTone ticketAgeTone(Duration age) => age.inMinutes >= 20
+    ? StatusTone.error
+    : age.inMinutes >= 10
+    ? StatusTone.warning
+    : StatusTone.success;
 
 class _TicketCard extends StatelessWidget {
   const new({
@@ -237,75 +267,70 @@ class _TicketCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final color = ticketAgeColor(age);
     final t = ticket;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.card),
-        side: BorderSide(color: color, width: 3),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    t.tableName == null
-                        ? l10n.orderTakeaway
-                        : l10n.ticketTable(t.tableName!, t.guestCount ?? 0),
-                    style: theme.textTheme.titleMedium,
-                  ),
+    return GlassCard(
+      level: GlassLevel.solid,
+      radius: AppRadius.tile,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  t.tableName == null
+                      ? l10n.orderTakeaway
+                      : l10n.ticketTable(t.tableName!, t.guestCount ?? 0),
+                  style: theme.textTheme.titleMedium,
                 ),
-                Text(
-                  l10n.kitchenAge(age.inMinutes),
-                  style: TextStyle(color: color, fontWeight: FontWeight.w700),
-                ),
-              ],
-            ),
-            Text(
-              '${t.orderNumber.split('-').last} · '
-              '${stationLabel(l10n, t.station)} · '
-              '${l10n.kitchenStatus(status)}',
-              style: theme.textTheme.bodySmall,
-            ),
-            const Divider(),
-            Expanded(
-              child: ListView(
-                children: [
-                  for (final i in t.items) ...[
-                    Text(
-                      '${i.quantity.toPlain()} × ${i.name}',
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    for (final m in i.modifiers) Text('  + $m'),
-                    if (i.note != null && i.note!.isNotEmpty)
-                      Text(
-                        '  ! ${i.note}',
-                        style: const TextStyle(color: AppColors.warning),
-                      ),
-                  ],
-                  if (t.note != null && t.note!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: AppSpacing.sm),
-                      child: Text(t.note!, style: theme.textTheme.bodySmall),
-                    ),
-                ],
               ),
+              const SizedBox(width: AppSpacing.sm),
+              StatusChip(
+                label: l10n.kitchenAge(age.inMinutes),
+                tone: ticketAgeTone(age),
+              ),
+            ],
+          ),
+          Text(
+            '${t.orderNumber.split('-').last} · '
+            '${stationLabel(l10n, t.station)} · '
+            '${l10n.kitchenStatus(status)}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: AppColors.textMuted,
             ),
-            FilledButton(
-              key: Key('ticket-next-${t.orderNumber}-${t.station}'),
-              onPressed: onAdvance,
-              child: Text(switch (status) {
-                'new' => l10n.kitchenStart,
-                'preparing' => l10n.kitchenReady,
-                _ => l10n.kitchenServed,
-              }),
+          ),
+          const Divider(height: AppSpacing.xl),
+          for (final i in t.items) ...[
+            Text(
+              '${i.quantity.toPlain()} × ${i.name}',
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
+            for (final m in i.modifiers) Text('  + $m'),
+            if (i.note != null && i.note!.isNotEmpty)
+              Text(
+                '  ! ${i.note}',
+                style: const TextStyle(color: AppColors.warningText),
+              ),
           ],
-        ),
+          if (t.note != null && t.note!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.sm),
+              child: Text(t.note!, style: theme.textTheme.bodySmall),
+            ),
+          const SizedBox(height: AppSpacing.lg),
+          PrimaryButton(
+            key: Key('ticket-next-${t.orderNumber}-${t.station}'),
+            expand: true,
+            onPressed: onAdvance,
+            label: switch (status) {
+              'new' => l10n.kitchenStart,
+              'preparing' => l10n.kitchenReady,
+              _ => l10n.kitchenServed,
+            },
+          ),
+        ],
       ),
     );
   }

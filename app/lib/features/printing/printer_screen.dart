@@ -1,19 +1,20 @@
 import 'dart:async';
 
-import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/printing/printer_setting.dart';
 import 'package:cashiera/core/printing/printer_transport.dart';
 import 'package:cashiera/core/printing/slips.dart';
 import 'package:cashiera/core/providers.dart';
+import 'package:cashiera/core/session/session_controller.dart';
 import 'package:cashiera/features/printing/print_actions.dart';
+import 'package:cashiera/features/printing/settings_cards.dart';
 import 'package:cashiera/features/sell/presentation/sell_providers.dart';
 import 'package:cashiera_core/cashiera_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 String connectionLabel(AppLocalizations l10n, PrinterConnection c) =>
     switch (c) {
@@ -188,198 +189,267 @@ class _PrinterScreenState extends ConsumerState<PrinterScreen> {
     final canDiscover = ref.watch(printerTransportProvider).canDiscover;
     final network = _connection == PrinterConnection.network;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
-        title: Text(l10n.printerTitle),
+    final device = ref.watch(sessionControllerProvider).value?.device;
+    final online = ref.watch(onlineProvider).value ?? false;
+
+    final printerCard = SettingsCard(
+      title: l10n.printerTitle,
+      child: Form(
+        key: _form,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (fnb || !_isReceipt) ...[
+              SegmentedButton<String>(
+                key: const Key('printer-slot'),
+                segments: [
+                  for (final s in PrinterRepository.slots)
+                    ButtonSegment(
+                      value: s,
+                      label: Text(printerSlotLabel(l10n, s)),
+                    ),
+                ],
+                selected: {_slot},
+                onSelectionChanged: (v) {
+                  setState(() => _slot = v.single);
+                  unawaited(_load());
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.print_outlined),
+                title: Text(current?.name ?? l10n.printerNone),
+                subtitle: current == null
+                    ? null
+                    : Text(
+                        '${connectionLabel(l10n, current.connection)}'
+                        ' · ${current.address} · '
+                        '${l10n.printerPaperMm(current.paperMm)}',
+                      ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(l10n.printerConnection),
+            const SizedBox(height: AppSpacing.xs),
+            SegmentedButton<PrinterConnection>(
+              segments: [
+                for (final c in PrinterConnection.values)
+                  ButtonSegment(
+                    value: c,
+                    label: Text(connectionLabel(l10n, c)),
+                  ),
+              ],
+              selected: {_connection},
+              onSelectionChanged: (v) => setState(() {
+                _connection = v.single;
+                _found = null;
+              }),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            if (!network) ...[
+              if (canDiscover)
+                OutlinedButton.icon(
+                  key: const Key('printer-search'),
+                  onPressed: _searching ? null : _search,
+                  icon: _searching
+                      ? const SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.search),
+                  label: Text(
+                    _searching ? l10n.printerSearching : l10n.printerSearch,
+                  ),
+                )
+              else
+                Text(l10n.printerDiscoverUnsupported),
+              if (_found != null && _found!.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: Text(l10n.printerFoundNone),
+                ),
+              for (final p in _found ?? const <DiscoveredPrinter>[])
+                ListTile(
+                  key: Key('printer-found-${p.address}'),
+                  leading: Icon(
+                    p.address == _address.text
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_off,
+                  ),
+                  title: Text(p.name),
+                  subtitle: Text(p.address),
+                  onTap: () => setState(() {
+                    _name.text = p.name;
+                    _address.text = p.address;
+                  }),
+                ),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            TextFormField(
+              key: const Key('printer-address'),
+              controller: _address,
+              decoration: InputDecoration(
+                labelText: l10n.printerAddress,
+                helperText: network ? l10n.printerAddressHint : null,
+              ),
+              validator: (v) {
+                final text = (v ?? '').trim();
+                if (text.isEmpty) return l10n.printerAddressRequired;
+                if (network &&
+                    PrinterSetting.parseNetworkAddress(text) == null) {
+                  return l10n.printInvalidAddress;
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextFormField(
+              key: const Key('printer-name'),
+              controller: _name,
+              decoration: InputDecoration(labelText: l10n.printerName),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(l10n.printerPaper),
+            const SizedBox(height: AppSpacing.xs),
+            SegmentedButton<int>(
+              segments: [
+                for (final mm in const [58, 80])
+                  ButtonSegment(
+                    value: mm,
+                    label: Text(l10n.printerPaperMm(mm)),
+                  ),
+              ],
+              selected: {_paperMm},
+              onSelectionChanged: (v) => setState(() => _paperMm = v.single),
+            ),
+            if (_isReceipt) ...[
+              SwitchListTile(
+                key: const Key('printer-drawer'),
+                contentPadding: EdgeInsets.zero,
+                value: _opensDrawer,
+                onChanged: (v) => setState(() => _opensDrawer = v),
+                title: Text(l10n.printerOpensDrawer),
+              ),
+              SwitchListTile(
+                key: const Key('printer-auto'),
+                contentPadding: EdgeInsets.zero,
+                value: _autoPrint,
+                onChanged: (v) => setState(() => _autoPrint = v),
+                title: Text(l10n.printerAutoPrint),
+              ),
+            ],
+            const SizedBox(height: AppSpacing.lg),
+            Wrap(
+              spacing: AppSpacing.md,
+              runSpacing: AppSpacing.md,
+              children: [
+                FilledButton.icon(
+                  key: const Key('printer-save'),
+                  onPressed: _busy ? null : _save,
+                  icon: const Icon(Icons.save_outlined),
+                  label: Text(l10n.commonSave),
+                ),
+                OutlinedButton.icon(
+                  key: const Key('printer-test'),
+                  onPressed: _busy ? null : _test,
+                  icon: const Icon(Icons.receipt_long_outlined),
+                  label: Text(l10n.printerTest),
+                ),
+                if (current != null)
+                  TextButton.icon(
+                    key: const Key('printer-remove'),
+                    onPressed: _busy ? null : _remove,
+                    icon: const Icon(Icons.delete_outline),
+                    label: Text(l10n.printerRemove),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
+    );
+    const gap = SizedBox(height: AppSpacing.md, width: AppSpacing.md);
+    final left = <Widget>[
+      const StoreProfileCard(),
+      gap,
+      const TerminalSyncCard(),
+    ];
+    final right = <Widget>[printerCard, gap, const VisualEffectsCard()];
+
+    // The shell's top bar holds the title; this is the settings page.
+    return Scaffold(
       body: !_loaded
           ? const Center(child: CircularProgressIndicator())
-          : Center(
+          : Align(
+              alignment: Alignment.topCenter,
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 560),
-                child: Form(
-                  key: _form,
-                  child: ListView(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    children: [
-                      if (fnb || !_isReceipt) ...[
-                        SegmentedButton<String>(
-                          key: const Key('printer-slot'),
-                          segments: [
-                            for (final s in PrinterRepository.slots)
-                              ButtonSegment(
-                                value: s,
-                                label: Text(printerSlotLabel(l10n, s)),
-                              ),
-                          ],
-                          selected: {_slot},
-                          onSelectionChanged: (v) {
-                            setState(() => _slot = v.single);
-                            unawaited(_load());
-                          },
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                      ],
-                      Card(
-                        child: ListTile(
-                          leading: const Icon(Icons.print_outlined),
-                          title: Text(current?.name ?? l10n.printerNone),
-                          subtitle: current == null
-                              ? null
-                              : Text(
-                                  '${connectionLabel(l10n, current.connection)}'
-                                  ' · ${current.address} · '
-                                  '${l10n.printerPaperMm(current.paperMm)}',
-                                ),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(l10n.printerConnection),
-                      const SizedBox(height: AppSpacing.xs),
-                      SegmentedButton<PrinterConnection>(
-                        segments: [
-                          for (final c in PrinterConnection.values)
-                            ButtonSegment(
-                              value: c,
-                              label: Text(connectionLabel(l10n, c)),
-                            ),
-                        ],
-                        selected: {_connection},
-                        onSelectionChanged: (v) => setState(() {
-                          _connection = v.single;
-                          _found = null;
-                        }),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      if (!network) ...[
-                        if (canDiscover)
-                          OutlinedButton.icon(
-                            key: const Key('printer-search'),
-                            onPressed: _searching ? null : _search,
-                            icon: _searching
-                                ? const SizedBox.square(
-                                    dimension: 18,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : const Icon(Icons.search),
-                            label: Text(
-                              _searching
-                                  ? l10n.printerSearching
-                                  : l10n.printerSearch,
-                            ),
-                          )
-                        else
-                          Text(l10n.printerDiscoverUnsupported),
-                        if (_found != null && _found!.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: AppSpacing.sm),
-                            child: Text(l10n.printerFoundNone),
-                          ),
-                        for (final p in _found ?? const <DiscoveredPrinter>[])
-                          ListTile(
-                            key: Key('printer-found-${p.address}'),
-                            leading: Icon(
-                              p.address == _address.text
-                                  ? Icons.radio_button_checked
-                                  : Icons.radio_button_off,
-                            ),
-                            title: Text(p.name),
-                            subtitle: Text(p.address),
-                            onTap: () => setState(() {
-                              _name.text = p.name;
-                              _address.text = p.address;
-                            }),
-                          ),
-                        const SizedBox(height: AppSpacing.md),
-                      ],
-                      TextFormField(
-                        key: const Key('printer-address'),
-                        controller: _address,
-                        decoration: InputDecoration(
-                          labelText: l10n.printerAddress,
-                          helperText: network ? l10n.printerAddressHint : null,
-                        ),
-                        validator: (v) {
-                          final text = (v ?? '').trim();
-                          if (text.isEmpty) return l10n.printerAddressRequired;
-                          if (network &&
-                              PrinterSetting.parseNetworkAddress(text) ==
-                                  null) {
-                            return l10n.printInvalidAddress;
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      TextFormField(
-                        key: const Key('printer-name'),
-                        controller: _name,
-                        decoration: InputDecoration(
-                          labelText: l10n.printerName,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(l10n.printerPaper),
-                      const SizedBox(height: AppSpacing.xs),
-                      SegmentedButton<int>(
-                        segments: [
-                          for (final mm in const [58, 80])
-                            ButtonSegment(
-                              value: mm,
-                              label: Text(l10n.printerPaperMm(mm)),
-                            ),
-                        ],
-                        selected: {_paperMm},
-                        onSelectionChanged: (v) =>
-                            setState(() => _paperMm = v.single),
-                      ),
-                      if (_isReceipt) ...[
-                        SwitchListTile(
-                          key: const Key('printer-drawer'),
-                          contentPadding: EdgeInsets.zero,
-                          value: _opensDrawer,
-                          onChanged: (v) => setState(() => _opensDrawer = v),
-                          title: Text(l10n.printerOpensDrawer),
-                        ),
-                        SwitchListTile(
-                          key: const Key('printer-auto'),
-                          contentPadding: EdgeInsets.zero,
-                          value: _autoPrint,
-                          onChanged: (v) => setState(() => _autoPrint = v),
-                          title: Text(l10n.printerAutoPrint),
-                        ),
-                      ],
-                      const SizedBox(height: AppSpacing.lg),
-                      Wrap(
-                        spacing: AppSpacing.md,
-                        runSpacing: AppSpacing.md,
+                constraints: const BoxConstraints(maxWidth: 1200),
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  children: [
+                    PageHeader(
+                      title: l10n.settingsTitle,
+                      status: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          FilledButton.icon(
-                            key: const Key('printer-save'),
-                            onPressed: _busy ? null : _save,
-                            icon: const Icon(Icons.save_outlined),
-                            label: Text(l10n.commonSave),
-                          ),
-                          OutlinedButton.icon(
-                            key: const Key('printer-test'),
-                            onPressed: _busy ? null : _test,
-                            icon: const Icon(Icons.receipt_long_outlined),
-                            label: Text(l10n.printerTest),
-                          ),
-                          if (current != null)
-                            TextButton.icon(
-                              key: const Key('printer-remove'),
-                              onPressed: _busy ? null : _remove,
-                              icon: const Icon(Icons.delete_outline),
-                              label: Text(l10n.printerRemove),
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: online
+                                  ? AppColors.success
+                                  : AppColors.error,
                             ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Flexible(
+                            child: Text(
+                              [
+                                if (device != null)
+                                  l10n.posTerminal(device.deviceCode),
+                                if (online)
+                                  l10n.statusOnline
+                                else
+                                  l10n.statusOffline,
+                              ].join(' • '),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    LayoutBuilder(
+                      builder: (context, c) => c.maxWidth < 900
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [...left, gap, ...right],
+                            )
+                          : Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: left,
+                                  ),
+                                ),
+                                gap,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: right,
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
                 ),
               ),
             ),

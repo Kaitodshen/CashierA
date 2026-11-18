@@ -1,6 +1,10 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
 import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/flow.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/pos_services.dart';
@@ -21,7 +25,7 @@ final StreamProvider<List<DiningTable>> diningTablesProvider =
 
 Color tableColor(String status) => switch (status) {
   'occupied' => AppColors.warning,
-  'cleaning' => AppColors.secondary,
+  'cleaning' => AppColors.info,
   'reserved' => AppColors.error,
   _ => AppColors.success,
 };
@@ -96,46 +100,70 @@ class TablesScreen extends ConsumerWidget {
     final tables = ref.watch(diningTablesProvider);
     final list = tables.value ?? const <DiningTable>[];
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(AppRoutes.pos)),
-        title: Text(l10n.navTables),
-        actions: [
-          TextButton.icon(
-            key: const Key('tables-sell'),
-            onPressed: () => context.go(AppRoutes.sell),
-            icon: const Icon(Icons.point_of_sale),
-            label: Text(l10n.posSell),
-          ),
-        ],
-      ),
-      body: tables.isLoading && list.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : list.isEmpty
-          ? EmptyState(
-              icon: Icons.table_restaurant,
-              message: l10n.tablesEmptyTerminal,
-            )
-          : GridView.extent(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              maxCrossAxisExtent: 200,
-              mainAxisSpacing: AppSpacing.md,
-              crossAxisSpacing: AppSpacing.md,
-              childAspectRatio: 1.1,
-              children: [
-                for (final t in list)
-                  _TableCard(
-                    key: Key('pos-table-${t.name}'),
-                    table: t,
-                    onTap: () => _open(context, ref, t),
-                    onClear: t.heldOrder == null && t.status != 'available'
-                        ? () => _clear(context, ref, t)
-                        : null,
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            children: [
+              FlowHeader(
+                title: l10n.navTables,
+                onBack: () => context.go(AppRoutes.pos),
+                backKey: const Key('tables-back'),
+                actions: [
+                  SecondaryButton(
+                    key: const Key('tables-sell'),
+                    onPressed: () => context.go(AppRoutes.sell),
+                    icon: Icons.point_of_sale,
+                    label: l10n.posSell,
                   ),
-              ],
-            ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              if (tables.isLoading && list.isEmpty)
+                const Center(child: CircularProgressIndicator())
+              else if (list.isEmpty)
+                GlassCard(
+                  child: EmptyState(
+                    icon: Icons.table_restaurant,
+                    message: l10n.tablesEmptyTerminal,
+                  ),
+                )
+              else
+                Wrap(
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.md,
+                  children: [
+                    for (final t in list)
+                      SizedBox(
+                        width: 200,
+                        child: _TableCard(
+                          key: Key('pos-table-${t.name}'),
+                          table: t,
+                          onTap: () => _open(context, ref, t),
+                          onClear:
+                              t.heldOrder == null && t.status != 'available'
+                              ? () => _clear(context, ref, t)
+                              : null,
+                        ),
+                      ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
+
+StatusTone tableTone(String status) => switch (status) {
+  'occupied' => StatusTone.warning,
+  'cleaning' => StatusTone.neutral,
+  'reserved' => StatusTone.error,
+  _ => StatusTone.success,
+};
 
 class _TableCard extends StatelessWidget {
   const new({
@@ -153,58 +181,62 @@ class _TableCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final color = tableColor(table.status);
     final order = table.heldOrder;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.card),
-        side: BorderSide(color: color, width: 2),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadius.card),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: AppColors.textMuted,
+    );
+    return GlassCard(
+      level: GlassLevel.solid,
+      radius: AppRadius.tile,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Icon(Icons.table_restaurant, color: color),
-                  const SizedBox(width: AppSpacing.xs),
-                  Expanded(
-                    child: Text(table.name, style: theme.textTheme.titleMedium),
-                  ),
-                ],
-              ),
-              Text(
-                [?table.area, l10n.tableSeats(table.capacity)].join(' · '),
-                style: theme.textTheme.bodySmall,
-              ),
-              const Spacer(),
-              Text(
-                l10n.tableStatus(table.status),
-                key: Key('pos-table-status-${table.name}'),
-                style: TextStyle(color: color, fontWeight: FontWeight.w600),
-              ),
-              if (order != null)
-                Text(
-                  '${order.orderNumber.split('-').last} · '
-                  '${Money(order.grandTotal).format()}',
-                  style: theme.textTheme.bodySmall,
+              Icon(Icons.table_restaurant, color: tableColor(table.status)),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  table.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleMedium,
                 ),
-              if (onClear != null)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    key: Key('pos-table-clear-${table.name}'),
-                    onPressed: onClear,
-                    child: Text(l10n.tableClear),
-                  ),
-                ),
+              ),
             ],
           ),
-        ),
+          Text(
+            [?table.area, l10n.tableSeats(table.capacity)].join(' · '),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: muted,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          StatusChip(
+            label: l10n.tableStatus(table.status),
+            tone: tableTone(table.status),
+            textKey: Key('pos-table-status-${table.name}'),
+          ),
+          if (order != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              '${order.orderNumber.split('-').last} · '
+              '${Money(order.grandTotal).format()}',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ],
+          if (onClear != null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                key: Key('pos-table-clear-${table.name}'),
+                onPressed: onClear,
+                child: Text(l10n.tableClear),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -237,16 +269,18 @@ class _GuestsDialogState extends State<_GuestsDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.tableGuestsTitle(widget.table.name)),
-      content: TextField(
-        key: const Key('table-guests'),
-        controller: _field,
-        autofocus: true,
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(labelText: l10n.tableGuests),
-        onSubmitted: (_) => _submit(),
+      content: SingleChildScrollView(
+        child: TextField(
+          key: const Key('table-guests'),
+          controller: _field,
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(labelText: l10n.tableGuests),
+          onSubmitted: (_) => _submit(),
+        ),
       ),
       actions: [
         TextButton(

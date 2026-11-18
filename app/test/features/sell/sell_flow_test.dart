@@ -77,7 +77,8 @@ void main() {
     await tester.pump(const Duration(seconds: 5));
     await tester.pumpAndSettle();
 
-    await tapKey(tester, 'sell-orders');
+    // Held orders moved from the old sell app bar to the shell top bar.
+    await tapKey(tester, 'terminal-held-orders');
     await tester.tap(find.text('Ditahan (1)'));
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining(RegExp('^PST-T1-')).first);

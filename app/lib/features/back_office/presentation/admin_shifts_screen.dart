@@ -1,6 +1,10 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/pos_config.dart';
@@ -106,85 +110,88 @@ class _AdminShiftsScreenState extends ConsumerState<AdminShiftsScreen> {
     );
     final list = shifts.value ?? const <ShiftOverviewRow>[];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    StatusTone tone(Money? d) => switch (d?.rupiah) {
+      null => StatusTone.neutral,
+      0 => StatusTone.success,
+      final v when v > 0 => StatusTone.warning,
+      _ => StatusTone.error,
+    };
+
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          StoreFilter(
+            value: _storeId,
+            onChanged: (v) => setState(() => _storeId = v),
+          ),
+          PeriodFilter(
+            value: _period,
+            onChanged: (v) => setState(() => _period = v),
+          ),
+        ],
+      ),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Wrap(
-            spacing: AppSpacing.md,
-            runSpacing: AppSpacing.sm,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              StoreFilter(
-                value: _storeId,
-                onChanged: (v) => setState(() => _storeId = v),
+        if (shifts.isLoading)
+          const Center(child: CircularProgressIndicator())
+        else if (shifts.hasError)
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('${shifts.error}'),
+          )
+        else if (list.isEmpty)
+          adminMessage(
+            icon: Icons.lock_clock_outlined,
+            message: l10n.shiftsEmpty,
+          )
+        else
+          GlassTable<ShiftOverviewRow>(
+            rows: list,
+            onRowTap: (s) => context.go(AppRoutes.adminShift(s.shiftId)),
+            columns: [
+              GlassColumn(
+                label: l10n.navShifts,
+                flex: 4,
+                cell: (s) => Column(
+                  key: Key('admin-shift-${s.shiftId}'),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${s.storeName} · ${s.deviceCode} · '
+                      '${_dayTime.format(s.openedAt.toLocal())}',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      [
+                        s.closedByName ?? s.openedByName,
+                        l10n.shiftsSales(s.salesTotal.format()),
+                        '${s.orderCount} ${l10n.reportTransactions}',
+                      ].join(' · '),
+                      style: muted,
+                    ),
+                  ],
+                ),
               ),
-              PeriodFilter(
-                value: _period,
-                onChanged: (v) => setState(() => _period = v),
+              GlassColumn(
+                label: l10n.closeDifference,
+                numeric: true,
+                flex: 2,
+                cell: (s) => s.status == 'open'
+                    ? StatusChip(
+                        label: l10n.shiftsOpen,
+                        tone: StatusTone.primary,
+                      )
+                    : StatusChip(
+                        label: s.cashDifference == null
+                            ? '-'
+                            : differenceText(l10n, s.cashDifference!),
+                        tone: tone(s.cashDifference),
+                      ),
               ),
             ],
           ),
-        ),
-        Expanded(
-          child: shifts.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : shifts.hasError
-              ? Center(child: Text(l10n.commonError('${shifts.error}')))
-              : list.isEmpty
-              ? EmptyState(
-                  icon: Icons.lock_clock_outlined,
-                  message: l10n.shiftsEmpty,
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.lg,
-                    0,
-                    AppSpacing.lg,
-                    AppSpacing.lg,
-                  ),
-                  itemCount: list.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: AppSpacing.sm),
-                  itemBuilder: (context, i) {
-                    final s = list[i];
-                    final diff = s.cashDifference;
-                    return Card(
-                      child: ListTile(
-                        key: Key('admin-shift-${s.shiftId}'),
-                        title: Text(
-                          '${s.storeName} · ${s.deviceCode} · '
-                          '${_dayTime.format(s.openedAt.toLocal())}',
-                        ),
-                        subtitle: Text(
-                          [
-                            s.closedByName ?? s.openedByName,
-                            l10n.shiftsSales(s.salesTotal.format()),
-                            '${s.orderCount} ${l10n.reportTransactions}',
-                          ].join(' · '),
-                        ),
-                        trailing: s.status == 'open'
-                            ? Text(
-                                l10n.shiftsOpen,
-                                style: const TextStyle(
-                                  color: AppColors.secondary,
-                                ),
-                              )
-                            : Text(
-                                diff == null ? '-' : differenceText(l10n, diff),
-                                style: TextStyle(
-                                  color: differenceColor(diff),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                        onTap: () =>
-                            context.go(AppRoutes.adminShift(s.shiftId)),
-                      ),
-                    );
-                  },
-                ),
-        ),
       ],
     );
   }
@@ -240,48 +247,53 @@ class AdminShiftReportScreen extends ConsumerWidget {
       AsyncData(value: final r) => () {
         final store = stores.where((s) => s.id == r.storeId).firstOrNull;
         final offset = utcOffsetMinutesFor(store?.timezone ?? 'Asia/Jakarta');
-        return ListView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+        return AdminPage(
+          maxWidth: 760,
+          toolbar: AdminToolbar(
+            filters: [
+              SecondaryButton(
+                key: const Key('admin-report-back'),
+                onPressed: () => context.go(AppRoutes.adminShifts),
+                icon: Icons.arrow_back,
+                label: l10n.commonBack,
+              ),
+              Text(
+                [reportTitle(l10n, r), ?r.storeName].join(' · '),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+            actions: [
+              SecondaryButton(
+                key: const Key('admin-report-share'),
+                onPressed: () => _pdf(context, r, offset, share: true),
+                icon: Icons.share_outlined,
+                label: l10n.reportShare,
+              ),
+              PrimaryButton(
+                key: const Key('admin-report-print'),
+                onPressed: () => _pdf(context, r, offset, share: false),
+                icon: Icons.print_outlined,
+                label: l10n.reportPrint,
+              ),
+            ],
+          ),
           children: [
-            Row(
-              children: [
-                IconButton(
-                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                  onPressed: () => context.go(AppRoutes.adminShifts),
-                  icon: const Icon(Icons.arrow_back),
-                ),
-                Expanded(
-                  child: Text(
-                    [reportTitle(l10n, r), ?r.storeName].join(' · '),
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ),
-                IconButton(
-                  key: const Key('admin-report-share'),
-                  tooltip: l10n.reportShare,
-                  onPressed: () => _pdf(context, r, offset, share: true),
-                  icon: const Icon(Icons.share_outlined),
-                ),
-                IconButton(
-                  key: const Key('admin-report-print'),
-                  tooltip: l10n.reportPrint,
-                  onPressed: () => _pdf(context, r, offset, share: false),
-                  icon: const Icon(Icons.print_outlined),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 640),
+            GlassCard(
+              level: GlassLevel.solid,
+              child: Center(
                 child: ShiftReportView(report: r, utcOffsetMinutes: offset),
               ),
             ),
           ],
         );
       }(),
-      AsyncError(:final error) => Center(
-        child: Text(l10n.commonError('$error')),
+      AsyncError(:final error) => AdminPage(
+        children: [
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('$error'),
+          ),
+        ],
       ),
       _ => const Center(child: CircularProgressIndicator()),
     };

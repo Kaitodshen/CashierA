@@ -3209,4 +3209,247 @@ class AppLocalizationsId extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get navRegister => 'Kasir & Pembayaran';
+
+  @override
+  String get navRegisterShort => 'Kasir';
+
+  @override
+  String get sectionOverview => 'Ringkasan';
+
+  @override
+  String get sectionCatalog => 'Katalog';
+
+  @override
+  String get sectionSales => 'Penjualan';
+
+  @override
+  String get sectionMembers => 'Member';
+
+  @override
+  String get sectionSettings => 'Pengaturan';
+
+  @override
+  String get shellRetailPos => 'POS Ritel';
+
+  @override
+  String get shellTagline => 'Kasir Ritel';
+
+  @override
+  String get shellHeldOrders => 'Pesanan ditahan';
+
+  @override
+  String get shellKitchen => 'Dapur';
+
+  @override
+  String get shellLock => 'Kunci';
+
+  @override
+  String get shellCollapse => 'Ciutkan menu';
+
+  @override
+  String get shellExpand => 'Lebarkan menu';
+
+  @override
+  String get shellMore => 'Lainnya';
+
+  @override
+  String get shellSearchHint => 'Pindai barcode atau cari SKU / barang';
+
+  @override
+  String get sellItemsTitle => 'Barang dagangan';
+
+  @override
+  String sellItemsCount(int count) {
+    return '$count barang';
+  }
+
+  @override
+  String sellStockBadge(String qty) {
+    return 'Stok $qty';
+  }
+
+  @override
+  String get sellPriceLabel => 'Harga';
+
+  @override
+  String get sellAddTooltip => 'Tambah ke tagihan';
+
+  @override
+  String get cartTitle => 'Tiket aktif';
+
+  @override
+  String get cartWalkIn => 'Pelanggan umum';
+
+  @override
+  String get cartTotalDue => 'Total tagihan';
+
+  @override
+  String get cartQuickCash => 'Uang cepat:';
+
+  @override
+  String get cartExact => 'Uang pas';
+
+  @override
+  String get cartPaymentMethod => 'Metode pembayaran';
+
+  @override
+  String get cartChange => 'Ganti';
+
+  @override
+  String get commonRemove => 'Hapus';
+
+  @override
+  String get overviewGross => 'Penjualan kotor';
+
+  @override
+  String get overviewTransactions => 'Transaksi';
+
+  @override
+  String get overviewCashInDrawer => 'Uang di laci';
+
+  @override
+  String get overviewNonCash => 'Total non-tunai';
+
+  @override
+  String overviewFloat(String amount) {
+    return 'Modal $amount';
+  }
+
+  @override
+  String overviewAverage(String amount) {
+    return 'Rata-rata $amount';
+  }
+
+  @override
+  String overviewOrders(int count) {
+    return '$count pesanan';
+  }
+
+  @override
+  String get overviewRecent => 'Pesanan terakhir';
+
+  @override
+  String get overviewPayments => 'Rincian pembayaran';
+
+  @override
+  String get overviewNoOrders => 'Belum ada penjualan di shift ini.';
+
+  @override
+  String get overviewSubtitle => 'Dasbor shift';
+
+  @override
+  String catalogHeaderCount(int count, int low) {
+    return '$count SKU • $low stok menipis';
+  }
+
+  @override
+  String get stockFilterAll => 'Semua stok';
+
+  @override
+  String get stockFilterLow => 'Menipis';
+
+  @override
+  String get stockFilterOut => 'Habis';
+
+  @override
+  String get catalogColProduct => 'Produk';
+
+  @override
+  String get catalogColSku => 'SKU / Barcode';
+
+  @override
+  String get catalogColCategory => 'Kategori';
+
+  @override
+  String get catalogColStock => 'Stok';
+
+  @override
+  String get catalogColPrice => 'Harga';
+
+  @override
+  String get membersTitle => 'Member';
+
+  @override
+  String get membersSubtitle => 'Poin, kasbon dan riwayat belanja';
+
+  @override
+  String get membersCount => 'Member';
+
+  @override
+  String get membersPoints => 'Poin beredar';
+
+  @override
+  String get membersOwed => 'Kasbon belum lunas';
+
+  @override
+  String get commonBack => 'Kembali';
+
+  @override
+  String get settingsTitle => 'Pengaturan';
+
+  @override
+  String get settingsStoreProfile => 'Profil toko';
+
+  @override
+  String get settingsTerminal => 'Terminal & sinkronisasi';
+
+  @override
+  String get settingsOpenSync => 'Buka sinkronisasi';
+
+  @override
+  String get settingsVisualEffects => 'Efek visual';
+
+  @override
+  String get settingsVisualEffectsHint =>
+      'Blur kaca di bar atas dan dialog. Matikan di tablet yang lambat.';
+
+  @override
+  String settingsPaper(int mm) {
+    return 'Kertas struk $mm mm';
+  }
+
+  @override
+  String get settingsTaxOff => 'Tidak dipungut';
+
+  @override
+  String get ordersColNumber => 'No. pesanan';
+
+  @override
+  String get ordersColTime => 'Waktu';
+
+  @override
+  String get ordersColItems => 'Barang';
+
+  @override
+  String get ordersColStatus => 'Status';
+
+  @override
+  String get ordersColTotal => 'Total';
+
+  @override
+  String get auditWho => 'Oleh';
+
+  @override
+  String get auditDetail => 'Detail';
+
+  @override
+  String get adminColVariants => 'Varian';
+
+  @override
+  String get adminColStatus => 'Status';
+
+  @override
+  String get adminColOnHand => 'Stok';
+
+  @override
+  String get adminColReorder => 'Stok minimum';
+
+  @override
+  String get productSectionBasics => 'Data produk';
+
+  @override
+  String get adminColUsed => 'Dipakai';
 }

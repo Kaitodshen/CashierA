@@ -1,5 +1,7 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/theme.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/gen/app_localizations_id.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
@@ -211,7 +213,7 @@ Widget app(FakeReports fake, Widget child) => ProviderScope(
   ],
   child: ToastificationWrapper(
     child: MaterialApp(
-      theme: AppTheme.backOffice(),
+      theme: AppTheme.light(),
       locale: const Locale('id'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -315,6 +317,9 @@ void main() {
     expect(find.text('03/10/2026'), findsOneWidget, reason: 'no gap');
     expect(find.text('Rp 72.000'), findsWidgets);
     expect(find.textContaining('PST · Pusat'), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is GlassTable), findsWidgets);
+    expect(find.byType(DataTable), findsNothing);
+    expect(find.byType(Card), findsNothing);
 
     await tester.tap(find.text('Pembayaran').first);
     await tester.pumpAndSettle();
@@ -329,6 +334,18 @@ void main() {
     await tester.tap(find.text('Penjualan').first);
     await tester.pumpAndSettle();
     expect(fake.calls.where((c) => c == 'sales').length, greaterThan(before));
+  });
+
+  testWidgets('dashboard heading keeps its width on a phone', (tester) async {
+    tester.view
+      ..physicalSize = const Size(390, 1600)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      app(FakeReports(), const SingleChildScrollView(child: DashboardPanel())),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.text('Hari ini')).width, greaterThan(40));
   });
 
   testWidgets('dashboard: today against yesterday and what needs attention', (
@@ -350,5 +367,14 @@ void main() {
     expect(find.text('Kasbon terlambat Rp 7.000'), findsOneWidget);
     expect(find.text('Jus Jeruk 1 L'), findsOneWidget);
     expect(fake.calls, ['dashboard:null']);
+    // Phase 3: the figures and panels sit on glass, no Material cards.
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('dash-sales')),
+        matching: find.byType(GlassCard),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(Card), findsNothing);
   });
 }

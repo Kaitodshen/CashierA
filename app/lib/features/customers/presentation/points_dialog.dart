@@ -1,4 +1,5 @@
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera_core/cashiera_core.dart';
 import 'package:flutter/material.dart';
@@ -74,46 +75,48 @@ class _PointsDialogState extends State<_PointsDialog> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final value = widget.rules.pointValue * widget.maximum;
-    return AlertDialog(
+    return GlassDialog(
       title: Text(l10n.pointsTitle),
-      content: SizedBox(
-        width: 340,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.pointsBalance(widget.balance)),
-            Text(l10n.pointsMax(widget.maximum, value.format())),
-            if (widget.rules.minRedeemPoints > 0)
-              Text(l10n.pointsMin(widget.rules.minRedeemPoints)),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    key: const Key('points-field'),
-                    controller: _points,
-                    autofocus: true,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(
-                      labelText: l10n.pointsField,
-                      errorText: _error,
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 340,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.pointsBalance(widget.balance)),
+              Text(l10n.pointsMax(widget.maximum, value.format())),
+              if (widget.rules.minRedeemPoints > 0)
+                Text(l10n.pointsMin(widget.rules.minRedeemPoints)),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      key: const Key('points-field'),
+                      controller: _points,
+                      autofocus: true,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                        labelText: l10n.pointsField,
+                        errorText: _error,
+                      ),
+                      onSubmitted: (_) => _use(),
                     ),
-                    onSubmitted: (_) => _use(),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                TextButton(
-                  key: const Key('points-max'),
-                  onPressed: widget.maximum == 0
-                      ? null
-                      : () => _points.text = '${widget.maximum}',
-                  child: Text(l10n.pointsAll),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: AppSpacing.sm),
+                  TextButton(
+                    key: const Key('points-max'),
+                    onPressed: widget.maximum == 0
+                        ? null
+                        : () => _points.text = '${widget.maximum}',
+                    child: Text(l10n.pointsAll),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       actions: [

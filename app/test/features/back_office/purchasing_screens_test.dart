@@ -1,5 +1,6 @@
 import 'package:cashiera/core/auth/models.dart';
 import 'package:cashiera/core/design_system/theme.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/back_office_backend.dart';
 import 'package:cashiera/features/back_office/data/catalog_admin_models.dart';
@@ -192,7 +193,7 @@ Widget app(FakePurchasing fake, String location, Set<String> permissions) {
     ],
     child: ToastificationWrapper(
       child: MaterialApp.router(
-        theme: AppTheme.backOffice(),
+        theme: AppTheme.light(),
         locale: const Locale('id'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -225,6 +226,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Diterima sebagian'), findsOneWidget);
+    expect(find.byType(Card), findsNothing);
+    expect(find.byWidgetPredicate((w) => w is GlassTable), findsOneWidget);
     expect(
       find.byKey(const Key('po-edit')),
       findsNothing,
@@ -314,6 +317,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Dikirim'), findsWidgets);
+    expect(find.byType(Card), findsNothing);
+    expect(find.byWidgetPredicate((w) => w is GlassTable), findsOneWidget);
     expect(find.byKey(const Key('transfer-approve')), findsNothing);
     await tester.tap(find.byKey(const Key('transfer-receive')));
     await tester.pumpAndSettle();
@@ -328,5 +333,20 @@ void main() {
     expect(cell.data, '9');
     expect(cell.style?.color, isNotNull, reason: 'the shortfall stands out');
     await tester.pump(const Duration(seconds: 5));
+  });
+
+  testWidgets('a PO fits a phone', (tester) async {
+    tester.view
+      ..physicalSize = const Size(390, 844)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      app(FakePurchasing(), '/admin/purchase-orders/po-1', const {
+        'purchase.manage',
+        'inventory.receive',
+      }),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 }

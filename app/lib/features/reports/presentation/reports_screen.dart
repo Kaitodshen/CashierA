@@ -1,4 +1,6 @@
 import 'package:cashiera/core/design_system/tokens.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shifts_screen.dart';
 import 'package:cashiera/features/back_office/presentation/back_office_providers.dart';
@@ -104,11 +106,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               AppSpacing.lg,
               0,
             ),
-            child: Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
+            child: AdminToolbar(
+              filters: [
                 StoreFilter(
                   value: _storeId,
                   onChanged: (v) => setState(() => _storeId = v),
@@ -127,10 +126,22 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               ],
             ),
           ),
-          TabBar(
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            tabs: [for (final (label, _) in tabs) Tab(text: label)],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              0,
+            ),
+            child: GlassCard(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              child: TabBar(
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                dividerHeight: 0,
+                tabs: [for (final (label, _) in tabs) Tab(text: label)],
+              ),
+            ),
           ),
           Expanded(
             child: TabBarView(children: [for (final (_, tab) in tabs) tab]),
@@ -147,10 +158,11 @@ Widget _async<T>(
   Widget Function(T data) build,
 ) => switch (value) {
   AsyncData(:final value) => build(value),
-  AsyncError(:final error) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Text(context.l10n.commonError('$error')),
+  AsyncError(:final error) => Padding(
+    padding: const EdgeInsets.all(AppSpacing.lg),
+    child: adminMessage(
+      icon: Icons.cloud_off_outlined,
+      message: context.l10n.commonError('$error'),
     ),
   ),
   _ => const Center(child: CircularProgressIndicator()),
@@ -210,9 +222,10 @@ class _SalesTab extends ConsumerWidget {
           ),
           if (r.byStore.length > 1)
             ReportSection(table: salesByStoreTable(l10n, r, subtitle)),
-          Card(
+          GlassCard(
+            padding: const EdgeInsets.all(AppSpacing.lg),
             child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: EdgeInsets.zero,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/shift_audit_repository.dart';
 import 'package:cashiera/features/back_office/presentation/admin_shifts_screen.dart';
@@ -112,108 +114,120 @@ class _AuditScreenState extends ConsumerState<AuditScreen> {
     final l10n = context.l10n;
     final time = DateFormat('dd/MM/yyyy HH:mm');
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Wrap(
-            spacing: AppSpacing.md,
-            runSpacing: AppSpacing.sm,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              StoreFilter(
-                value: _storeId,
-                onChanged: (v) => _change(() => _storeId = v),
-              ),
-              PeriodFilter(
-                value: _period,
-                onChanged: (v) => _change(() => _period = v),
-              ),
-              DropdownButton<String?>(
-                key: const Key('audit-kind'),
-                value: _prefix,
-                hint: Text(l10n.auditKind),
-                items: [
-                  for (final (prefix, label) in auditKinds(l10n))
-                    DropdownMenuItem(value: prefix, child: Text(label)),
-                ],
-                onChanged: (v) => _change(() => _prefix = v),
-              ),
-              FilterChip(
-                key: const Key('audit-approvals'),
-                label: Text(l10n.auditOnlyApprovals),
-                selected: _onlyApprovals,
-                onSelected: (v) => _change(() => _onlyApprovals = v),
-              ),
-            ],
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          StoreFilter(
+            value: _storeId,
+            onChanged: (v) => _change(() => _storeId = v),
           ),
-        ),
-        Expanded(
-          child: _error != null
-              ? Center(child: Text(l10n.commonError('$_error')))
-              : _entries.isEmpty && _loading
-              ? const Center(child: CircularProgressIndicator())
-              : _entries.isEmpty
-              ? EmptyState(
-                  icon: Icons.policy_outlined,
-                  message: l10n.auditEmpty,
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.lg,
-                    0,
-                    AppSpacing.lg,
-                    AppSpacing.lg,
-                  ),
-                  itemCount: _entries.length + (_more ? 1 : 0),
-                  itemBuilder: (context, i) {
-                    if (i == _entries.length) {
-                      return Center(
-                        child: TextButton(
-                          key: const Key('audit-more'),
-                          onPressed: _loading ? null : _load,
-                          child: Text(l10n.auditLoadMore),
-                        ),
-                      );
-                    }
-                    final e = _entries[i];
-                    final who = [
-                      e.actorName ?? l10n.auditSystem,
-                      if (e.approverName != null)
-                        l10n.auditApprovedBy(e.approverName!),
-                    ].join(' · ');
-                    final details = auditDetailsText(e.details);
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                      child: ListTile(
-                        key: Key('audit-${e.id}'),
-                        leading: Icon(
-                          e.approverName != null
-                              ? Icons.verified_user_outlined
-                              : Icons.history,
-                          color: e.approverName != null
-                              ? AppColors.warning
-                              : null,
-                        ),
-                        title: Text(auditActionText(l10n, e)),
-                        subtitle: Text(
-                          [
+          PeriodFilter(
+            value: _period,
+            onChanged: (v) => _change(() => _period = v),
+          ),
+          DropdownButton<String?>(
+            key: const Key('audit-kind'),
+            value: _prefix,
+            hint: Text(l10n.auditKind),
+            items: [
+              for (final (prefix, label) in auditKinds(l10n))
+                DropdownMenuItem(value: prefix, child: Text(label)),
+            ],
+            onChanged: (v) => _change(() => _prefix = v),
+          ),
+          FilterChip(
+            key: const Key('audit-approvals'),
+            label: Text(l10n.auditOnlyApprovals),
+            selected: _onlyApprovals,
+            onSelected: (v) => _change(() => _onlyApprovals = v),
+          ),
+        ],
+      ),
+      children: [
+        if (_error != null)
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('$_error'),
+          )
+        else if (_entries.isEmpty && _loading)
+          const Center(child: CircularProgressIndicator())
+        else if (_entries.isEmpty)
+          adminMessage(icon: Icons.policy_outlined, message: l10n.auditEmpty)
+        else ...[
+          GlassTable<AuditEntry>(
+            rows: _entries,
+            columns: [
+              GlassColumn(
+                label: l10n.auditKind,
+                flex: 3,
+                cell: (e) => Row(
+                  key: Key('audit-${e.id}'),
+                  children: [
+                    Icon(
+                      e.approverName != null
+                          ? Icons.verified_user_outlined
+                          : Icons.history,
+                      color: e.approverName != null
+                          ? AppColors.warning
+                          : AppColors.textMuted,
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            auditActionText(l10n, e),
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
                             [
                               time.format(e.occurredAt.toLocal()),
                               ?e.storeName,
                               ?e.deviceCode,
                             ].join(' · '),
-                            who,
-                            if (details.isNotEmpty) details,
-                          ].join('\n'),
-                        ),
-                        isThreeLine: true,
+                            style: muted,
+                          ),
+                        ],
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
-        ),
+              ),
+              GlassColumn(
+                label: l10n.auditWho,
+                flex: 2,
+                cell: (e) => Text(
+                  [
+                    e.actorName ?? l10n.auditSystem,
+                    if (e.approverName != null)
+                      l10n.auditApprovedBy(e.approverName!),
+                  ].join(' · '),
+                ),
+              ),
+              GlassColumn(
+                label: l10n.auditDetail,
+                flex: 3,
+                cell: (e) => Text(auditDetailsText(e.details), style: muted),
+              ),
+            ],
+          ),
+          if (_more)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.md),
+              child: Center(
+                child: SecondaryButton(
+                  key: const Key('audit-more'),
+                  onPressed: _loading ? null : _load,
+                  label: l10n.auditLoadMore,
+                ),
+              ),
+            ),
+        ],
       ],
     );
   }
