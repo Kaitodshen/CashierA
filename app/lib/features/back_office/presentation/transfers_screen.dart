@@ -1,6 +1,10 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/features/back_office/data/purchasing_repository.dart';
@@ -20,6 +24,13 @@ Color transferStatusColor(String status) => switch (status) {
   'approved' || 'in_transit' => AppColors.info,
   'rejected' || 'cancelled' => AppColors.error,
   _ => AppColors.warning,
+};
+
+StatusTone transferStatusTone(String status) => switch (status) {
+  'received' => StatusTone.success,
+  'approved' || 'in_transit' => StatusTone.primary,
+  'rejected' || 'cancelled' => StatusTone.error,
+  _ => StatusTone.warning,
 };
 
 /// Stock transfers between stores: incoming and outgoing.
@@ -43,9 +54,36 @@ class _TransfersScreenState extends ConsumerState<TransfersScreen> {
     final list = transfers.value ?? const <TransferListRow>[];
     final canRequest =
         ref.watch(principalProvider).value?.can('transfer.request') ?? false;
-    return Scaffold(
-      floatingActionButton: canRequest
-          ? FloatingActionButton.extended(
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          StoreFilter(
+            value: _storeId,
+            onChanged: (v) => setState(() {
+              _storeId = v;
+              if (v == null) _direction = null;
+            }),
+          ),
+          for (final d in const [null, 'in', 'out'])
+            ChoiceChip(
+              key: Key('transfer-dir-${d ?? 'all'}'),
+              label: Text(switch (d) {
+                'in' => l10n.transferIncoming,
+                'out' => l10n.transferOutgoing,
+                _ => l10n.auditAll,
+              }),
+              selected: _direction == d,
+              showCheckmark: false,
+              onSelected: _storeId == null && d != null
+                  ? null
+                  : (_) => setState(() => _direction = d),
+            ),
+        ],
+        actions: [
+          if (canRequest)
+            PrimaryButton(
               key: const Key('transfer-new'),
               onPressed: () async {
                 final id = await showDialog<String>(
@@ -57,92 +95,60 @@ class _TransfersScreenState extends ConsumerState<TransfersScreen> {
                   context.go(AppRoutes.adminTransfer(id));
                 }
               },
-              icon: const Icon(Icons.add),
-              label: Text(l10n.transferNew),
-            )
-          : null,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                StoreFilter(
-                  value: _storeId,
-                  onChanged: (v) => setState(() {
-                    _storeId = v;
-                    if (v == null) _direction = null;
-                  }),
-                ),
-                for (final d in const [null, 'in', 'out'])
-                  ChoiceChip(
-                    key: Key('transfer-dir-${d ?? 'all'}'),
-                    label: Text(switch (d) {
-                      'in' => l10n.transferIncoming,
-                      'out' => l10n.transferOutgoing,
-                      _ => l10n.auditAll,
-                    }),
-                    selected: _direction == d,
-                    onSelected: _storeId == null && d != null
-                        ? null
-                        : (_) => setState(() => _direction = d),
-                  ),
-              ],
+              icon: Icons.add,
+              label: l10n.transferNew,
             ),
-          ),
-          Expanded(
-            child: transfers.isLoading && list.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : transfers.hasError
-                ? Center(child: Text(l10n.commonError('${transfers.error}')))
-                : list.isEmpty
-                ? EmptyState(
-                    icon: Icons.swap_horiz,
-                    message: l10n.transferEmpty,
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.lg,
-                      0,
-                      AppSpacing.lg,
-                      96,
-                    ),
-                    itemCount: list.length,
-                    separatorBuilder: (_, _) =>
-                        const SizedBox(height: AppSpacing.sm),
-                    itemBuilder: (context, i) {
-                      final t = list[i];
-                      return Card(
-                        child: ListTile(
-                          key: Key('transfer-${t.number}'),
-                          leading: Icon(
-                            Icons.swap_horiz,
-                            color: transferStatusColor(t.status),
-                          ),
-                          title: Text(
-                            '${t.number} · ${t.fromStore} → ${t.toStore}',
-                          ),
-                          subtitle: Text(
-                            [
-                              l10n.transferStatus(t.status),
-                              _at.format(t.requestedAt.toLocal()),
-                              ?t.requestedBy,
-                              l10n.purchaseLines(t.lines),
-                            ].join(' · '),
-                          ),
-                          onTap: () =>
-                              context.go(AppRoutes.adminTransfer(t.id)),
-                        ),
-                      );
-                    },
-                  ),
-          ),
         ],
       ),
+      children: [
+        if (transfers.isLoading && list.isEmpty)
+          const Center(child: CircularProgressIndicator())
+        else if (transfers.hasError)
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('${transfers.error}'),
+          )
+        else if (list.isEmpty)
+          adminMessage(icon: Icons.swap_horiz, message: l10n.transferEmpty)
+        else
+          GlassTable<TransferListRow>(
+            rows: list,
+            onRowTap: (t) => context.go(AppRoutes.adminTransfer(t.id)),
+            columns: [
+              GlassColumn(
+                label: l10n.navTransfers,
+                flex: 4,
+                cell: (t) => Column(
+                  key: Key('transfer-${t.number}'),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${t.number} · ${t.fromStore} → ${t.toStore}',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      [
+                        _at.format(t.requestedAt.toLocal()),
+                        ?t.requestedBy,
+                        l10n.purchaseLines(t.lines),
+                      ].join(' · '),
+                      style: muted,
+                    ),
+                  ],
+                ),
+              ),
+              GlassColumn(
+                label: l10n.adminColStatus,
+                flex: 2,
+                cell: (t) => StatusChip(
+                  label: l10n.transferStatus(t.status),
+                  tone: transferStatusTone(t.status),
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
@@ -431,30 +437,74 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     final canReceive = principal?.can('inventory.receive') ?? false;
     final canRequest = principal?.can('transfer.request') ?? false;
     return switch (detail) {
-      AsyncError(:final error) => Center(
-        child: Text(l10n.commonError('$error')),
-      ),
-      AsyncData(value: final t) => ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+      AsyncError(:final error) => AdminPage(
         children: [
-          Row(
-            children: [
-              IconButton(
-                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                onPressed: () => context.go(AppRoutes.adminTransfers),
-                icon: const Icon(Icons.arrow_back),
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('$error'),
+          ),
+        ],
+      ),
+      AsyncData(value: final t) => AdminPage(
+        toolbar: AdminToolbar(
+          filters: [
+            SecondaryButton(
+              key: const Key('transfer-back'),
+              onPressed: () => context.go(AppRoutes.adminTransfers),
+              icon: Icons.arrow_back,
+              label: l10n.commonBack,
+            ),
+            Text(t.number, style: theme.textTheme.titleLarge),
+            StatusChip(
+              key: const Key('transfer-status'),
+              label: l10n.transferStatus(t.status),
+              tone: transferStatusTone(t.status),
+            ),
+          ],
+          actions: [
+            if (canApprove && t.status == 'requested') ...[
+              PrimaryButton(
+                key: const Key('transfer-approve'),
+                onPressed: _busy ? null : () => _transition(t, 'approved'),
+                icon: Icons.check,
+                label: l10n.transferApprove,
               ),
-              Expanded(
-                child: Text(t.number, style: theme.textTheme.titleLarge),
-              ),
-              Chip(
-                key: const Key('transfer-status'),
-                label: Text(l10n.transferStatus(t.status)),
-                side: BorderSide(color: transferStatusColor(t.status)),
+              SecondaryButton(
+                key: const Key('transfer-reject'),
+                onPressed: _busy ? null : () => _reject(t),
+                icon: Icons.block,
+                label: l10n.transferReject,
               ),
             ],
+            if (canApprove && t.status == 'approved')
+              PrimaryButton(
+                key: const Key('transfer-ship'),
+                onPressed: _busy ? null : () => _ship(t),
+                icon: Icons.local_shipping_outlined,
+                label: l10n.transferShip,
+              ),
+            if (canReceive && t.status == 'in_transit')
+              PrimaryButton(
+                key: const Key('transfer-receive'),
+                onPressed: _busy ? null : () => _receive(t),
+                icon: Icons.inventory_outlined,
+                label: l10n.purchaseReceive,
+              ),
+            if ((canRequest || canApprove) &&
+                (t.status == 'requested' || t.status == 'approved'))
+              TextButton.icon(
+                key: const Key('transfer-cancel'),
+                onPressed: _busy ? null : () => _transition(t, 'cancelled'),
+                icon: const Icon(Icons.cancel_outlined),
+                label: Text(l10n.transferCancel),
+              ),
+          ],
+        ),
+        children: [
+          Text(
+            '${t.fromStore} → ${t.toStore}',
+            style: theme.textTheme.titleMedium,
           ),
-          Text('${t.fromStore} → ${t.toStore}'),
           if (t.note != null) Text(t.note!),
           if (t.rejectReason != null)
             Text(
@@ -462,116 +512,75 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
               style: const TextStyle(color: AppColors.error),
             ),
           const SizedBox(height: AppSpacing.md),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: [
-              if (canApprove && t.status == 'requested') ...[
-                FilledButton.icon(
-                  key: const Key('transfer-approve'),
-                  onPressed: _busy ? null : () => _transition(t, 'approved'),
-                  icon: const Icon(Icons.check),
-                  label: Text(l10n.transferApprove),
+          GlassTable<TransferLine>(
+            rows: t.lines,
+            columns: [
+              GlassColumn(
+                label: l10n.colProduct,
+                flex: 3,
+                cell: (l) => Text([l.name, ?l.sku].join(' · ')),
+              ),
+              GlassColumn(
+                label: l10n.transferRequested,
+                numeric: true,
+                cell: (l) => Text(l.requested.toPlain()),
+              ),
+              GlassColumn(
+                label: l10n.transferShipped,
+                numeric: true,
+                cell: (l) => Text(l.shipped?.toPlain() ?? '–'),
+              ),
+              GlassColumn(
+                label: l10n.purchaseReceivedCol,
+                numeric: true,
+                cell: (l) => Text(
+                  l.received?.toPlain() ?? '–',
+                  key: Key('transfer-received-${l.variantId}'),
+                  style: TextStyle(
+                    color:
+                        l.received != null &&
+                            l.shipped != null &&
+                            l.received!.milli != l.shipped!.milli
+                        ? AppColors.error
+                        : null,
+                  ),
                 ),
-                OutlinedButton.icon(
-                  key: const Key('transfer-reject'),
-                  onPressed: _busy ? null : () => _reject(t),
-                  icon: const Icon(Icons.block),
-                  label: Text(l10n.transferReject),
-                ),
-              ],
-              if (canApprove && t.status == 'approved')
-                FilledButton.icon(
-                  key: const Key('transfer-ship'),
-                  onPressed: _busy ? null : () => _ship(t),
-                  icon: const Icon(Icons.local_shipping_outlined),
-                  label: Text(l10n.transferShip),
-                ),
-              if (canReceive && t.status == 'in_transit')
-                FilledButton.icon(
-                  key: const Key('transfer-receive'),
-                  onPressed: _busy ? null : () => _receive(t),
-                  icon: const Icon(Icons.inventory_outlined),
-                  label: Text(l10n.purchaseReceive),
-                ),
-              if ((canRequest || canApprove) &&
-                  (t.status == 'requested' || t.status == 'approved'))
-                TextButton.icon(
-                  key: const Key('transfer-cancel'),
-                  onPressed: _busy ? null : () => _transition(t, 'cancelled'),
-                  icon: const Icon(Icons.cancel_outlined),
-                  label: Text(l10n.transferCancel),
-                ),
+              ),
+              GlassColumn(
+                label: l10n.transferSenderStock,
+                numeric: true,
+                cell: (l) => Text(l.stockAtSender?.toPlain() ?? '–'),
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          Card(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text(l10n.colProduct)),
-                  DataColumn(
-                    label: Text(l10n.transferRequested),
-                    numeric: true,
-                  ),
-                  DataColumn(label: Text(l10n.transferShipped), numeric: true),
-                  DataColumn(
-                    label: Text(l10n.purchaseReceivedCol),
-                    numeric: true,
-                  ),
-                  DataColumn(
-                    label: Text(l10n.transferSenderStock),
-                    numeric: true,
-                  ),
-                ],
-                rows: [
-                  for (final l in t.lines)
-                    DataRow(
-                      cells: [
-                        DataCell(Text([l.name, ?l.sku].join(' · '))),
-                        DataCell(Text(l.requested.toPlain())),
-                        DataCell(Text(l.shipped?.toPlain() ?? '–')),
-                        DataCell(
-                          Text(
-                            l.received?.toPlain() ?? '–',
-                            key: Key('transfer-received-${l.variantId}'),
-                            style: TextStyle(
-                              color:
-                                  l.received != null &&
-                                      l.shipped != null &&
-                                      l.received!.milli != l.shipped!.milli
-                                  ? AppColors.error
-                                  : null,
-                            ),
-                          ),
-                        ),
-                        DataCell(Text(l.stockAtSender?.toPlain() ?? '–')),
-                      ],
+          Text(l10n.transferHistory, style: theme.textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.sm),
+          GlassCard(
+            level: GlassLevel.solid,
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+            child: Column(
+              children: [
+                for (final e in const [
+                  'requested',
+                  'approved',
+                  'shipped',
+                  'received',
+                  'rejected',
+                  'cancelled',
+                ])
+                  if (t.events[e] case final ev?)
+                    ListTile(
+                      dense: true,
+                      leading: const Icon(Icons.history),
+                      title: Text(l10n.transferEvent(e)),
+                      subtitle: Text(
+                        [_at.format(ev.at.toLocal()), ?ev.by].join(' · '),
+                      ),
                     ),
-                ],
-              ),
+              ],
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
-          Text(l10n.transferHistory, style: theme.textTheme.titleMedium),
-          for (final e in const [
-            'requested',
-            'approved',
-            'shipped',
-            'received',
-            'rejected',
-            'cancelled',
-          ])
-            if (t.events[e] case final ev?)
-              ListTile(
-                dense: true,
-                leading: const Icon(Icons.history),
-                title: Text(l10n.transferEvent(e)),
-                subtitle: Text(
-                  [_at.format(ev.at.toLocal()), ?ev.by].join(' · '),
-                ),
-              ),
         ],
       ),
       _ => const Center(child: CircularProgressIndicator()),

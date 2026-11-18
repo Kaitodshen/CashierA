@@ -1,6 +1,10 @@
 import 'package:cashiera/app/app_mode.dart';
 import 'package:cashiera/core/design_system/tokens.dart';
-import 'package:cashiera/core/design_system/widgets/empty_state.dart';
+import 'package:cashiera/core/design_system/widgets/admin.dart';
+import 'package:cashiera/core/design_system/widgets/buttons.dart';
+import 'package:cashiera/core/design_system/widgets/data_display.dart';
+import 'package:cashiera/core/design_system/widgets/glass.dart';
+import 'package:cashiera/core/design_system/widgets/glass_table.dart';
 import 'package:cashiera/core/design_system/widgets/toasts.dart';
 import 'package:cashiera/core/l10n/l10n.dart';
 import 'package:cashiera/core/pos/money_input.dart';
@@ -27,6 +31,14 @@ Color poStatusColor(String status) => switch (status) {
   _ => AppColors.warning,
 };
 
+StatusTone poStatusTone(String status) => switch (status) {
+  'received' => StatusTone.success,
+  'partially_received' => StatusTone.warning,
+  'ordered' => StatusTone.primary,
+  'cancelled' => StatusTone.error,
+  _ => StatusTone.neutral,
+};
+
 /// Purchase orders of the stores the person may see.
 class PurchaseOrdersScreen extends ConsumerStatefulWidget {
   const new({super.key});
@@ -49,117 +61,117 @@ class _PurchaseOrdersScreenState extends ConsumerState<PurchaseOrdersScreen> {
     final list = orders.value ?? const <PoListRow>[];
     final canEdit =
         ref.watch(principalProvider).value?.can('purchase.manage') ?? false;
-    return Scaffold(
-      floatingActionButton: canEdit
-          ? FloatingActionButton.extended(
+    final muted = Theme.of(context).textTheme.bodySmall
+        ?.copyWith(color: AppColors.textMuted);
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          StoreFilter(
+            value: _storeId,
+            onChanged: (v) => setState(() => _storeId = v),
+          ),
+          for (final s in const [
+            null,
+            'draft',
+            'ordered',
+            'partially_received',
+            'received',
+            'cancelled',
+          ])
+            ChoiceChip(
+              label: Text(s == null ? l10n.auditAll : l10n.poStatus(s)),
+              selected: _status == s,
+              showCheckmark: false,
+              onSelected: (_) => setState(() => _status = s),
+            ),
+        ],
+        actions: [
+          if (canEdit)
+            PrimaryButton(
               key: const Key('po-new'),
               onPressed: () => context.go(AppRoutes.adminPurchaseOrder('new')),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.purchaseNew),
-            )
-          : null,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                StoreFilter(
-                  value: _storeId,
-                  onChanged: (v) => setState(() => _storeId = v),
-                ),
-                for (final s in const [
-                  null,
-                  'draft',
-                  'ordered',
-                  'partially_received',
-                  'received',
-                  'cancelled',
-                ])
-                  ChoiceChip(
-                    label: Text(s == null ? l10n.auditAll : l10n.poStatus(s)),
-                    selected: _status == s,
-                    onSelected: (_) => setState(() => _status = s),
-                  ),
-              ],
+              icon: Icons.add,
+              label: l10n.purchaseNew,
             ),
-          ),
-          Expanded(
-            child: orders.isLoading && list.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : orders.hasError
-                ? Center(child: Text(l10n.commonError('${orders.error}')))
-                : list.isEmpty
-                ? EmptyState(
-                    icon: Icons.local_shipping_outlined,
-                    message: l10n.purchaseEmpty,
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.lg,
-                      0,
-                      AppSpacing.lg,
-                      96,
-                    ),
-                    itemCount: list.length,
-                    separatorBuilder: (_, _) =>
-                        const SizedBox(height: AppSpacing.sm),
-                    itemBuilder: (context, i) {
-                      final po = list[i];
-                      return Card(
-                        child: ListTile(
-                          key: Key('po-${po.number}'),
-                          title: Text('${po.number} · ${po.supplierName}'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                [
-                                  po.storeCode,
-                                  l10n.poStatus(po.status),
-                                  l10n.purchaseLines(po.lines),
-                                  if (po.expectedDate != null)
-                                    l10n.purchaseExpectedShort(
-                                      _day.format(
-                                        DateTime.parse(po.expectedDate!),
-                                      ),
-                                    ),
-                                ].join(' · '),
-                              ),
-                              if (po.status == 'partially_received' ||
-                                  po.status == 'received')
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: LinearProgressIndicator(
-                                    value: po.receivedRatio,
-                                    color: poStatusColor(po.status),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          trailing: Text(
-                            po.total.format(),
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                          onTap: () =>
-                              context.go(AppRoutes.adminPurchaseOrder(po.id)),
-                        ),
-                      );
-                    },
-                  ),
-          ),
         ],
       ),
+      children: [
+        if (orders.isLoading && list.isEmpty)
+          const Center(child: CircularProgressIndicator())
+        else if (orders.hasError)
+          adminMessage(
+            icon: Icons.cloud_off_outlined,
+            message: l10n.commonError('${orders.error}'),
+          )
+        else if (list.isEmpty)
+          adminMessage(
+            icon: Icons.local_shipping_outlined,
+            message: l10n.purchaseEmpty,
+          )
+        else
+          GlassTable<PoListRow>(
+            rows: list,
+            onRowTap: (po) => context.go(AppRoutes.adminPurchaseOrder(po.id)),
+            columns: [
+              GlassColumn(
+                label: l10n.purchaseSupplier,
+                flex: 4,
+                cell: (po) => Column(
+                  key: Key('po-${po.number}'),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${po.number} · ${po.supplierName}',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      [
+                        po.storeCode,
+                        l10n.purchaseLines(po.lines),
+                        if (po.expectedDate != null)
+                          l10n.purchaseExpectedShort(
+                            _day.format(DateTime.parse(po.expectedDate!)),
+                          ),
+                      ].join(' · '),
+                      style: muted,
+                    ),
+                    if (po.status == 'partially_received' ||
+                        po.status == 'received')
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.xs),
+                        child: StockBar(
+                          fraction: po.receivedRatio,
+                          tone: poStatusTone(po.status),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              GlassColumn(
+                label: l10n.adminColStatus,
+                flex: 2,
+                cell: (po) => StatusChip(
+                  label: l10n.poStatus(po.status),
+                  tone: poStatusTone(po.status),
+                ),
+              ),
+              GlassColumn(
+                label: l10n.totalRow,
+                numeric: true,
+                flex: 2,
+                cell: (po) => Text(
+                  po.total.format(),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
 
-/// A purchase order: the editor for a new or still-editable one, or the
-/// detail with receiving.
 class PurchaseOrderScreen extends ConsumerStatefulWidget {
   const new({required this.purchaseOrderId, super.key});
 
@@ -306,29 +318,77 @@ class _PoDetailViewState extends ConsumerState<_PoDetailView> {
     final principal = ref.watch(principalProvider).value;
     final canEdit = principal?.can('purchase.manage') ?? false;
     final canReceive = principal?.can('inventory.receive') ?? false;
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          SecondaryButton(
+            key: const Key('po-back'),
+            onPressed: () => context.go(AppRoutes.adminPurchaseOrders),
+            icon: Icons.arrow_back,
+            label: l10n.commonBack,
+          ),
+          Text(
+            '${po.number} · ${po.supplierName}',
+            style: theme.textTheme.titleLarge,
+          ),
+          StatusChip(
+            key: const Key('po-status'),
+            label: l10n.poStatus(po.status),
+            tone: poStatusTone(po.status),
+          ),
+        ],
+        actions: [
+          if (canEdit && po.editable)
+            SecondaryButton(
+              key: const Key('po-edit'),
+              onPressed: _busy ? null : widget.onEdit,
+              icon: Icons.edit_outlined,
+              label: l10n.commonEdit,
+            ),
+          if (canEdit && po.status == 'draft')
+            PrimaryButton(
+              key: const Key('po-order'),
+              onPressed: _busy
+                  ? null
+                  : () => _run(() async {
+                      await ref
+                          .read(purchasingProvider)
+                          .setPurchaseOrderStatus(po.id, 'ordered');
+                      return l10n.purchaseOrdered;
+                    }),
+              icon: Icons.send_outlined,
+              label: l10n.purchaseOrder,
+            ),
+          if (canReceive && po.receivable)
+            PrimaryButton(
+              key: const Key('po-receive'),
+              onPressed: _busy ? null : _receive,
+              icon: Icons.inventory_outlined,
+              label: l10n.purchaseReceive,
+            ),
+          SecondaryButton(
+            key: const Key('po-pdf'),
+            onPressed: _busy ? null : _pdf,
+            icon: Icons.picture_as_pdf_outlined,
+            label: l10n.exportPdf,
+          ),
+          if (canEdit && po.editable)
+            TextButton.icon(
+              key: const Key('po-cancel'),
+              onPressed: _busy
+                  ? null
+                  : () => _run(() async {
+                      await ref
+                          .read(purchasingProvider)
+                          .setPurchaseOrderStatus(po.id, 'cancelled');
+                      return l10n.purchaseCancelled;
+                    }),
+              icon: const Icon(Icons.cancel_outlined),
+              label: Text(l10n.purchaseCancel),
+            ),
+        ],
+      ),
       children: [
-        Row(
-          children: [
-            IconButton(
-              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              onPressed: () => context.go(AppRoutes.adminPurchaseOrders),
-              icon: const Icon(Icons.arrow_back),
-            ),
-            Expanded(
-              child: Text(
-                '${po.number} · ${po.supplierName}',
-                style: theme.textTheme.titleLarge,
-              ),
-            ),
-            Chip(
-              key: const Key('po-status'),
-              label: Text(l10n.poStatus(po.status)),
-              side: BorderSide(color: poStatusColor(po.status)),
-            ),
-          ],
-        ),
         Text(
           [
             po.storeName,
@@ -337,118 +397,65 @@ class _PoDetailViewState extends ConsumerState<_PoDetailView> {
               l10n.purchaseExpectedShort(_day.format(po.expectedDate!)),
             ?po.note,
           ].join(' · '),
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.md),
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
-          children: [
-            if (canEdit && po.editable)
-              OutlinedButton.icon(
-                key: const Key('po-edit'),
-                onPressed: _busy ? null : widget.onEdit,
-                icon: const Icon(Icons.edit_outlined),
-                label: Text(l10n.commonEdit),
+        GlassTable<PoLine?>(
+          rows: [...po.lines, null],
+          columns: [
+            GlassColumn(
+              label: l10n.colProduct,
+              flex: 3,
+              cell: (l) => Text(
+                l == null ? l10n.totalRow : [l.name, ?l.sku].join(' · '),
+                style: TextStyle(
+                  fontWeight: l == null ? FontWeight.w700 : null,
+                ),
               ),
-            if (canEdit && po.status == 'draft')
-              FilledButton.icon(
-                key: const Key('po-order'),
-                onPressed: _busy
-                    ? null
-                    : () => _run(() async {
-                        await ref
-                            .read(purchasingProvider)
-                            .setPurchaseOrderStatus(po.id, 'ordered');
-                        return l10n.purchaseOrdered;
-                      }),
-                icon: const Icon(Icons.send_outlined),
-                label: Text(l10n.purchaseOrder),
-              ),
-            if (canReceive && po.receivable)
-              FilledButton.icon(
-                key: const Key('po-receive'),
-                onPressed: _busy ? null : _receive,
-                icon: const Icon(Icons.inventory_outlined),
-                label: Text(l10n.purchaseReceive),
-              ),
-            OutlinedButton.icon(
-              key: const Key('po-pdf'),
-              onPressed: _busy ? null : _pdf,
-              icon: const Icon(Icons.picture_as_pdf_outlined),
-              label: Text(l10n.exportPdf),
             ),
-            if (canEdit && po.editable)
-              TextButton.icon(
-                key: const Key('po-cancel'),
-                onPressed: _busy
-                    ? null
-                    : () => _run(() async {
-                        await ref
-                            .read(purchasingProvider)
-                            .setPurchaseOrderStatus(po.id, 'cancelled');
-                        return l10n.purchaseCancelled;
-                      }),
-                icon: const Icon(Icons.cancel_outlined),
-                label: Text(l10n.purchaseCancel),
+            GlassColumn(
+              label: l10n.purchaseOrderedCol,
+              numeric: true,
+              cell: (l) =>
+                  Text(l == null ? '' : '${l.ordered.toPlain()} ${l.unit}'),
+            ),
+            GlassColumn(
+              label: l10n.purchaseReceivedCol,
+              numeric: true,
+              cell: (l) => Text(
+                l?.received.toPlain() ?? '',
+                style: TextStyle(
+                  color: l != null && l.open.milli == 0
+                      ? AppColors.success
+                      : null,
+                ),
               ),
+            ),
+            GlassColumn(
+              label: l10n.purchaseCost,
+              numeric: true,
+              cell: (l) => Text(l?.unitCost.format() ?? ''),
+            ),
+            GlassColumn(
+              label: l10n.totalRow,
+              numeric: true,
+              cell: (l) => l == null
+                  ? Text(
+                      po.total.format(),
+                      key: const Key('po-total'),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    )
+                  : Text(l.lineTotal.format()),
+            ),
           ],
-        ),
-        const SizedBox(height: AppSpacing.lg),
-        Card(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columns: [
-                DataColumn(label: Text(l10n.colProduct)),
-                DataColumn(label: Text(l10n.purchaseOrderedCol), numeric: true),
-                DataColumn(
-                  label: Text(l10n.purchaseReceivedCol),
-                  numeric: true,
-                ),
-                DataColumn(label: Text(l10n.purchaseCost), numeric: true),
-                DataColumn(label: Text(l10n.totalRow), numeric: true),
-              ],
-              rows: [
-                for (final l in po.lines)
-                  DataRow(
-                    cells: [
-                      DataCell(Text([l.name, ?l.sku].join(' · '))),
-                      DataCell(Text('${l.ordered.toPlain()} ${l.unit}')),
-                      DataCell(
-                        Text(
-                          l.received.toPlain(),
-                          style: TextStyle(
-                            color: l.open.milli == 0 ? AppColors.success : null,
-                          ),
-                        ),
-                      ),
-                      DataCell(Text(l.unitCost.format())),
-                      DataCell(Text(l.lineTotal.format())),
-                    ],
-                  ),
-                DataRow(
-                  cells: [
-                    DataCell(Text(l10n.totalRow)),
-                    const DataCell(Text('')),
-                    const DataCell(Text('')),
-                    const DataCell(Text('')),
-                    DataCell(
-                      Text(
-                        po.total.format(),
-                        key: const Key('po-total'),
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ),
         if (po.receipts.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.lg),
           Text(l10n.purchaseReceipts, style: theme.textTheme.titleMedium),
-          Card(
+          const SizedBox(height: AppSpacing.sm),
+          GlassCard(
+            level: GlassLevel.solid,
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
             child: Column(
               children: [
                 for (final r in po.receipts)
@@ -579,25 +586,32 @@ class _PoEditorState extends ConsumerState<_PoEditor> {
     _seed(ref.watch(stockVariantsProvider).value ?? const []);
     final total = _lines.fold(Money.zero, (a, l) => a + l.total);
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    return AdminPage(
+      toolbar: AdminToolbar(
+        filters: [
+          SecondaryButton(
+            key: const Key('po-editor-back'),
+            onPressed: () => widget.existing == null
+                ? context.go(AppRoutes.adminPurchaseOrders)
+                : widget.onDone?.call(),
+            icon: Icons.arrow_back,
+            label: l10n.commonBack,
+          ),
+          Text(
+            widget.existing?.number ?? l10n.purchaseNew,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ],
+        actions: [
+          PrimaryButton(
+            key: const Key('po-save'),
+            onPressed: _busy ? null : _save,
+            icon: Icons.save_outlined,
+            label: l10n.commonSave,
+          ),
+        ],
+      ),
       children: [
-        Row(
-          children: [
-            IconButton(
-              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-              onPressed: () => widget.existing == null
-                  ? context.go(AppRoutes.adminPurchaseOrders)
-                  : widget.onDone?.call(),
-              icon: const Icon(Icons.arrow_back),
-            ),
-            Text(
-              widget.existing?.number ?? l10n.purchaseNew,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.md),
         Wrap(
           spacing: AppSpacing.lg,
           runSpacing: AppSpacing.md,
@@ -654,7 +668,9 @@ class _PoEditorState extends ConsumerState<_PoEditor> {
           decoration: InputDecoration(labelText: l10n.closeNote),
         ),
         const SizedBox(height: AppSpacing.lg),
-        Card(
+        GlassCard(
+          level: GlassLevel.solid,
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
           child: Column(
             children: [
               for (final (i, l) in _lines.indexed)
@@ -679,15 +695,6 @@ class _PoEditorState extends ConsumerState<_PoEditor> {
             total.format(),
             key: const Key('po-editor-total'),
             style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: FilledButton.icon(
-            key: const Key('po-save'),
-            onPressed: _busy ? null : _save,
-            icon: const Icon(Icons.save_outlined),
-            label: Text(l10n.commonSave),
           ),
         ),
       ],
