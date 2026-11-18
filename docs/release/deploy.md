@@ -15,8 +15,36 @@ How to put CashierA into production: the Supabase project, the Midtrans gateway,
    ```
 
    This applies `supabase/migrations/*` in order. Never add `--include-seed` in production: the seed holds demo stores, staff and PINs.
-4. Create the owner account and the real stores. See `supabase/README.md`, section 2.
+4. Create the first owner:
+   - Make their login under **Authentication → Users → Add user** (email and a strong password, tick **Auto Confirm User**).
+   - Run `supabase/production/first_owner.sql` once in the **SQL Editor**, with its four values changed.
+   - After that, everything else is done from the back office: **Settings → Stores** to add stores, **Settings → Staff** to add staff, set PINs and invite managers.
 5. Under **Authentication → URL configuration**, set the site URL to the back-office address (section 5).
+6. Leave CAPTCHA off for now: the app does not send a CAPTCHA token yet, so turning it on blocks terminal pairing and back-office sign-in. Use the anonymous sign-in rate limit instead.
+
+## 1a. Staff invitations
+
+Managers get their back-office login by email from **Settings → Staff → Invite to back office**. The `staff-invite` function creates the login, and the person sets a password on `/admin/set-password`. It needs the back office to be online at its HTTPS address (section 5).
+
+1. Tell the function where the back office is, then deploy it:
+
+   ```bash
+   npx supabase@3.0.0 secrets set SITE_URL=https://<back-office address>
+   ```
+
+   ```bash
+   npx supabase@3.0.0 functions deploy staff-invite
+   ```
+
+2. Change the invitation email so its link fits the app's routes. In **Authentication → Email Templates → Invite user**, make the link:
+
+   ```text
+   {{ .SiteURL }}/?token_hash={{ .TokenHash }}&type=invite#/admin/set-password
+   ```
+
+   The default link puts the sign-in tokens after a `#`, which collides with the back office's own `#/` routes.
+3. Optional but recommended for a real business: under **Authentication → SMTP Settings**, connect an email provider (Resend, Brevo or similar). Supabase's built-in sender allows only a few emails an hour and often lands in spam.
+4. Try it with a second email address of your own: add a manager, invite them, open the email, set a password and sign in.
 
 ## 2. Midtrans (dynamic QRIS)
 
